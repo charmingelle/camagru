@@ -6,7 +6,7 @@ require_once(getRoot() . 'app/modules/Page.php');
 require_once(getRoot() . 'app/modules/Validate.php');
 
 class AuthController {
-	public static function signup() {
+	public static function sendVerification() {
 		if (!Validate::isValidEmail($_POST['email'])) {
 			Page::redirect('views/invalidEmail.php');
 		}
@@ -16,7 +16,11 @@ class AuthController {
 		if (!Validate::isValidPassword($_POST['password'])) {
 			Page::redirect('views/invalidPassword.php');
 		}
-		if (Auth::signup($_POST['email'], $_POST['login'], hash('whirlpool', $_POST['password'])) === true) {
+		Auth::sendLink($_POST['email'], $_POST['login'], hash('whirlpool', $_POST['password']));
+	}
+	
+	public static function signup() {
+		if (Auth::signup($_GET['email'], $_GET['hash']) === true) {
 			Page::redirect('views/home.php');
 		} else {
 			Page::redirect('views/signup.php');
@@ -27,11 +31,12 @@ class AuthController {
 		if (Auth::signin($_POST['login'], hash('whirlpool', $_POST['password'])) === true) {
 			Page::redirect('views/home.php');
 		} else {
-			Page::redirect('views/signin.php');
+			Page::redirect('views/invalidOrInactiveAccount.php');
 		}
 	}
 	
 	public static function signout() {
 		unset($_SESSION['login']);
+		Page::redirect('views/home.php');
 	}
 }

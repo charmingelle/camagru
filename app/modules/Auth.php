@@ -1,22 +1,54 @@
 <?php
 
 class Auth {
-	public static function signup($email, $login, $password) {
+	private static function _accountExists($login) {
 		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE login = :login', array('login' => $login));
 		
 		if (empty($query_result)) {
-			DBConnect::sendQuery('INSERT INTO account(email, login, password) VALUES (:email, :login, :password)',
-								array('email' => $email, 'login' => $login, 'password' => $password));
+			return false;
+		}
+		return true;
+	}
+	
+	public static function sendLink($email, $login, $password) {
+		if (!self::_accountExists($login)) {
+			$hash = md5(rand(0, 1000));
+			$message = 'Thanks for signing up to Camagru website!
+			
+			Please click this link to activate your account:
+			http://localhost:7777?email='.$email.'&hash='.$hash.'
+			
+			';
+			
+			mail($email, 'Confirm your signing up to Camagru website', $message, 'From:noreply@camagru.com\r\n');
+			DBConnect::sendQuery('INSERT INTO account(email, login, password, hash) VALUES (:email, :login, :password, :hash)',
+							array('email' => $email, 'login' => $login, 'password' => $password, 'hash' => $hash));
+		}
+	}
+	
+	private static function _validHash($email, $hash) {
+		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email AND hash = :hash',
+											array('email' => $email, 'hash' => $hash));
+		
+		if (empty($query_result)) {
+			return false;
+		}
+		return true;
+	}
+	
+	public static function signup($email, $hash) {
+		if (self::_validHash($email, $hash)) {
+			DBConnect::sendQuery('INSERT INTO account(active) VALUES (:active)', array('active' => true));
 			return true;
 		}
 		return false;
 	}
 	
 	public static function signin($login, $password) {
-		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE login = :login AND password = :password',
+		$query_result = DBConnect::sendQuery('SELECT active FROM account WHERE login = :login AND password = :password',
 											array('login' => $login, 'password' => $password));
-		
-		if (!empty($query_result)) {
+											
+		if (!empty($query_result) && $query_result[0]['active']) {
 			$_SESSION['login'] = $login;
 			return true;
 		}
