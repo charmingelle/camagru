@@ -1,6 +1,6 @@
 <?php
 
-class siteMapController {
+class SiteMapController {
 	public function home() {
 		Page::view('home');
 	}
