@@ -43,6 +43,42 @@ class Route {
 	public static function signout() {
 		self::_request('AuthController@signout');
 	}
+	
+	public static function changeEmail() {
+		if (isset($_SESSION['login']) && $_SESSION['login'] !== '') {
+			require_once(getRoot() . 'views/changeEmail.php');
+			if (isset($_POST['email']) && $_POST['email'] !== ""
+				&& isset($_POST['submit']) && $_POST['submit'] === 'Submit') {
+				self::_request('AuthController@changeEmail');
+			}
+		} else {
+			require_once(getRoot() . 'views/home.php');
+		}
+	}
+	
+	public static function changeLogin() {
+		if (isset($_SESSION['login']) && $_SESSION['login'] !== '') {
+			require_once(getRoot() . 'views/changeLogin.php');
+			if (isset($_POST['login']) && $_POST['login'] !== ""
+				&& isset($_POST['submit']) && $_POST['submit'] === 'Submit') {
+				self::_request('AuthController@changeLogin');
+			}
+		} else {
+			require_once(getRoot() . 'views/home.php');
+		}
+	}
+	
+	public static function changePassword() {
+		if (isset($_SESSION['login']) && $_SESSION['login'] !== '') {
+			require_once(getRoot() . 'views/changePassword.php');
+			if (isset($_POST['password']) && $_POST['password'] !== ""
+				&& isset($_POST['submit']) && $_POST['submit'] === 'Submit') {
+				self::_request('AuthController@changePassword');
+			}
+		} else {
+			require_once(getRoot() . 'views/home.php');
+		}
+	}
 }
 
 if ($_SERVER['REQUEST_URI'] === '/') {
@@ -53,4 +89,10 @@ if ($_SERVER['REQUEST_URI'] === '/') {
 	Route::signin();
 } else if ($_SERVER['REQUEST_URI'] === '/signout') {
 	Route::signout();
+} else if ($_SERVER['REQUEST_URI'] === '/changeEmail') {
+	Route::changeEmail();
+} else if ($_SERVER['REQUEST_URI'] === '/changeLogin') {
+	Route::changeLogin();
+} else if ($_SERVER['REQUEST_URI'] === '/changePassword') {
+	Route::changePassword();
 }

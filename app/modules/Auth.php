@@ -54,4 +54,19 @@ class Auth {
 		}
 		return false;
 	}
+	
+	public static function changeEmail($email, $login) {
+		$query_result = DBConnect::sendQuery('UPDATE account SET email = :email WHERE login = :login',
+											array('email' => $email, 'login' => $login));
+	}
+	
+	public static function changeLogin($new_login, $login) {
+		$query_result = DBConnect::sendQuery('UPDATE account SET login = :new_login WHERE login = :login',
+											array('new_login' => $new_login, 'login' => $login));
+	}
+	
+	public static function changePassword($password, $login) {
+		$query_result = DBConnect::sendQuery('UPDATE account SET password = :password WHERE login = :login',
+											array('password' => $password, 'login' => $login));
+	}
 }

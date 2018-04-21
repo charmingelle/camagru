@@ -39,4 +39,26 @@ class AuthController {
 		unset($_SESSION['login']);
 		Page::redirect('views/home.php');
 	}
+	
+	public static function changeEmail() {
+		if (!Validate::isValidEmail($_POST['email'])) {
+			Page::redirect('views/invalidEmail.php');
+		}
+		Auth::changeEmail($_POST['email'], $_SESSION['login']);
+	}
+	
+	public static function changeLogin() {
+		if (!Validate::isValidLogin($_POST['login'])) {
+			Page::redirect('views/invalidLogin.php');
+		}
+		Auth::changeLogin($_POST['login'], $_SESSION['login']);
+		$_SESSION['login'] = $_POST['login'];
+	}
+	
+	public static function changePassword() {
+		if (!Validate::isValidPassword($_POST['password'])) {
+			Page::redirect('views/invalidPassword.php');
+		}
+		Auth::changePassword(hash('whirlpool', $_POST['password']), $_SESSION['login']);
+	}
 }
