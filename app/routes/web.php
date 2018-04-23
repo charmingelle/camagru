@@ -1,14 +1,15 @@
 <?php
 
 require_once(getRoot() . 'app/controllers/AuthController.php');
+require_once(getRoot() . 'app/controllers/DataController.php');
 
 class Route {
 	private static function _request($controller_name_and_method) {
 		$controller_name_and_method_array = explode('@', $controller_name_and_method);
 		$controller_name = $controller_name_and_method_array[0];
 		$controller_method = $controller_name_and_method_array[1];
-		
-		$controller_name::$controller_method();
+		$result = $controller_name::$controller_method();
+		return $result;
 	}
 	
 	public static function home() {
@@ -91,6 +92,14 @@ class Route {
 			self::_request('AuthController@sendResetLink');
 		}
 	}
+	
+	public static function getMain() {
+		require_once(getRoot() . 'views/main.php');
+	}
+	
+	public static function getPhotos() {
+		return self::_request('DataController@getPhotos');
+	}
 }
 
 if ($_SERVER['REQUEST_URI'] === '/') {
@@ -109,4 +118,8 @@ if ($_SERVER['REQUEST_URI'] === '/') {
 	Route::changePassword();
 } else if ($_SERVER['REQUEST_URI'] === '/forgotPassword') {
 	Route::sendResetLink();
+} else if ($_SERVER['REQUEST_URI'] === '/main') {
+	Route::getMain();
+} else if ($_SERVER['REQUEST_URI'] === '/photos') {
+	Route::getPhotos();
 }
