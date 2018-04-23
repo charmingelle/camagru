@@ -32,8 +32,7 @@ class Route {
 	
 	public static function signin() {
 		require_once(getRoot() . 'views/signin.php');
-		if ($_SERVER['REQUEST_METHOD'] === 'POST'
-			&& isset($_POST['login']) && $_POST['login'] !== ""
+		if (isset($_POST['login']) && $_POST['login'] !== ""
 			&& isset($_POST['password']) && $_POST['password'] !== ""
 			&& isset($_POST['submit']) && $_POST['submit'] === 'Sign in') {
 			self::_request('AuthController@signin');
@@ -69,7 +68,12 @@ class Route {
 	}
 	
 	public static function changePassword() {
-		if (isset($_SESSION['login']) && $_SESSION['login'] !== '') {
+		if ($_SERVER['REQUEST_METHOD'] === 'GET'
+			&& isset($_GET['login']) && $_GET['login'] !== ''
+			&& isset($_GET['hash']) && $_GET['hash'] !== '') {
+			$_SESSION['login'] = $_GET['login'];
+			require_once(getRoot() . 'views/changePassword.php');
+		} else if (isset($_SESSION['login']) && $_SESSION['login'] !== '') {
 			require_once(getRoot() . 'views/changePassword.php');
 			if (isset($_POST['password']) && $_POST['password'] !== ""
 				&& isset($_POST['submit']) && $_POST['submit'] === 'Submit') {
@@ -79,11 +83,19 @@ class Route {
 			require_once(getRoot() . 'views/home.php');
 		}
 	}
+	
+	public static function sendResetLink() {
+		require_once(getRoot() . 'views/forgotPassword.php');
+		if (isset($_POST['email']) && $_POST['email'] !== ""
+			&& isset($_POST['submit']) && $_POST['submit'] === 'Get reset password link') {
+			self::_request('AuthController@sendResetLink');
+		}
+	}
 }
 
 if ($_SERVER['REQUEST_URI'] === '/') {
 	Route::home();
-} else if ($_SERVER['REQUEST_URI'] === '/signup') {
+} else if (explode('?', $_SERVER['REQUEST_URI'], 2)[0] === '/signup') {
 	Route::signup();
 } else if ($_SERVER['REQUEST_URI'] === '/signin') {
 	Route::signin();
@@ -93,6 +105,8 @@ if ($_SERVER['REQUEST_URI'] === '/') {
 	Route::changeEmail();
 } else if ($_SERVER['REQUEST_URI'] === '/changeLogin') {
 	Route::changeLogin();
-} else if ($_SERVER['REQUEST_URI'] === '/changePassword') {
+} else if (explode('?', $_SERVER['REQUEST_URI'], 2)[0] === '/changePassword') {
 	Route::changePassword();
+} else if ($_SERVER['REQUEST_URI'] === '/forgotPassword') {
+	Route::sendResetLink();
 }

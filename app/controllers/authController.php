@@ -61,4 +61,10 @@ class AuthController {
 		}
 		Auth::changePassword(hash('whirlpool', $_POST['password']), $_SESSION['login']);
 	}
+	
+	public static function sendResetLink() {
+		if (Auth::sendResetLink($_POST['email']) === false) {
+			Page::redirect('views/invalidEmail.php');
+		}
+	}
 }

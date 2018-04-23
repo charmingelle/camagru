@@ -1,7 +1,7 @@
 <?php
 
 class Auth {
-	private static function _accountExists($login) {
+	private static function _loginExists($login) {
 		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE login = :login', array('login' => $login));
 		
 		if (empty($query_result)) {
@@ -11,12 +11,12 @@ class Auth {
 	}
 	
 	public static function sendLink($email, $login, $password) {
-		if (!self::_accountExists($login)) {
+		if (!self::_loginExists($login)) {
 			$hash = md5(rand(0, 1000));
 			$message = 'Thanks for signing up to Camagru website!
 			
 			Please click this link to activate your account:
-			http://localhost:7777?email='.$email.'&hash='.$hash.'
+			http://localhost:7777/signup?email='.$email.'&hash='.$hash.'
 			
 			';
 			
@@ -68,5 +68,22 @@ class Auth {
 	public static function changePassword($password, $login) {
 		$query_result = DBConnect::sendQuery('UPDATE account SET password = :password WHERE login = :login',
 											array('password' => $password, 'login' => $login));
+	}
+	
+	public static function sendResetLink($email) {
+		$query_result = DBConnect::sendQuery('SELECT login, hash FROM account WHERE email = :email', array('email' => $email));
+		
+		if (empty($query_result)) {
+			return false;
+		}
+		$login = $query_result[0]['login'];
+		$hash = $query_result[0]['hash'];
+		$message = 'Please click this link to reset your Camagru account password:
+		http://localhost:7777/changePassword?login='.$login.'&hash='.$hash.'
+		
+		';
+		
+		mail($email, 'Reset your Camagru website password', $message, 'From:noreply@camagru.com\r\n');
+		return true;
 	}
 }
