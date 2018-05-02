@@ -1,8 +1,24 @@
+Options All -ExecCGI -Indexes -Includes +FollowSymLinks
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+</IfModule>
+
+php_value date.timezone 'Europe/Kiev'
+php_flag session.use_only_cookies on
+php_value session.gc_maxlifetime 14400
+php_value session.cookie_lifetime 14400
 php_flag display_startup_errors on
 php_flag display_errors on
 php_flag html_errors on
-php_flag log_errors on
-
-RewriteEngine On
-RewriteBase '/'
-RewriteRule '^.+$'  'index.php'

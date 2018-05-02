@@ -6,6 +6,7 @@
 		return (__DIR__ . $sys_path);
 	}
 
-	require_once(getRoot() . 'app/routes/web.php');
+	require('../views/jopa/lusogo/bobra/main.php'); // -> echo eval(file_get_contents(../main.php));
+	// require_once(getRoot() . 'app/routes/web.php');
 ?>
  
