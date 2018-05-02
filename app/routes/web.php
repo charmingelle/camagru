@@ -98,7 +98,7 @@ class Route {
 	}
 	
 	public static function getPhotos() {
-		return self::_request('DataController@getPhotos');
+		return json_encode(self::_request('DataController@getPhotos'));
 	}
 }
 
@@ -121,5 +121,7 @@ if ($_SERVER['REQUEST_URI'] === '/') {
 } else if ($_SERVER['REQUEST_URI'] === '/main') {
 	Route::getMain();
 } else if ($_SERVER['REQUEST_URI'] === '/photos') {
-	Route::getPhotos();
+	return Route::getPhotos();
+} else if ($_SERVER['REQUEST_URI'] === '/script.js') {
+	require_once(getRoot() . 'views/main.php');
 }
