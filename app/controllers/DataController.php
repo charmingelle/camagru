@@ -5,6 +5,9 @@ require_once(getRoot() . 'app/modules/Photos.php');
 
 class DataController {
 	public static function getPhotos() {
-		return Photos::getPhotos();
+		$to_check = json_encode(Photos::getPhotos());
+
+		echo $to_check;
+		return $to_check;
 	}
 }
