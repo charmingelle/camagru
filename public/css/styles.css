@@ -1,0 +1,36 @@
+body {
+	background-color: #f4f4f4;
+}
+
+header {
+	background-color: #333;
+	color: white;
+}
+
+#gallery {
+	display: flex;
+	justify-content: center;
+}
+
+.photo-container {
+	margin: 10px;
+	padding: 10px;
+	background-color: white;
+}
+
+.like-comment {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	margin: 10px;
+	color: #bbb;
+}
+
+.like {
+	margin-right: 15px;
+}
+
+footer {
+	background-color: white;
+	color: #999;
+}

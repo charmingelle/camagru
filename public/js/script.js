@@ -2,15 +2,33 @@ let gallery = document.getElementById('gallery');
 
 const appendImg = (sources) => {
 	const images = sources.map(source => {
-		let img = document.createElement('img');
+		let imageContainer = document.createElement('div');
+		let image = document.createElement('img');
+		let likeComment = document.createElement('div');
+		let likeIcon = document.createElement('div');
+		let like = document.createElement('div');
+		let commentIcon = document.createElement('div');
+		let comment = document.createElement('div');
 		
-		img.src = source;
-		return img;
+		imageContainer.classList.add('photo-container');
+		image.src = source['url'];
+		image.classList.add('photo');
+		likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
+		like.innerHTML = source['likes'];
+		like.classList.add('like');
+		commentIcon.innerHTML = '<i class="fa fa-comment"></i>';
+		comment.innerHTML = '1';
+		comment.classList.add('comment');
+		likeComment.classList.add('like-comment');
+
+		likeComment.append(likeIcon, like, commentIcon, comment);
+		imageContainer.append(image, likeComment);
+		return imageContainer;
 	});
 	gallery.append(...images);
 }
 
-fetch('http://localhost:7777/photos', {method: 'POST'})
+fetch('/photos', {method: 'POST'})
 .then(response => response.json())
 .then(appendImg)
 .catch(error => console.log(error.message));

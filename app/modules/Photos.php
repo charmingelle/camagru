@@ -1,13 +1,9 @@
 <?php
 
 class Photos {
-	private static function _getUrl($elem) {
-		return $elem['url'];
-	}
-	
 	public static function getPhotos() {
-		$result = DBConnect::sendQuery('SELECT url FROM photo', array());
+		$result = DBConnect::sendQuery('SELECT `url`, `likes` FROM `photo`')->fetchAll();
 		
-		return array_map('self::_getUrl', $result);
+		return $result;
 	}
 }

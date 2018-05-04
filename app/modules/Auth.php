@@ -2,7 +2,7 @@
 
 class Auth {
 	private static function _loginExists($login) {
-		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE login = :login', array('login' => $login));
+		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE login = :login', ['login' => $login])->fetchAll();
 		
 		if (empty($query_result)) {
 			return false;
@@ -22,13 +22,13 @@ class Auth {
 			
 			mail($email, 'Confirm your signing up to Camagru website', $message, 'From:noreply@camagru.com\r\n');
 			DBConnect::sendQuery('INSERT INTO account(email, login, password, hash) VALUES (:email, :login, :password, :hash)',
-							array('email' => $email, 'login' => $login, 'password' => $password, 'hash' => $hash));
+							['email' => $email, 'login' => $login, 'password' => $password, 'hash' => $hash])->fetchAll();
 		}
 	}
 	
 	private static function _validHash($email, $hash) {
 		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email AND hash = :hash',
-											array('email' => $email, 'hash' => $hash));
+											['email' => $email, 'hash' => $hash])->fetchAll();
 		
 		if (empty($query_result)) {
 			return false;
@@ -38,7 +38,7 @@ class Auth {
 	
 	public static function signup($email, $hash) {
 		if (self::_validHash($email, $hash)) {
-			DBConnect::sendQuery('INSERT INTO account(active) VALUES (:active)', array('active' => true));
+			DBConnect::sendQuery('INSERT INTO account(active) VALUES (:active)', ['active' => true])->fetchAll();
 			return true;
 		}
 		return false;
@@ -46,7 +46,7 @@ class Auth {
 	
 	public static function signin($login, $password) {
 		$query_result = DBConnect::sendQuery('SELECT active FROM account WHERE login = :login AND password = :password',
-											array('login' => $login, 'password' => $password));
+											['login' => $login, 'password' => $password])->fetchAll();
 											
 		if (!empty($query_result) && $query_result[0]['active']) {
 			$_SESSION['login'] = $login;
@@ -57,21 +57,21 @@ class Auth {
 	
 	public static function changeEmail($email, $login) {
 		$query_result = DBConnect::sendQuery('UPDATE account SET email = :email WHERE login = :login',
-											array('email' => $email, 'login' => $login));
+											['email' => $email, 'login' => $login])->fetchAll();
 	}
 	
 	public static function changeLogin($new_login, $login) {
 		$query_result = DBConnect::sendQuery('UPDATE account SET login = :new_login WHERE login = :login',
-											array('new_login' => $new_login, 'login' => $login));
+											['new_login' => $new_login, 'login' => $login])->fetchAll();
 	}
 	
 	public static function changePassword($password, $login) {
 		$query_result = DBConnect::sendQuery('UPDATE account SET password = :password WHERE login = :login',
-											array('password' => $password, 'login' => $login));
+											['password' => $password, 'login' => $login])->fetchAll();
 	}
 	
 	public static function sendResetLink($email) {
-		$query_result = DBConnect::sendQuery('SELECT login, hash FROM account WHERE email = :email', array('email' => $email));
+		$query_result = DBConnect::sendQuery('SELECT login, hash FROM account WHERE email = :email', ['email' => $email])->fetchAll();
 		
 		if (empty($query_result)) {
 			return false;
