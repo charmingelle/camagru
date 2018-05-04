@@ -12,20 +12,30 @@ class SiteMapController {
 	}
 
 	public static function showChangeEmail() {
-		if (!isset($_SESSION['login']) || $_SESSION['login'] === '') {
-			exit ;
+		if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
+			Page::show('views/changeEmail.php');
+		} else {
+			Route::redirect('/');
 		}
-		Page::show('views/changeEmail.php');
 	}
 
 	public static function showChangeLogin() {
-		if (!isset($_SESSION['login']) || $_SESSION['login'] === '') {
-			exit ;
+		if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
+			Page::show('views/changeLogin.php');
+		} else {
+			Route::redirect('/');
 		}
-		Page::show('views/changeLogin.php');
 	}
 
 	public static function showForgotPassword() {
 		Page::show('views/forgotPassword.php');
+	}
+
+	public static function showAccount() {
+		if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
+			Page::show('views/account.php');
+		} else {
+			Route::redirect('/');
+		}
 	}
 }

@@ -49,7 +49,7 @@ class Auth {
 											['login' => $login, 'password' => $password])->fetchAll();
 											
 		if (!empty($query_result) && $query_result[0]['active']) {
-			$_SESSION['login'] = $login;
+			$_SESSION['auth-data']['login'] = $login;
 			return true;
 		}
 		return false;

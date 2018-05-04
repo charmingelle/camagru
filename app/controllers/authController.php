@@ -14,13 +14,13 @@ class AuthController {
 			exit ;
 		}
 		if (!Validate::isValidEmail($_POST['email'])) {
-			Page::show('views/invalidEmail.php');
+			$_SESSION['auth-data']['change-status'] = Message::$invalidEmail;
 		}
 		if (!Validate::isValidLogin($_POST['login'])) {
-			Page::show('views/invalidLogin.php');
+			$_SESSION['auth-data']['change-status'] = Message::$invalidLogin;
 		}
 		if (!Validate::isValidPassword($_POST['password'])) {
-			Page::show('views/invalidPassword.php');
+			$_SESSION['auth-data']['change-status'] = Message::$invalidPassword;
 		}
 		Auth::sendLink($_POST['email'], $_POST['login'], hash('whirlpool', $_POST['password']));
 	}
@@ -49,8 +49,8 @@ class AuthController {
 	}
 	
 	public static function signout() {
-		unset($_SESSION['login']);
-		Page::show('views/home.php');
+		unset($_SESSION['auth-data']);
+		Route::redirect('/');
 	}
 
 	public static function changeEmail() {
@@ -59,9 +59,10 @@ class AuthController {
 			exit ;
 		}
 		if (!Validate::isValidEmail($_POST['email'])) {
-			Page::show('views/invalidEmail.php');
+			$_SESSION['auth-data']['change-status'] = Message::$invalidEmail;
 		}
-		Auth::changeEmail($_POST['email'], $_SESSION['login']);
+		Auth::changeEmail($_POST['email'], $_SESSION['auth-data']['login']);
+		Route::redirect('/account');
 	}
 	
 	public static function changeLogin() {
@@ -70,35 +71,37 @@ class AuthController {
 			exit ;
 		}
 		if (!Validate::isValidLogin($_POST['login'])) {
-			Page::show('views/invalidLogin.php');
+			$_SESSION['auth-data']['change-status'] = Message::$invalidLogin;
 		}
-		Auth::changeLogin($_POST['login'], $_SESSION['login']);
-		$_SESSION['login'] = $_POST['login'];
+		Auth::changeLogin($_POST['login'], $_SESSION['auth-data']['login']);
+		$_SESSION['auth-data']['login'] = $_POST['login'];
+		Route::redirect('/account');
 	}
 
-	public static function displayChangePassword() {
-		if (isset($_SESSION['login']) && $_SESSION['login'] !== '') {
+	public static function showChangePassword() {
+		if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
 			Page::show('views/changePassword.php');
 		} else if ($_SERVER['REQUEST_METHOD'] === 'GET'
 			&& isset($_GET['login']) && $_GET['login'] !== ''
 			&& isset($_GET['hash']) && $_GET['hash'] !== '') {
-			$_SESSION['login'] = $_GET['login'];
+			$_SESSION['auth-data']['login'] = $_GET['login'];
 			Page::show('views/changePassword.php');
 		} else {
-			Route::redirect('/');
+			Route::redirect('/account');
 		}
 	}
 	
 	public static function changePassword() {
-		if (!isset($_SESSION['login']) || $_SESSION['login'] === '' ||
+		if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '' ||
 			!isset($_POST['password']) || $_POST['password'] === ''
 		|| !isset($_POST['submit']) || $_POST['submit'] !== 'Submit') {
 			exit ;
 		}
 		if (!Validate::isValidPassword($_POST['password'])) {
-			Page::show('views/invalidPassword.php');
+			$_SESSION['auth-data']['change-status'] = Message::$invalidPassword;
 		}
-		Auth::changePassword(hash('whirlpool', $_POST['password']), $_SESSION['login']);
+		Auth::changePassword(hash('whirlpool', $_POST['password']), $_SESSION['auth-data']['login']);
+		Route::redirect('/account');
 	}
 	
 	public static function sendResetLink() {
@@ -107,7 +110,7 @@ class AuthController {
 			exit ;
 		}
 		if (Auth::sendResetLink($_POST['email']) === false) {
-			Page::show('views/invalidEmail.php');
+			$_SESSION['auth-data']['change-status'] = Message::$invalidEmail;
 		}
 	}
 }
