@@ -9,8 +9,8 @@
 		<header>
 			<div>Camagru Gallery</div>
 			<div>
-				<button id='signin-button'>Sign in</button>
-				<button id='reset-password-button'>Forgot password?</button>
+				<a id='signin-button' href='/signin'>Sign in</a>
+				<a id='reset-password-button' href='/forgotPassword'>Forgot password?</a>
 			</div>
 		</header>
 		<div id='main'>

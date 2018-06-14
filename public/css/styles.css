@@ -10,6 +10,12 @@ header {
 	color: white;
 }
 
+header a {
+	margin: 1vmin;
+	color: white;
+	text-decoration: none;
+}
+
 #gallery {
 	display: flex;
 	flex-wrap: wrap;
