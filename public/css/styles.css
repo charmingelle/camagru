@@ -12,25 +12,31 @@ header {
 
 #gallery {
 	display: flex;
-	justify-content: center;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-items: center;
 }
 
 .photo-container {
-	margin: 10px;
-	padding: 10px;
+	margin: 1vmin;
+	padding: 1vmin;
 	background-color: white;
+}
+
+.photo {
+	width: 50vmin;
 }
 
 .like-comment {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
-	margin: 10px;
+	margin: 1vmin;
 	color: #bbb;
 }
 
 .like {
-	margin-right: 15px;
+	margin-right: 1.5vmin;
 }
 
 footer {

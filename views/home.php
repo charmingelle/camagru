@@ -10,7 +10,7 @@
 			<div>Camagru Gallery</div>
 			<div>
 				<button id='signin-button'>Sign in</button>
-				<button id='reset-password-button'>Reset password?</button>
+				<button id='reset-password-button'>Forgot password?</button>
 			</div>
 		</header>
 		<div id='main'>

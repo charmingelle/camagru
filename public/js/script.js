@@ -17,7 +17,7 @@ const appendImg = (sources) => {
 		like.innerHTML = source['likes'];
 		like.classList.add('like');
 		commentIcon.innerHTML = '<i class="fa fa-comment"></i>';
-		comment.innerHTML = '1';
+		comment.innerHTML = source['comments'];
 		comment.classList.add('comment');
 		likeComment.classList.add('like-comment');
 
