@@ -1,5 +1,6 @@
 let video = document.getElementById('account-video');
-let output = document.getElementById('output');
+let preview = document.getElementById('preview');
+let stickersContainer = document.getElementById('account-stickers');
 
 if (navigator.mediaDevices.getUserMedia) {
 	navigator.mediaDevices.getUserMedia({video: true})
@@ -20,5 +21,26 @@ document.getElementById('capture').addEventListener('click', () => {
 	canvas.height = video.videoHeight * scale;
 	canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 	img.src = canvas.toDataURL();
-	output.appendChild(img);
+	preview.appendChild(img);
+});
+
+const appendImg = (sources) => {
+	const images = sources.map(source => {
+		let image = document.createElement('img');
+		
+		image.src = source['url'];
+		image.classList.add('sticker');
+		return image;
+	});
+
+	stickersContainer.append(...images);
+}
+
+fetch('/stickers', {method: 'POST'})
+.then(response => response.json())
+.then(appendImg)
+.catch(error => console.log(error.message));
+
+stickersContainer.addEventListener('click', (event) => {
+	console.log(event.target.src);
 });

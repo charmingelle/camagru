@@ -31,3 +31,5 @@ Route::post('/forgotPassword', 'AuthController@sendResetLink');
 Route::post('/photos', 'DataController@getPhotos');
 
 Route::get('/account', 'SiteMapController@showAccount');
+
+Route::post('/stickers', 'DataController@getStickers');

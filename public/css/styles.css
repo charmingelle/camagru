@@ -62,16 +62,27 @@ footer {
 #account-video-container {
 	margin: 0px auto;
 	width: 500px;
-	height: 375px;
+	height: 500px;
 	border: 10px #333 solid;
 }
 
 #account-video {
 	width: 500px;
-	height: 375px;
+	height: 500px;
 	background-color: #666;
 }
 
 #account-aside {
 	width: 20%;
+}
+
+.sticker {
+	width: 500px;
+	height: 500px;
+}
+
+#preview {
+	width: 500px;
+	height: 500px;
+	border: 1px solid black;
 }

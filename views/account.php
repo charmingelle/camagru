@@ -19,8 +19,9 @@
 						Your browser does not support the video tag.
 					</video>
 				</div>
+				<div id='account-stickers'></div>
 				<button id='capture'>Take a picture</button>
-				<div id='output'></div>
+				<div id='preview'></div>
 			</main>
 			<aside id='account-aside'>
 				<?php
