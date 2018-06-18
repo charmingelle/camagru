@@ -1,4 +1,4 @@
-<!DOCTYOE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Camagru</title>
@@ -12,8 +12,8 @@
 				<?php
 					if (isset($_SESSION['auth-data']['login'])) {
 						echo
-							"<a id='signout-button' href='/signout'>Sign out</a>" .
-							"<a id='my-account-button' href='/account'>My account</a>";
+							"<a id='my-account-button' href='/account'>My account</a>" .
+							"<a id='signout-button' href='/signout'>Sign out</a>";
 						} else {
 							echo 
 								"<a id='signin-button' href='/signin'>Sign in</a>" .
@@ -23,10 +23,10 @@
 				?>
 			</div>
 		</header>
-		<div id='main'>
+		<main>
 			<div id='gallery'></div>
-		</div>
+		</main>
 		<footer>@ grevenko 2018</footer>
 	</body>
-	<script src='js/script.js'></script>
+	<script src='js/home.js'></script>
 </html>
