@@ -9,8 +9,18 @@
 		<header>
 			<div>Camagru Gallery</div>
 			<div>
-				<a id='signin-button' href='/signin'>Sign in</a>
-				<a id='reset-password-button' href='/forgotPassword'>Forgot password?</a>
+				<?php
+					if (isset($_SESSION['auth-data']['login'])) {
+						echo
+							"<a id='signout-button' href='/signout'>Sign out</a>" .
+							"<a id='my-account-button' href='/account'>My account</a>";
+						} else {
+							echo 
+								"<a id='signin-button' href='/signin'>Sign in</a>" .
+								"<a id='signup-button' href='/signup'>Sign up</a>" .
+								"<a id='reset-password-button' href='/forgotPassword'>Forgot password?</a>";
+						}
+				?>
 			</div>
 		</header>
 		<div id='main'>
