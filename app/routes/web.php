@@ -33,3 +33,5 @@ Route::post('/photos', 'DataController@getPhotos');
 Route::get('/account', 'SiteMapController@showAccount');
 
 Route::post('/stickers', 'DataController@getStickers');
+
+Route::post('/save-picture', 'DataController@savePicture');

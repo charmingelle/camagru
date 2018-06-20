@@ -14,14 +14,18 @@
 		</header>
 		<div id='account-content'>
 			<main id='account-main'>
-				<div id='account-video-container'>
-					<video autoplay='true' id='account-video'>
-						Your browser does not support the video tag.
-					</video>
+				<div id='account-photo-section'>
+					<div id='account-video-container'>
+						<video autoplay='true' id='account-video'>
+							Your browser does not support the video tag.
+						</video>
+					</div>
+					<div id='preview'></div>
+					<button id='account-capture-button'>Take a picture</button>
+					<button id='account-save-button'>Save a picture</button>
 				</div>
+				<h1 id='account-stickers-h1'>Stickers</h1>
 				<div id='account-stickers'></div>
-				<button id='capture'>Take a picture</button>
-				<div id='preview'></div>
 			</main>
 			<aside id='account-aside'>
 				<?php

@@ -53,36 +53,71 @@ footer {
 #account-content {
 	display: flex;
 	flex-direction: row;
+	padding: 1vmin;
 }
 
 #account-main {
 	width: 80%;
 }
 
+#account-photo-section {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
 #account-video-container {
-	margin: 0px auto;
-	width: 500px;
-	height: 500px;
-	border: 10px #333 solid;
+	width: 50vmin;
+	height: 50vmin;
+	margin: 1vmin;
+	border: 1px solid black;
 }
 
 #account-video {
-	width: 500px;
-	height: 500px;
+	width: 50vmin;
+	height: 50vmin;
 	background-color: #666;
+}
+
+#preview {
+	display: flex;
+    align-items: center;
+	width: 50vmin;
+	height: 50vmin;
+	margin: 1vmin;
+	border: 1px solid black;
+}
+
+#account-capture-button {
+	margin: 1vmin;
 }
 
 #account-aside {
 	width: 20%;
+	padding: 1vmin;
+	border-left: 1px solid black;
+}
+
+#account-stickers-h1 {
+	text-align: center;
+}
+
+#account-stickers {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 
 .sticker {
-	width: 500px;
-	height: 500px;
+	width: 25vmin;
+	height: 25vmin;
+	margin: 1vmin;
 }
 
-#preview {
-	width: 500px;
-	height: 500px;
-	border: 1px solid black;
+#sticked {
+	position: sticky;
+	width: 50vmin;
+	height: 50vmin;
+	top: 0;
+	left: 0;
 }
