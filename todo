@@ -14,12 +14,5 @@ TODO
 - find out what to do with image size
 - for now I save user images in database. Is there a way to do this better?
 + find out why SESSION is empty
-- set up php debugger
-
-HOME
-Sign in
-Forgot password?
-
-HOME (logged in)
-Sign out
-Account
+- add pictures taken by user to side section of his account
+- add if method to Route for authentication, rights check (see web.php)

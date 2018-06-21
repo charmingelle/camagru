@@ -17,6 +17,7 @@ const vmin = v => {
 let video = document.getElementById('account-video');
 let preview = document.getElementById('preview');
 let stickersContainer = document.getElementById('account-stickers');
+let userPicturesContainer = document.getElementById('account-user-pictures');
 let scale = vmin(50);
 let canvas = document.createElement('canvas');
 let result = document.createElement('img');
@@ -42,7 +43,7 @@ document.getElementById('account-capture-button').addEventListener('click', () =
 	preview.appendChild(result);
 });
 
-const appendImg = (sources) => {
+const appendSticker = sources => {
 	const images = sources.map(source => {
 		let image = document.createElement('img');
 		
@@ -59,7 +60,27 @@ fetch('/stickers', {
 	credentials: 'include'
 })
 .then(response => response.json())
-.then(appendImg)
+.then(appendSticker)
+.catch(error => console.log(error.message));
+
+const appendUserPicture = sources => {
+	const images = sources.map(source => {
+		let image = document.createElement('img');
+		
+		image.src = source['url'];
+		image.classList.add('user-picture');
+		return image;
+	});
+
+	userPicturesContainer.append(...images);
+}
+
+fetch('/userPictures', {
+	method: 'POST',
+	credentials: 'include'
+})
+.then(response => response.json())
+.then(appendUserPicture)
 .catch(error => console.log(error.message));
 
 stickersContainer.addEventListener('click', event => {

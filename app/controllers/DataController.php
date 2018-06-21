@@ -19,4 +19,8 @@ class DataController {
 			Photos::savePhoto($source);
 		}
 	}
+
+	public static function getUserPictures() {
+		echo json_encode(Photos::getUserPictures());
+	}
 }

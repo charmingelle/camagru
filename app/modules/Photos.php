@@ -22,4 +22,9 @@ class Photos {
 		DBConnect::sendQuery('INSERT INTO `photo`(`url`, `likes`, `comments`, `login`) VALUES (:url, 0, 0, :login)',
 								['url' => $url, 'login' => $_SESSION['auth-data']['login']]);
 	}
+
+	public static function getUserPictures() {
+		return DBConnect::sendQuery('SELECT `url` FROM `photo` WHERE `login` = :login',
+			['login' => $_SESSION['auth-data']['login']])->fetchAll();
+	}
 }

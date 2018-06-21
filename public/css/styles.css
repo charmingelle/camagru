@@ -112,6 +112,12 @@ footer {
 	flex-wrap: wrap;
 }
 
+#account-user-pictures {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+
 .sticker {
 	width: 25vmin;
 	height: 25vmin;

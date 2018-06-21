@@ -34,6 +34,7 @@
 					require_once(getRoot() . 'views/changeLogin.php');
 					require_once(getRoot() . 'views/changePassword.php');	
 				?>
+				<div id='account-user-pictures'></div>
 			</aside>
 		</div>
 		<footer>@ grevenko 2018</footer>

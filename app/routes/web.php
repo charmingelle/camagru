@@ -35,3 +35,7 @@ Route::get('/account', 'SiteMapController@showAccount');
 Route::post('/stickers', 'DataController@getStickers');
 
 Route::post('/save-picture', 'DataController@savePicture');
+
+Route::post('/userPictures', 'DataController@getUserPictures');
+
+// Route::post('/userPictures', 'DataController@getUserPictures')->if(User,authentificated);

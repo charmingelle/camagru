@@ -38,5 +38,3 @@ fetch('/photos', {
 .then(response => response.json())
 .then(appendImg)
 .catch(error => console.log(error.message));
-// .then(response => response.json())
-// .then(data => console.log(data));
