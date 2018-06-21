@@ -21,4 +21,14 @@ class DBConnect {
 		}
 		return $pdo_statement;
 	}
+
+	static function	success(PDOStatement $pdo)
+	{
+		$info = $pdo->errorInfo();
+		if ($info[0] == "00000") {
+			return (true);
+		} else {
+			return ($info[2]);
+		}
+	}
 }

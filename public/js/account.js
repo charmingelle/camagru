@@ -54,7 +54,10 @@ const appendImg = (sources) => {
 	stickersContainer.append(...images);
 }
 
-fetch('/stickers', {method: 'POST'})
+fetch('/stickers', {
+	method: 'POST',
+	credentials: 'include'
+})
 .then(response => response.json())
 .then(appendImg)
 .catch(error => console.log(error.message));
@@ -71,21 +74,11 @@ stickersContainer.addEventListener('click', event => {
 document.getElementById('account-save-button').addEventListener('click', () => {
 	let picture = document.getElementById('result');
 
-	// if (picture) {
-	// 	fetch('/save-picture', {
-	// 		method: 'POST',
-	// 		body: picture.src
-	// 	})
-	// 	.then(response => console.log(response));
-	// }
-
 	if (picture) {
 		fetch('/save-picture', {
 			method: 'POST',
+			credentials: 'include',
 			body: picture.src
-		})
-		.then(response => response.json())
-		.then(data => console.log(data))
-		.catch(error => console.log(error.message));
+		});
 	}
 });

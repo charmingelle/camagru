@@ -13,12 +13,10 @@ class DataController {
 	}
 
 	public static function savePicture() {
-		echo json_encode($_SESSION);
-
-		// $source = file_get_contents('php://input');
-
-		// $accountId = Photos::savePhoto($source);
-		// error_log(print_r($accountId, true));
-		// echo json_encode($accountId);
+		$source = file_get_contents('php://input');
+		
+		if ($source !== FALSE) {
+			Photos::savePhoto($source);
+		}
 	}
 }

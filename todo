@@ -1,1 +1,25 @@
-- replace Page::show with Route::redirect
+TODO
+
++ add sign up button to home when the user isn't signed in
++ remove sing in, forgot password button from home when the user is signed in, replace it with sign out
+- add Sign Out button to any page where needed
++ add My Account button to home when the user is signed in
++ move change email, login, password function to My account
+- find out what to do for verification email to be send from local server
+- check if I can use isset to find out if the user is logged in
++ make Sign Out button to redirect you to Home, check if it works
+- rename all class files
+- make account page to be accessible for signed in users only
+- create account page layout
+- find out what to do with image size
+- for now I save user images in database. Is there a way to do this better?
++ find out why SESSION is empty
+- set up php debugger
+
+HOME
+Sign in
+Forgot password?
+
+HOME (logged in)
+Sign out
+Account

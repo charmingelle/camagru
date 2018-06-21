@@ -9,6 +9,7 @@
 		<header>
 			<div>My account</div>
 			<div>
+				<a id='home-button' href='/'>Home</a>
 				<a id='signout-button' href='/signout'>Sign out</a>
 			</div>
 		</header>

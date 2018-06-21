@@ -9,6 +9,7 @@ const appendImg = (sources) => {
 		let like = document.createElement('div');
 		let commentIcon = document.createElement('div');
 		let comment = document.createElement('div');
+		let login = document.createElement('div');
 		
 		imageContainer.classList.add('photo-container');
 		image.src = source['url'];
@@ -20,15 +21,22 @@ const appendImg = (sources) => {
 		comment.innerHTML = source['comments'];
 		comment.classList.add('comment');
 		likeComment.classList.add('like-comment');
+		login.innerHTML = source['login'];
+		login.classList.add('login');
 
-		likeComment.append(likeIcon, like, commentIcon, comment);
+		likeComment.append(likeIcon, like, commentIcon, comment, login);
 		imageContainer.append(image, likeComment);
 		return imageContainer;
 	});
 	gallery.append(...images);
 }
 
-fetch('/photos', {method: 'POST'})
+fetch('/photos', {
+	method: 'POST',
+	credentials: 'include'
+})
 .then(response => response.json())
 .then(appendImg)
 .catch(error => console.log(error.message));
+// .then(response => response.json())
+// .then(data => console.log(data));
