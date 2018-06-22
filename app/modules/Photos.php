@@ -24,7 +24,18 @@ class Photos {
 	}
 
 	public static function getUserPictures() {
-		return DBConnect::sendQuery('SELECT `url` FROM `photo` WHERE `login` = :login',
+		return DBConnect::sendQuery('SELECT `id`, `url` FROM `photo` WHERE `login` = :login',
 			['login' => $_SESSION['auth-data']['login']])->fetchAll();
+	}
+
+	public static function deleteUserPicture($id) {
+		$url = DBConnect::sendQuery('SELECT `url` FROM `photo` WHERE `id` = :id',
+							['id' => $id])->fetchAll();
+
+		if (!empty($url)) {
+			DBConnect::sendQuery('DELETE FROM `photo` WHERE `id` = :id',
+								['id' => $id]);
+			unlink(getRoot() . 'public/' . $url[0]['url']);
+		}
 	}
 }

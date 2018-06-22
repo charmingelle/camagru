@@ -26,17 +26,31 @@ const appendSticker = sources => {
 	stickersContainer.append(...images);
 }
 
+// picture removing is here
+
 const appendUserPicture = sources => {
 	const images = sources.map(source => {
 		let image = document.createElement('img');
 		
 		image.src = source['url'];
 		image.classList.add('user-picture');
+		image.addEventListener('click', () => {
+			fetch('/deleteUserPicture', {
+				method: 'POST',
+				credentials: 'include',
+				body: source['id']
+			})
+			.then(() => {
+				userPicturesContainer.removeChild(image);
+			})
+		});
 		return image;
 	});
 
 	userPicturesContainer.append(...images);
 }
+
+// picture removing is here
 
 const reloadUserPicture = () => {
 	while (userPicturesContainer.firstChild) {
@@ -79,7 +93,6 @@ document.getElementById('account-capture-button').addEventListener('click', () =
 	result.src = canvas.toDataURL();
 	preview.appendChild(result);
 });
-
 
 fetch('/stickers', {
 	method: 'POST',

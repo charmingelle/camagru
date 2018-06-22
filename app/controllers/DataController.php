@@ -23,4 +23,12 @@ class DataController {
 	public static function getUserPictures() {
 		echo json_encode(Photos::getUserPictures());
 	}
+
+	public static function deleteUserPicture() {
+		$id = file_get_contents('php://input');
+
+		if ($id !== FALSE) {
+			Photos::deleteUserPicture($id);
+		}
+	}
 }

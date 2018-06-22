@@ -38,6 +38,8 @@ Route::post(['uri' => '/save-picture', 'controller' => 'DataController@savePictu
 
 Route::post(['uri' => '/userPictures', 'controller' => 'DataController@getUserPictures', 'condition' => 'signed in']);
 
+Route::post(['uri' => '/deleteUserPicture', 'controller' => 'DataController@deleteUserPicture', 'condition' => 'signed in']);
+
 // Route::get('/', 'SiteMapController@showHome');
 
 // Route::get('/signup', 'AuthController@signup');
