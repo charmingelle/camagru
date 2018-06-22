@@ -8,6 +8,7 @@ TODO
 + make Sign Out button to redirect you to Home, check if it works
 + find out why SESSION is empty when request is sent though fetch
 + add pictures taken by user to side section of his account
++ add picture to user account when it is taken
 - add Sign Out button to any page where needed
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -16,3 +17,4 @@ TODO
 - find out what to do with image size
 - check if more Route conditions should be added to web.php
 - check how to make rediect if condition is set and it isn't true
+- add the ability for the user to delete photos

@@ -14,6 +14,43 @@ const vmin = v => {
 	return Math.min(vh(v), vw(v));
 }
 
+const appendSticker = sources => {
+	const images = sources.map(source => {
+		let image = document.createElement('img');
+		
+		image.src = source['url'];
+		image.classList.add('sticker');
+		return image;
+	});
+
+	stickersContainer.append(...images);
+}
+
+const appendUserPicture = sources => {
+	const images = sources.map(source => {
+		let image = document.createElement('img');
+		
+		image.src = source['url'];
+		image.classList.add('user-picture');
+		return image;
+	});
+
+	userPicturesContainer.append(...images);
+}
+
+const reloadUserPicture = () => {
+	while (userPicturesContainer.firstChild) {
+		userPicturesContainer.removeChild(userPicturesContainer.firstChild);
+	}
+	fetch('/userPictures', {
+		method: 'POST',
+		credentials: 'include'
+	})
+	.then(response => response.json())
+	.then(appendUserPicture)
+	.catch(error => console.log(error.message));
+}
+
 let video = document.getElementById('account-video');
 let preview = document.getElementById('preview');
 let stickersContainer = document.getElementById('account-stickers');
@@ -43,17 +80,6 @@ document.getElementById('account-capture-button').addEventListener('click', () =
 	preview.appendChild(result);
 });
 
-const appendSticker = sources => {
-	const images = sources.map(source => {
-		let image = document.createElement('img');
-		
-		image.src = source['url'];
-		image.classList.add('sticker');
-		return image;
-	});
-
-	stickersContainer.append(...images);
-}
 
 fetch('/stickers', {
 	method: 'POST',
@@ -63,25 +89,7 @@ fetch('/stickers', {
 .then(appendSticker)
 .catch(error => console.log(error.message));
 
-const appendUserPicture = sources => {
-	const images = sources.map(source => {
-		let image = document.createElement('img');
-		
-		image.src = source['url'];
-		image.classList.add('user-picture');
-		return image;
-	});
-
-	userPicturesContainer.append(...images);
-}
-
-fetch('/userPictures', {
-	method: 'POST',
-	credentials: 'include'
-})
-.then(response => response.json())
-.then(appendUserPicture)
-.catch(error => console.log(error.message));
+reloadUserPicture();
 
 stickersContainer.addEventListener('click', event => {
 	while (preview.firstChild) {
@@ -100,6 +108,7 @@ document.getElementById('account-save-button').addEventListener('click', () => {
 			method: 'POST',
 			credentials: 'include',
 			body: picture.src
-		});
+		})
+		.then(reloadUserPicture);
 	}
 });
