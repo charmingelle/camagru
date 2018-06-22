@@ -11,26 +11,26 @@ Route::get(['uri' => '/', 'controller' => 'SiteMapController@showHome']);
 Route::get(['uri' => '/signup', 'controller' => 'AuthController@signup']);
 Route::post(['uri' => '/signup', 'controller' => 'AuthController@sendVerification']);
 
-Route::get(['uri' => '/signin', 'controller' => 'SiteMapController@showSignin']);
+Route::get(['uri' => '/signin', 'controller' => 'SiteMapController@showSignin', 'condition' => 'not signed in']);
 Route::post(['uri' => '/signin', 'controller' => 'AuthController@signin']);
 
-Route::get(['uri' => '/signout', 'controller' => 'AuthController@signout']);
+Route::get(['uri' => '/signout', 'controller' => 'AuthController@signout', 'condition' => 'signed in']);
 
-Route::get(['uri' => '/changeEmail', 'controller' => 'SiteMapController@showChangeEmail']);
+Route::get(['uri' => '/changeEmail', 'controller' => 'SiteMapController@showChangeEmail', 'condition' => 'signed in']);
 Route::post(['uri' => '/changeEmail', 'controller' => 'AuthController@changeEmail']);
 
-Route::get(['uri' => '/changeLogin', 'controller' => 'SiteMapController@showChangeLogin']);
+Route::get(['uri' => '/changeLogin', 'controller' => 'SiteMapController@showChangeLogin', 'condition' => 'signed in']);
 Route::post(['uri' => '/changeLogin', 'controller' => 'AuthController@changeLogin']);
 
 Route::get(['uri' => '/changePassword', 'controller' => 'AuthController@showChangePassword']);
 Route::post(['uri' => '/changePassword', 'controller' => 'AuthController@changePassword']);
 
-Route::get(['uri' => '/forgotPassword', 'controller' => 'SiteMapController@showForgotPassword']);
+Route::get(['uri' => '/forgotPassword', 'controller' => 'SiteMapController@showForgotPassword', 'condition' => 'not signed in']);
 Route::post(['uri' => '/forgotPassword', 'controller' => 'AuthController@sendResetLink']);
 
 Route::post(['uri' => '/photos', 'controller' => 'DataController@getPhotos']);
 
-Route::get(['uri' => '/account', 'controller' => 'SiteMapController@showAccount']);
+Route::get(['uri' => '/account', 'controller' => 'SiteMapController@showAccount', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/stickers', 'controller' => 'DataController@getStickers']);
 

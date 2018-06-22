@@ -10,10 +10,18 @@ class Route {
 	}
 
 	private static function _isTrueCondition($condition) {
-		if ($condition === 'signed in'
-			&& isset($_SESSION['auth-data']['login'])
-			&& $_SESSION['auth-data']['login'] !== '') {
+		if ($condition === 'signed in') {
+			if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
 				return true;
+			} else {
+				return false;
+			}
+		} else if ($condition === 'not signed in') {
+			if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '') {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		return false;
 	}
