@@ -4,7 +4,7 @@ require_once(getRoot() . 'app/core/DBConnect.php');
 
 class Photos {
 	public static function getPhotos() {
-		$result = DBConnect::sendQuery('SELECT `url`, `likes`, `comments`, `login` FROM `photo`')->fetchAll();
+		$result = DBConnect::sendQuery('SELECT `id`, `url`, `likes`, `comments`, `login` FROM `photo`')->fetchAll();
 		
 		return $result;
 	}
@@ -37,5 +37,17 @@ class Photos {
 								['id' => $id]);
 			unlink(getRoot() . 'public/' . $url[0]['url']);
 		}
+	}
+
+	public static function likePicture($id) {
+		DBConnect::sendQuery('UPDATE `photo` SET `likes` = `likes` + 1 WHERE `id` = :id',
+							['id' => $id]);
+	}
+
+	public static function getLikes($id) {
+		$likes = DBConnect::sendQuery('SELECT `likes` FROM `photo` WHERE `id` = :id',
+										['id' => $id])->fetchAll();
+		
+		return ($likes[0]['likes']);
 	}
 }

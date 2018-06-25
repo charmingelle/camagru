@@ -1,18 +1,19 @@
 body {
-	background-color: #f4f4f4;
+	font-family: Georgia;
+	background-color: pink;
 }
 
 header {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	background-color: #333;
-	color: white;
 }
 
 header a {
 	margin: 1vmin;
-	color: white;
+	text-decoration: none;
+}
+header a:visited {
 	text-decoration: none;
 }
 
@@ -31,8 +32,6 @@ header a {
 
 .photo-container {
 	margin: 1vmin;
-	padding: 1vmin;
-	background-color: white;
 }
 
 .photo {
@@ -43,8 +42,13 @@ header a {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
-	margin: 1vmin;
-	color: #bbb;
+	padding: 1vmin;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.like-comment div {
+	margin: 0;
+	padding: 0;
 }
 
 .like {
@@ -53,11 +57,6 @@ header a {
 
 .comment {
 	margin-right: 1.5vmin;
-}
-
-footer {
-	background-color: white;
-	color: #999;
 }
 
 #account-content {

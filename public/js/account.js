@@ -15,39 +15,43 @@ const vmin = v => {
 }
 
 const appendSticker = sources => {
-	const images = sources.map(source => {
-		let image = document.createElement('img');
-		
-		image.src = source['url'];
-		image.classList.add('sticker');
-		return image;
-	});
-
-	stickersContainer.append(...images);
+	if (sources) {
+		const images = sources.map(source => {
+			let image = document.createElement('img');
+			
+			image.src = source['url'];
+			image.classList.add('sticker');
+			return image;
+		});
+	
+		stickersContainer.append(...images);
+	}
 }
 
 // picture removing is here
 
 const appendUserPicture = sources => {
-	const images = sources.map(source => {
-		let image = document.createElement('img');
-		
-		image.src = source['url'];
-		image.classList.add('user-picture');
-		image.addEventListener('click', () => {
-			fetch('/deleteUserPicture', {
-				method: 'POST',
-				credentials: 'include',
-				body: source['id']
-			})
-			.then(() => {
-				userPicturesContainer.removeChild(image);
-			})
+	if (sources) {
+		const images = sources.map(source => {
+			let image = document.createElement('img');
+			
+			image.src = source['url'];
+			image.classList.add('user-picture');
+			image.addEventListener('click', () => {
+				fetch('/deleteUserPicture', {
+					method: 'POST',
+					credentials: 'include',
+					body: source['id']
+				})
+				.then(() => {
+					userPicturesContainer.removeChild(image);
+				})
+			});
+			return image;
 		});
-		return image;
-	});
-
-	userPicturesContainer.append(...images);
+	
+		userPicturesContainer.append(...images);
+	}
 }
 
 // picture removing is here

@@ -31,4 +31,20 @@ class DataController {
 			Photos::deleteUserPicture($id);
 		}
 	}
+
+	public static function likePicture() {
+		$id = file_get_contents('php://input');
+
+		if ($id !== FALSE) {
+			Photos::likePicture($id);
+		}
+	}
+
+	public static function getLikes() {
+		$id = file_get_contents('php://input');
+		
+		if ($id !== FALSE) {
+			echo json_encode(Photos::getLikes($id));
+		}
+	}
 }

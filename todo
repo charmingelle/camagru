@@ -11,6 +11,7 @@ TODO
 + add picture to user account when it is taken
 + add the ability for the user to delete photos
 + move stickers from photo to separate folder
++ add sign in, sign up, forgot password forms to home page
 - add Sign Out button to any page where needed
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -19,4 +20,7 @@ TODO
 - find out what to do with image size
 - check if more Route conditions should be added to web.php
 - check how to make rediect if condition is set and it isn't true
-+ add sign in, sign up, forgot password forms to home page
+- commented 404 redirect from now; check what happens with it
+- add the ability to like and comment photos
+- replace names with "picture" with "photo"
+- add error messages to form section
