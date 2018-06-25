@@ -48,10 +48,13 @@ const appendImg = (sources) => {
 			like.classList.add('like');
 			commentIcon.innerHTML = '<i class="fa fa-comment"></i>';
 			commentIcon.addEventListener('click', () => {
-				fetch('/comment', {
+				fetch('/addComment', {
 					method: 'POST',
 					credentials: 'include',
-					body: source['id']
+					body: JSON.stringify({
+						'comment': 'Some comment',
+						'photo-id': source['id']
+					})
 				});
 			})
 			comment.innerHTML = source['comments'];

@@ -83,3 +83,5 @@ Route::post('/userPictures', 'DataController@getUserPictures');
 Route::post('/like', 'DataController@likePicture');
 
 Route::post('/getLikes', 'DataController@getLikes');
+
+Route::post('/addComment', 'DataController@addComment');

@@ -24,3 +24,6 @@ TODO
 - add the ability to like and comment photos
 - replace names with "picture" with "photo"
 - add error messages to form section
+- limit comment message on client (8000 bytes)
+- figure out how to count comments automatically after adding(, deleting)
+- create photo details view or change page design for all comments to be seen

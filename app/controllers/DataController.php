@@ -47,4 +47,13 @@ class DataController {
 			echo json_encode(Photos::getLikes($id));
 		}
 	}
+
+	public static function addComment() {
+		$data = file_get_contents('php://input');
+
+		if ($data !== FALSE) {
+			$data = json_decode($data, TRUE);
+			Photos::addComment($data['comment'], $data['photo-id']);
+		}
+	}
 }

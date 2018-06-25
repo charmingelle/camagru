@@ -50,4 +50,9 @@ class Photos {
 		
 		return ($likes[0]['likes']);
 	}
+
+	public static function addComment($comment, $photoId) {
+		DBConnect::sendQuery('INSERT INTO `comment`(`comment`, `photo_id`) VALUES (:comment, :photoId)',
+							['comment' => $comment, 'photoId' => $photoId]);
+	}
 }
