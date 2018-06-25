@@ -16,6 +16,12 @@ header a {
 	text-decoration: none;
 }
 
+#form-container {
+	display: flex;
+	justify-content: flex-end;
+	margin: 1vmin;
+}
+
 #gallery {
 	display: flex;
 	flex-wrap: wrap;

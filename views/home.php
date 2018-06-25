@@ -10,19 +10,22 @@
 			<div>Camagru Gallery</div>
 			<div>
 				<?php
+				?>
+				<?php
 					if (isset($_SESSION['auth-data']['login'])) {
-						echo
-							"<a id='my-account-button' href='/account'>My account</a>" .
-							"<a id='signout-button' href='/signout'>Sign out</a>";
-						} else {
-							echo 
-								"<a id='signin-button' href='/signin'>Sign in</a>" .
-								"<a id='signup-button' href='/signup'>Sign up</a>" .
-								"<a id='reset-password-button' href='/forgotPassword'>Forgot password?</a>";
-						}
+					echo
+						"<a id='my-account-button' href='/account'>My account</a>" .
+						"<a id='signout-button' href='/signout'>Sign out</a>";
+					} else {
+						echo 
+							"<button id='signin-button'>Sign in</button>" .
+							"<button id='signup-button'>Sign up</button>" .
+							"<button id='reset-password-button'>Forgot password?</button>";
+					}
 				?>
 			</div>
 		</header>
+		<div id='form-container'></div>
 		<main>
 			<div id='gallery'></div>
 		</main>
