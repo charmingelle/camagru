@@ -26,4 +26,8 @@ class SiteMapController {
 	public static function showAccount() {
 		Page::show('views/account.php');
 	}
+
+	public static function show404() {
+		Page::show('views/404.php');
+	}
 }

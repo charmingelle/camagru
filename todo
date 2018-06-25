@@ -19,4 +19,4 @@ TODO
 - find out what to do with image size
 - check if more Route conditions should be added to web.php
 - check how to make rediect if condition is set and it isn't true
-- add sign in, sign up, forgot password forms to home page
++ add sign in, sign up, forgot password forms to home page

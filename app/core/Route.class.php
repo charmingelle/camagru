@@ -1,5 +1,7 @@
 <?php
 
+require_once(getRoot() . 'app/controllers/SiteMapController.php');
+
 class Route {
 	private static function _getControllerName($controller_name_and_method) {
 		return explode('@', $controller_name_and_method)[0];
@@ -37,6 +39,8 @@ class Route {
 			}
 			if ($url === $params['uri']) {
 				return $controller_name::$controller_method();
+			} else {
+				SiteMapController::show404();
 			}
 		}
 	}
