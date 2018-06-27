@@ -78,8 +78,6 @@ Route::post('/save-picture', 'DataController@savePicture');
 
 Route::post('/userPictures', 'DataController@getUserPictures');
 
-Route::post('/userPictures', 'DataController@getUserPictures');
-
 Route::post('/like', 'DataController@likePicture');
 
 Route::post('/getLikes', 'DataController@getLikes');

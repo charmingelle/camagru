@@ -14,13 +14,14 @@ const appendImg = (sources) => {
 	if (sources) {
 		const images = sources.map(source => {
 			let imageContainer = document.createElement('div');
+			let login = document.createElement('div');
 			let image = document.createElement('img');
 			let likeComment = document.createElement('div');
 			let likeIcon = document.createElement('div');
 			let like = document.createElement('div');
 			let commentIcon = document.createElement('div');
 			let comment = document.createElement('div');
-			let login = document.createElement('div');
+			let addComment = document.createElement('input');
 			
 			imageContainer.classList.add('photo-container');
 			image.src = source['url'];
@@ -47,24 +48,33 @@ const appendImg = (sources) => {
 			like.innerHTML = source['likes'];
 			like.classList.add('like');
 			commentIcon.innerHTML = '<i class="fa fa-comment"></i>';
-			commentIcon.addEventListener('click', () => {
-				fetch('/addComment', {
-					method: 'POST',
-					credentials: 'include',
-					body: JSON.stringify({
-						'comment': 'Some comment',
-						'photo-id': source['id']
-					})
-				});
-			})
 			comment.innerHTML = source['comments'];
 			comment.classList.add('comment');
 			likeComment.classList.add('like-comment');
 			login.innerHTML = source['login'];
 			login.classList.add('login');
+			
+			addComment.type = 'text';
+			addComment.placeholder = 'Add a comment...';
+			addComment.addEventListener('keypress', (event) => {
+				let keycode = (event.keyCode ? event.keyCode : event.which);
+				
+				if (keycode == '13') {
+					if (addComment.value) {
+						fetch('/addComment', {
+							method: 'POST',
+							credentials: 'include',
+							body: JSON.stringify({
+								'comment': addComment.value,
+								'photo-id': source['id']
+							})
+						});
+					}
+				}
+			});
 	
-			likeComment.append(likeIcon, like, commentIcon, comment, login);
-			imageContainer.append(image, likeComment);
+			likeComment.append(likeIcon, like, commentIcon, comment);
+			imageContainer.append(login, image, likeComment, addComment);
 			return imageContainer;
 		});
 		gallery.append(...images);
