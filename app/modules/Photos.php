@@ -48,12 +48,22 @@ class Photos {
 		$likes = DBConnect::sendQuery('SELECT `likes` FROM `photo` WHERE `id` = :id',
 										['id' => $id])->fetchAll();
 		
-		return ($likes[0]['likes']);
+		return $likes[0]['likes'];
 	}
 
 	public static function addComment($comment, $photoId) {
 		DBConnect::sendQuery('INSERT INTO `comment`(`comment`, `photo_id`, `login`) VALUES (:comment, :photoId, :login)',
 							['comment' => $comment, 'photoId' => $photoId, 'login' => $_SESSION['auth-data']['login']]);
+	}
+
+	public static function increaseCommentCount($id) {
+		DBConnect::sendQuery('UPDATE `photo` SET `comments` = `comments` + 1 WHERE `id` = :id',
+							['id' => $id]);
+
+		$comments = DBConnect::sendQuery('SELECT `comments` FROM `photo` WHERE `id` = :id',
+									['id' => $id])->fetchAll();
+
+		return $comments[0]['comments'];
 	}
 
 	public static function getComments($id) {

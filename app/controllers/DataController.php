@@ -57,6 +57,14 @@ class DataController {
 		}
 	}
 
+	public static function increaseCommentCount() {
+		$id = file_get_contents('php://input');
+		
+		if ($id !== FALSE) {
+			echo json_encode(Photos::increaseCommentCount($id));
+		}
+	}
+
 	public static function getComments() {
 		$id = file_get_contents('php://input');
 		

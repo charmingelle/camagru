@@ -13,6 +13,7 @@ TODO
 + move stickers from photo to separate folder
 + add sign in, sign up, forgot password forms to home page
 + create photo details view or change page design for all comments to be seen
++ figure out how to count comments automatically after adding(, deleting)
 - add Sign Out button to any page where needed
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -26,4 +27,4 @@ TODO
 - replace names with "picture" with "photo"
 - add error messages to form section
 - limit comment message on client (8000 bytes)
-- figure out how to count comments automatically after adding(, deleting)
+- add the ability to delete comments (not mandatory)

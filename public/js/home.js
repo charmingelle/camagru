@@ -105,6 +105,15 @@ const appendImg = (sources) => {
 								'photo-id': source['id']
 							})
 						});
+						fetch('/increaseCommentCount', {
+							method: 'POST',
+							credentials: 'include',
+							body: source['id']
+						})
+						.then(response => response.json())
+						.then(commentAmount => {
+							comment.innerHTML = commentAmount;
+						});
 						addComment.value = '';
 						removeAllChildren(commentsContainer);
 						fillCommentsContainer(commentsContainer, source['id']);
