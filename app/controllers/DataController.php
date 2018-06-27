@@ -56,4 +56,12 @@ class DataController {
 			Photos::addComment($data['comment'], $data['photo-id']);
 		}
 	}
+
+	public static function getComments() {
+		$id = file_get_contents('php://input');
+		
+		if ($id !== FALSE) {
+			echo json_encode(Photos::getComments($id));
+		}
+	}
 }

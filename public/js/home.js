@@ -10,6 +10,38 @@ const removeAllChildren = (elem) => {
 	}
 }
 
+const fillCommentsContainer = (commentsContainer, photoId) => {
+	fetch('/getComments', {
+		method: 'POST',
+		credentials: 'include',
+		body: photoId
+	})
+	.then(response => response.json())
+	.then((comments) => {
+		if (comments) {
+			const commentDivs = comments.map(comment => {
+				let commentContainer = document.createElement('div');
+				let loginDiv = document.createElement('div');
+				let commentDiv = document.createElement('div');
+
+				commentContainer.classList.add('comment-container');
+				loginDiv.innerHTML = `${comment['login']}:`;
+				loginDiv.classList.add('login-div');
+				commentDiv.innerHTML = comment['comment'];
+				commentDiv.classList.add('comment-div');
+				commentContainer.append(loginDiv, commentDiv);
+				return commentContainer;
+			});
+			return commentDivs;
+		}
+	})
+	.then(commentDivs => {
+		if (commentDivs) {
+			commentsContainer.append(...commentDivs);
+		}
+	});
+}
+
 const appendImg = (sources) => {
 	if (sources) {
 		const images = sources.map(source => {
@@ -21,9 +53,12 @@ const appendImg = (sources) => {
 			let like = document.createElement('div');
 			let commentIcon = document.createElement('div');
 			let comment = document.createElement('div');
+			let commentsContainer = document.createElement('div');
 			let addComment = document.createElement('input');
 			
 			imageContainer.classList.add('photo-container');
+			login.innerHTML = source['login'];
+			login.classList.add('login');
 			image.src = source['url'];
 			image.classList.add('photo');
 			likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
@@ -51,9 +86,10 @@ const appendImg = (sources) => {
 			comment.innerHTML = source['comments'];
 			comment.classList.add('comment');
 			likeComment.classList.add('like-comment');
-			login.innerHTML = source['login'];
-			login.classList.add('login');
 			
+			commentsContainer.classList.add('comments');
+			fillCommentsContainer(commentsContainer, source['id']);
+
 			addComment.type = 'text';
 			addComment.placeholder = 'Add a comment...';
 			addComment.addEventListener('keypress', (event) => {
@@ -69,12 +105,15 @@ const appendImg = (sources) => {
 								'photo-id': source['id']
 							})
 						});
+						addComment.value = '';
+						removeAllChildren(commentsContainer);
+						fillCommentsContainer(commentsContainer, source['id']);
 					}
 				}
 			});
 	
 			likeComment.append(likeIcon, like, commentIcon, comment);
-			imageContainer.append(login, image, likeComment, addComment);
+			imageContainer.append(login, image, likeComment, commentsContainer, addComment);
 			return imageContainer;
 		});
 		gallery.append(...images);

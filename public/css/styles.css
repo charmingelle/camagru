@@ -54,6 +54,15 @@ header a:visited {
 	padding: 1vmin;
 }
 
+.comment-container {
+	display: flex;
+}
+
+.login-div {
+	font-weight: bold;
+	margin-right: 1vmin;
+}
+
 #account-main {
 	width: 80%;
 }

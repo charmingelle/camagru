@@ -52,7 +52,12 @@ class Photos {
 	}
 
 	public static function addComment($comment, $photoId) {
-		DBConnect::sendQuery('INSERT INTO `comment`(`comment`, `photo_id`) VALUES (:comment, :photoId)',
-							['comment' => $comment, 'photoId' => $photoId]);
+		DBConnect::sendQuery('INSERT INTO `comment`(`comment`, `photo_id`, `login`) VALUES (:comment, :photoId, :login)',
+							['comment' => $comment, 'photoId' => $photoId, 'login' => $_SESSION['auth-data']['login']]);
+	}
+
+	public static function getComments($id) {
+		return DBConnect::sendQuery('SELECT `login`, `comment` FROM `comment` WHERE `photo_id` = :photoId',
+									['photoId' => $id])->fetchAll();
 	}
 }
