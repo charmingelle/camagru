@@ -121,7 +121,7 @@ document.getElementById('account-save-button').addEventListener('click', () => {
 	let picture = document.getElementById('result');
 
 	if (picture) {
-		fetch('/save-picture', {
+		fetch('/savePicture', {
 			method: 'POST',
 			credentials: 'include',
 			body: picture.src

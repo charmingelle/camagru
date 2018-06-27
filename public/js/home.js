@@ -92,6 +92,7 @@ const appendImg = (sources) => {
 
 			addComment.type = 'text';
 			addComment.placeholder = 'Add a comment...';
+			addComment.maxLength = '8000';
 			addComment.addEventListener('keypress', (event) => {
 				let keycode = (event.keyCode ? event.keyCode : event.which);
 				

@@ -74,9 +74,11 @@ Route::get('/account', 'SiteMapController@showAccount');
 
 Route::post('/stickers', 'DataController@getStickers');
 
-Route::post('/save-picture', 'DataController@savePicture');
+Route::post('/savePicture', 'DataController@savePicture');
 
 Route::post('/userPictures', 'DataController@getUserPictures');
+
+Route::post('/deleteUserPicture', 'DataController@deleteUserPicture');
 
 Route::post('/like', 'DataController@likePicture');
 

@@ -13,6 +13,7 @@ class DataController {
 	}
 
 	public static function savePicture() {
+		echo json_encode("here");
 		$source = file_get_contents('php://input');
 		
 		if ($source !== FALSE) {
