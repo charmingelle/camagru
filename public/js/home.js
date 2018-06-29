@@ -42,6 +42,18 @@ const fillCommentsContainer = (commentsContainer, photoId) => {
 	});
 }
 
+const isSignedIn = () => {
+	fetch('/isSignedIn', {
+		method: 'POST',
+		credentials: 'include'
+	})
+	.then(response => response.json())
+	.then(data => data);
+}
+
+let signedIn = isSignedIn();
+console.log(`signedIn = ${signedIn}`);
+
 const appendImg = (sources) => {
 	if (sources) {
 		const images = sources.map(source => {
@@ -91,36 +103,41 @@ const appendImg = (sources) => {
 			fillCommentsContainer(commentsContainer, source['id']);
 
 			addComment.type = 'text';
-			addComment.placeholder = 'Add a comment...';
-			addComment.maxLength = '8000';
-			addComment.addEventListener('keypress', (event) => {
-				let keycode = (event.keyCode ? event.keyCode : event.which);
-				
-				if (keycode == '13') {
-					if (addComment.value) {
-						fetch('/addComment', {
-							method: 'POST',
-							credentials: 'include',
-							body: JSON.stringify({
-								'comment': addComment.value,
-								'photo-id': source['id']
+			if (isSignedIn()) {
+				addComment.placeholder = 'Add a comment...';
+				addComment.maxLength = '8000';
+				addComment.addEventListener('keypress', (event) => {
+					let keycode = (event.keyCode ? event.keyCode : event.which);
+					
+					if (keycode == '13') {
+						if (addComment.value) {
+							fetch('/addComment', {
+								method: 'POST',
+								credentials: 'include',
+								body: JSON.stringify({
+									'comment': addComment.value,
+									'photo-id': source['id']
+								})
+							});
+							fetch('/increaseCommentCount', {
+								method: 'POST',
+								credentials: 'include',
+								body: source['id']
 							})
-						});
-						fetch('/increaseCommentCount', {
-							method: 'POST',
-							credentials: 'include',
-							body: source['id']
-						})
-						.then(response => response.json())
-						.then(commentAmount => {
-							comment.innerHTML = commentAmount;
-						});
-						addComment.value = '';
-						removeAllChildren(commentsContainer);
-						fillCommentsContainer(commentsContainer, source['id']);
+							.then(response => response.json())
+							.then(commentAmount => {
+								comment.innerHTML = commentAmount;
+							});
+							addComment.value = '';
+							removeAllChildren(commentsContainer);
+							fillCommentsContainer(commentsContainer, source['id']);
+						}
 					}
-				}
-			});
+				});
+			} else {
+				addComment.placeholder = 'Sign in to add a comment';
+				addComment.disabled = 'disabled';
+			}
 	
 			likeComment.append(likeIcon, like, commentIcon, comment);
 			imageContainer.append(login, image, likeComment, commentsContainer, addComment);

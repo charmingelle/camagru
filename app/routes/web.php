@@ -89,3 +89,5 @@ Route::post('/addComment', 'DataController@addComment');
 Route::post('/increaseCommentCount', 'DataController@increaseCommentCount');
 
 Route::post('/getComments', 'DataController@getComments');
+
+Route::post('/isSignedIn', 'AuthController@isSignedIn');

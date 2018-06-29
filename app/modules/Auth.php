@@ -86,4 +86,9 @@ class Auth {
 		mail($email, 'Reset your Camagru website password', $message, 'From:noreply@camagru.com\r\n');
 		return true;
 	}
+	
+	public static function isSignedIn() {
+		return isset($_SESSION['auth-data']['login'])
+				&& $_SESSION['auth-data']['login'] !== '';
+	}
 }

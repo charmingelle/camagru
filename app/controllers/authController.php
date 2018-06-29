@@ -113,4 +113,8 @@ class AuthController {
 			$_SESSION['auth-data']['change-status'] = Message::$invalidEmail;
 		}
 	}
+	
+	public static function isSignedIn() {
+		echo json_encode(Auth::isSignedIn());
+	}
 }

@@ -28,3 +28,4 @@ TODO
 - replace names with "picture" with "photo"
 - add error messages to form section
 - add the ability to delete comments (not mandatory)
+- replace add comment input with the message "Sign in to leave a comment"
