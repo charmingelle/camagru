@@ -8,22 +8,7 @@
 	<body>
 		<header>
 			<div>Camagru Gallery</div>
-			<div>
-				<?php
-				?>
-				<?php
-					if (isset($_SESSION['auth-data']['login'])) {
-					echo
-						"<a id='my-account-button' href='/account'>My account</a>" .
-						"<a id='signout-button' href='/signout'>Sign out</a>";
-					} else {
-						echo 
-							"<button id='signin-button'>Sign in</button>" .
-							"<button id='signup-button'>Sign up</button>" .
-							"<button id='reset-password-button'>Forgot password?</button>";
-					}
-				?>
-			</div>
+			<div id='header-buttons-div'></div>
 		</header>
 		<div id='form-container'></div>
 		<main>
