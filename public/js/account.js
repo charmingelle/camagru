@@ -62,26 +62,32 @@ class Account {
 		}
 	}
 
-	deleteUserPicture(id, image) {
-		fetch('/deleteUserPicture', {
-			method: 'POST',
-			credentials: 'include',
-			body: id
-		})
-		.then(() => {
-			this.userPicturesContainer.removeChild(image);
-		});
+	deleteUserPicture(id, imageContainer) {
+		if (confirm("Are you sure you would like to delete a picture?")) {
+			fetch('/deleteUserPicture', {
+				method: 'POST',
+				credentials: 'include',
+				body: id
+			})
+			.then(() => {
+				this.userPicturesContainer.removeChild(imageContainer);
+			});
+		}
 	}
 	
 	appendUserPicture(sources) {
 		if (sources) {
 			const images = sources.map(source => {
+				let imageContainer = document.createElement('div');
 				let image = document.createElement('img');
+				let deleteButton = document.createElement('button');
 				
 				image.src = source['url'];
 				image.classList.add('user-picture');
-				image.addEventListener('click', this.deleteUserPicture.bind(this, source['id'], image));
-				return image;
+				deleteButton.innerHTML = 'Delete';
+				deleteButton.addEventListener('click', this.deleteUserPicture.bind(this, source['id'], imageContainer));
+				imageContainer.append(image, deleteButton);
+				return imageContainer;
 			});
 		
 			this.userPicturesContainer.append(...images);
