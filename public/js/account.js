@@ -130,10 +130,12 @@ class Account {
 	}
 
 	addSticker(event) {
-		this.removeAllChildren(this.preview);
-		this.canvas.getContext('2d').drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
-		this.result.src = this.canvas.toDataURL();
-		this.preview.appendChild(this.result);
+		if (event.target.src) {
+			this.removeAllChildren(this.preview);
+			this.canvas.getContext('2d').drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
+			this.result.src = this.canvas.toDataURL();
+			this.preview.appendChild(this.result);
+		}
 	}
 
 	savePicture() {
