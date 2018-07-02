@@ -73,6 +73,12 @@ header a:visited {
 	justify-content: center;
 }
 
+#account-photo-buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 #account-video-container {
 	width: 50vmin;
 	height: 50vmin;
@@ -92,6 +98,11 @@ header a:visited {
 	height: 50vmin;
 	margin: 1vmin;
 	border: 1px solid black;
+}
+
+.sticked-sticker {
+	width: 50vmin;
+	position: absolute;
 }
 
 #account-capture-button {

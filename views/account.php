@@ -22,7 +22,10 @@
 						</video>
 					</div>
 					<div id='preview'></div>
+				</div>
+				<div id='account-photo-buttons'>
 					<button id='account-capture-button'>Take a picture</button>
+					<button id='account-clear-button'>Clear</button>
 					<button id='account-save-button'>Save a picture</button>
 				</div>
 				<h1 id='account-stickers-h1'>Stickers</h1>
