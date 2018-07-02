@@ -116,8 +116,11 @@ header a:visited {
 
 #account-user-pictures {
 	display: flex;
-	justify-content: flex-start;
-	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+.user-picture {
+	width: 50vmin;
 }
 
 .sticker {
