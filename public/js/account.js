@@ -6,6 +6,7 @@ const W = 'w';
 const S = 's';
 const A = 'a';
 const D = 'd';
+const DELETE = 'Delete';
 
 class Account {
 	constructor() {
@@ -36,6 +37,7 @@ class Account {
 		this.clearPicture = this.clearPicture.bind(this);
 		this.changeSticker = this.changeSticker.bind(this);
 		this.keydownHandler = this.keydownHandler.bind(this);
+		this.addStickersToCanvas = this.addStickersToCanvas.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -148,6 +150,7 @@ class Account {
 	}
 
 	keydownHandler(event, sticker) {
+		console.log(event.key);
 		let currentLeft = parseInt(window.getComputedStyle(sticker).left);
 		let currentTop = parseInt(window.getComputedStyle(sticker).top);
 		let horizontalMoveLimit = this.preview.clientWidth - sticker.clientWidth;
@@ -171,6 +174,8 @@ class Account {
 			sticker.style.width = sticker.clientWidth - 1 + 'px';
 		} else if (event.key === D && sticker.clientWidth < horizontalSizeLimit) {
 			sticker.style.width = sticker.clientWidth + 1 + 'px';
+		} else if (event.key === DELETE) {
+			this.preview.removeChild(sticker);
 		}
 	}
 
@@ -191,19 +196,19 @@ class Account {
 
 			sticker.src = event.target.src;
 			sticker.classList.add('sticked-sticker');
+			this.preview.appendChild(sticker);
 			sticker.addEventListener('click', () => {
 			});
-			this.preview.appendChild(sticker);
 		}
 	}
 
-	savePicture() {
+	addStickersToCanvas() {
 		let stickers = this.preview.children;
-
+	
 		for (let sticker of stickers) {
 			if (sticker.src) {
 				let stickerStyle = window.getComputedStyle(sticker);
-
+	
 				this.canvas.getContext('2d').drawImage(sticker,
 														parseInt(stickerStyle.left),
 														parseInt(stickerStyle.top),
@@ -211,7 +216,10 @@ class Account {
 														parseInt(stickerStyle.height));
 			}
 		}
+	}
 
+	savePicture() {
+		this.addStickersToCanvas();
 		fetch('/savePicture', {
 			method: 'POST',
 			credentials: 'include',
