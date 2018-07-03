@@ -10,15 +10,13 @@ const DELETE = 'Delete';
 
 class Account {
 	constructor() {
+		this.container = document.getElementById('account-video-container');
 		this.video = document.getElementById('account-video');
-		this.preview = document.getElementById('preview');
 		this.stickersContainer = document.getElementById('account-stickers');
 		this.userPicturesContainer = document.getElementById('account-user-pictures');
 		this.scale = this.vmin(50);
 		this.canvas = document.createElement('canvas');
 		this.result = document.createElement('img');
-
-		this.result.id = 'result';
 
 		this.removeAllChildren = this.removeAllChildren.bind(this);
 		this.vh = this.vh.bind(this);
@@ -153,10 +151,10 @@ class Account {
 		console.log(event.key);
 		let currentLeft = parseInt(window.getComputedStyle(sticker).left);
 		let currentTop = parseInt(window.getComputedStyle(sticker).top);
-		let horizontalMoveLimit = this.preview.clientWidth - sticker.clientWidth;
-		let verticalMoveLimit = this.preview.clientHeight - sticker.clientHeight;
-		let horizontalSizeLimit = this.preview.clientWidth - currentLeft;
-		let verticalSizeLimit = this.preview.clientHeight - currentTop;
+		let horizontalMoveLimit = this.container.clientWidth - sticker.clientWidth;
+		let verticalMoveLimit = this.container.clientHeight - sticker.clientHeight;
+		let horizontalSizeLimit = this.container.clientWidth - currentLeft;
+		let verticalSizeLimit = this.container.clientHeight - currentTop;
 
 		if (event.key === LEFT && currentLeft > 0) {
 			sticker.style.left = currentLeft - 1 + 'px';
@@ -175,7 +173,7 @@ class Account {
 		} else if (event.key === D && sticker.clientWidth < horizontalSizeLimit) {
 			sticker.style.width = sticker.clientWidth + 1 + 'px';
 		} else if (event.key === DELETE) {
-			this.preview.removeChild(sticker);
+			this.container.removeChild(sticker);
 		}
 	}
 
@@ -196,9 +194,9 @@ class Account {
 
 			sticker.src = event.target.src;
 			sticker.classList.add('sticked-sticker');
-			this.preview.appendChild(sticker);
-			sticker.addEventListener('click', () => {
-			});
+			this.container.appendChild(sticker);
+
+			sticker.addEventListener('click', this.changeSticker);
 		}
 	}
 
@@ -239,9 +237,7 @@ class Account {
 		this.reloadUserPicture();
 		document.getElementById('account-capture-button').addEventListener('click', this.takePicture);
 		document.getElementById('account-clear-button').addEventListener('click', this.clearPicture);
-		document.getElementById('account-save-button').addEventListener('click', this.savePicture);
 		this.stickersContainer.addEventListener('click', this.addSticker);
-		this.preview.addEventListener('click', this.changeSticker);
 	}
 }
 

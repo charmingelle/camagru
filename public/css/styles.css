@@ -74,23 +74,18 @@ header a:visited {
 }
 
 #account-video-container {
+	position: relative;
+	overflow: hidden;
 	width: 50vmin;
-	/* height: 50vmin; */
+	height: 50vmin;
 	margin: 1vmin;
 	border: 1px solid black;
 }
 
 #account-video {
+	position: absolute;
 	width: 50vmin;
-	/* height: 50vmin; */
-}
-
-#preview {
-	position: relative;
-	width: 50vmin;
-	/* height: 50vmin; */
-	margin: 1vmin;
-	border: 1px solid black;
+	height: 50vmin;
 }
 
 .sticked-sticker {

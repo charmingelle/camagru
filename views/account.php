@@ -21,12 +21,10 @@
 							Your browser does not support the video tag.
 						</video>
 					</div>
-					<div id='preview'></div>
 				</div>
 				<div id='account-photo-buttons'>
 					<button id='account-capture-button'>Take a picture</button>
 					<button id='account-clear-button'>Clear</button>
-					<button id='account-save-button'>Save a picture</button>
 				</div>
 				<h1 id='account-stickers-h1'>Stickers</h1>
 				<div id='account-stickers'></div>
