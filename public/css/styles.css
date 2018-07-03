@@ -92,8 +92,9 @@ header a:visited {
 }
 
 #preview {
-	display: flex;
-    align-items: center;
+	/* display: flex;
+	align-items: center; */
+	position: relative;
 	width: 50vmin;
 	height: 50vmin;
 	margin: 1vmin;
@@ -103,7 +104,13 @@ header a:visited {
 .sticked-sticker {
 	width: 50vmin;
 	position: absolute;
+	left: 0;
+	right: 0;
 }
+
+/* .edited-sticker {
+	border: 1px solid black;
+} */
 
 #account-capture-button {
 	margin: 1vmin;

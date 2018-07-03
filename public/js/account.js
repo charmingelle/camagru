@@ -1,3 +1,12 @@
+const UP = 'ArrowUp';
+const DOWN = 'ArrowDown';
+const LEFT = 'ArrowLeft';
+const RIGHT = 'ArrowRight';
+const W = 'w';
+const S = 's';
+const A = 'a';
+const D = 'd';
+
 class Account {
 	constructor() {
 		this.video = document.getElementById('account-video');
@@ -25,8 +34,8 @@ class Account {
 		this.savePicture = this.savePicture.bind(this);
 		this.render = this.render.bind(this);
 		this.clearPicture = this.clearPicture.bind(this);
-		this.addDragAndDropListener = this.addDragAndDropListener.bind(this);
-		this.getCoords = this.getCoords.bind(this);
+		this.changeSticker = this.changeSticker.bind(this);
+		this.keydownHandler = this.keydownHandler.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -138,53 +147,52 @@ class Account {
 		.catch(error => console.log(error.message));
 	}
 
-	getCoords(elem) {
-		let box = elem.getBoundingClientRect();
+	keydownHandler(event, sticker) {
+		let currentLeft = parseInt(window.getComputedStyle(sticker).left);
+		let currentTop = parseInt(window.getComputedStyle(sticker).top);
+		let horizontalMoveLimit = this.preview.clientWidth - sticker.clientWidth;
+		let verticalMoveLimit = this.preview.clientHeight - sticker.clientHeight;
+		let horizontalSizeLimit = this.preview.clientWidth - currentLeft;
+		let verticalSizeLimit = this.preview.clientHeight - currentTop;
 
-		return {
-			top: box.top + pageYOffset,
-			left: box.left + pageXOffset
-		};
+		if (event.key === LEFT && currentLeft > 0) {
+			sticker.style.left = currentLeft - 1 + 'px';
+		} else if (event.key === RIGHT && currentLeft < horizontalMoveLimit) {
+			sticker.style.left = currentLeft + 1 + 'px';
+		} else if (event.key === UP && currentTop > 0) {
+			sticker.style.top = currentTop - 1 + 'px';
+		} else if (event.key === DOWN && currentTop < verticalMoveLimit) {
+			sticker.style.top = currentTop + 1 + 'px';
+		} else if (event.key === W && sticker.clientHeight > 0) {
+			sticker.style.height = sticker.clientHeight - 1 + 'px';
+		} else if (event.key === S && sticker.clientHeight < verticalSizeLimit) {
+			sticker.style.height = sticker.clientHeight + 1 + 'px';
+		} else if (event.key === A && sticker.clientWidth > 0) {
+			sticker.style.width = sticker.clientWidth - 1 + 'px';
+		} else if (event.key === D && sticker.clientWidth < horizontalSizeLimit) {
+			sticker.style.width = sticker.clientWidth + 1 + 'px';
+		}
 	}
 
-	addDragAndDropListener(elem) {
-		elem.addEventListener('mousedown', (event) => {
-			let coords = this.getCoords(elem);
-			let shiftX = event.pageX - coords.left;
-			let shiftY = event.pageY - coords.top;
-		
-			elem.style.position = 'absolute';
-			document.body.appendChild(elem);
-			elem.style.left = event.pageX - shiftX + 'px';
-			elem.style.top = event.pageY - shiftY + 'px';
-			elem.style.zIndex = 1000;
-		
-			document.onmousemove = (event) => {
-				elem.style.left = event.pageX - shiftX + 'px';
-				elem.style.top = event.pageY - shiftY + 'px';
+	changeSticker(clickEvent) {
+		if (clickEvent.target.src) {
+			let sticker = clickEvent.target;
+			const keydownHandlerCover = (keydownEvent) => {
+				this.keydownHandler(keydownEvent, sticker);
 			};
-		
-			elem.onmouseup = () => {
-				document.onmousemove = null;
-				elem.onmouseup = null;
-			};
-		});
-		
-		elem.ondragstart = () => {
-		  return false;
-		};
+
+			document.body.onkeydown = keydownHandlerCover;
+		}
 	}
 
 	addSticker(event) {
 		if (event.target.src) {
-			// this.removeAllChildren(this.preview);
-			// this.canvas.getContext('2d').drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
-			// this.result.src = this.canvas.toDataURL();
 			let sticker = document.createElement('img');
 
 			sticker.src = event.target.src;
 			sticker.classList.add('sticked-sticker');
-			this.addDragAndDropListener(sticker);
+			sticker.addEventListener('click', () => {
+			});
 			this.preview.appendChild(sticker);
 		}
 	}
@@ -214,6 +222,7 @@ class Account {
 		document.getElementById('account-clear-button').addEventListener('click', this.clearPicture);
 		document.getElementById('account-save-button').addEventListener('click', this.savePicture);
 		this.stickersContainer.addEventListener('click', this.addSticker);
+		this.preview.addEventListener('click', this.changeSticker);
 	}
 }
 

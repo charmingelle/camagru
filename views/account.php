@@ -16,11 +16,11 @@
 		<div id='account-content'>
 			<main id='account-main'>
 				<div id='account-photo-section'>
-					<div id='account-video-container'>
+					<!-- <div id='account-video-container'>
 						<video autoplay='true' id='account-video'>
 							Your browser does not support the video tag.
 						</video>
-					</div>
+					</div> -->
 					<div id='preview'></div>
 				</div>
 				<div id='account-photo-buttons'>

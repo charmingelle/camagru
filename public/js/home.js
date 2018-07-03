@@ -1,3 +1,5 @@
+const ENTER = '13';
+
 class Home {
 	constructor() {
 		this.gallery = document.getElementById('gallery');
@@ -65,7 +67,7 @@ class Home {
 		addComment.addEventListener('keypress', (event) => {
 			let keycode = (event.keyCode ? event.keyCode : event.which);
 			
-			if (keycode == '13') {
+			if (keycode === ENTER) {
 				if (addComment.value) {
 					fetch('/addComment', {
 						method: 'POST',
