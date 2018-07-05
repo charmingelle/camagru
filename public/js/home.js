@@ -22,13 +22,13 @@ class Home {
 		this.renderGallery = this.renderGallery.bind(this);
 		this.renderSignedInOrAnonymousPage = this.renderSignedInOrAnonymousPage.bind(this);
 	}
-	
+
 	removeAllChildren(elem) {
 		while (elem.firstChild) {
 			elem.removeChild(elem.firstChild);
 		}
 	}
-	
+
 	fillCommentsContainer(commentsContainer, photoId) {
 		fetch('/getComments', {
 			method: 'POST',
@@ -60,7 +60,7 @@ class Home {
 			}
 		});
 	}
-	
+
 	setSignedInAddComment(addComment, commentsContainer, photoId) {
 		addComment.placeholder = 'Add a comment...';
 		addComment.maxLength = '8000';

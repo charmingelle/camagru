@@ -17,6 +17,7 @@ TODO
 + limit comment message on client (8000 bytes)
 + add the ability to like and comment photos
 + replace add comment input with the message "Sign in to leave a comment"
++ get rid of preview element
 - add Sign Out button to any page where needed
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -30,4 +31,4 @@ TODO
 - add error messages to form section
 - add the ability to delete comments (not mandatory)
 - add sign in verification on server side when like or comment is added
-- get rid of preview element
+- find out if I can export, import without webpack

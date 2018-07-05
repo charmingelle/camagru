@@ -10,32 +10,28 @@ const DELETE = 'Delete';
 
 class Account {
 	constructor() {
-		this.container = document.getElementById('account-video-container');
+		this.videoContainer = document.getElementById('account-video-container');
 		this.video = document.getElementById('account-video');
 		this.stickersContainer = document.getElementById('account-stickers');
-		this.userPicturesContainer = document.getElementById('account-user-pictures');
+		this.photosContainer = document.getElementById('account-user-pictures');
 		this.scale = this.vmin(50);
-		this.canvas = document.createElement('canvas');
-		this.result = document.createElement('img');
 
 		this.removeAllChildren = this.removeAllChildren.bind(this);
 		this.vh = this.vh.bind(this);
 		this.vw = this.vw.bind(this);
 		this.vmin = this.vmin.bind(this);
-		this.appendSticker = this.appendSticker.bind(this);
-		this.deleteUserPicture = this.deleteUserPicture.bind(this);
-		this.appendUserPicture = this.appendUserPicture.bind(this);
-		this.reloadUserPicture = this.reloadUserPicture.bind(this);
+		this.renderSticker = this.renderSticker.bind(this);
+		this.deletePhoto = this.deletePhoto.bind(this);
+		this.renderPhoto = this.renderPhoto.bind(this);
+		this.renderPhotos = this.renderPhotos.bind(this);
 		this.renderCamera = this.renderCamera.bind(this);
-		this.takePicture = this.takePicture.bind(this);
+		this.savePhoto = this.savePhoto.bind(this);
 		this.renderStickers = this.renderStickers.bind(this);
-		this.addSticker = this.addSticker.bind(this);
-		this.savePicture = this.savePicture.bind(this);
+		this.renderStickedSticker = this.renderStickedSticker.bind(this);
 		this.render = this.render.bind(this);
-		this.clearPicture = this.clearPicture.bind(this);
+		this.clearPhoto = this.clearPhoto.bind(this);
 		this.changeSticker = this.changeSticker.bind(this);
 		this.keydownHandler = this.keydownHandler.bind(this);
-		this.addStickersToCanvas = this.addStickersToCanvas.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -60,7 +56,7 @@ class Account {
 		return Math.min(this.vh(v), this.vw(v));
 	}
 	
-	appendSticker(sources) {
+	renderSticker(sources) {
 		if (sources) {
 			const images = sources.map(source => {
 				let image = document.createElement('img');
@@ -74,7 +70,7 @@ class Account {
 		}
 	}
 
-	deleteUserPicture(id, imageContainer) {
+	deletePhoto(id, imageContainer) {
 		if (confirm("Are you sure you would like to delete a picture?")) {
 			fetch('/deleteUserPicture', {
 				method: 'POST',
@@ -82,12 +78,12 @@ class Account {
 				body: id
 			})
 			.then(() => {
-				this.userPicturesContainer.removeChild(imageContainer);
+				this.photosContainer.removeChild(imageContainer);
 			});
 		}
 	}
 
-	appendUserPicture(sources) {
+	renderPhoto(sources) {
 		if (sources) {
 			const images = sources.map(source => {
 				let imageContainer = document.createElement('div');
@@ -97,23 +93,23 @@ class Account {
 				image.src = source['url'];
 				image.classList.add('user-picture');
 				deleteButton.innerHTML = 'Delete';
-				deleteButton.addEventListener('click', this.deleteUserPicture.bind(this, source['id'], imageContainer));
+				deleteButton.addEventListener('click', this.deletePhoto.bind(this, source['id'], imageContainer));
 				imageContainer.append(image, deleteButton);
 				return imageContainer;
 			});
 		
-			this.userPicturesContainer.append(...images);
+			this.photosContainer.append(...images);
 		}
 	}
 	
-	reloadUserPicture() {
-		this.removeAllChildren(this.userPicturesContainer);
+	renderPhotos() {
+		this.removeAllChildren(this.photosContainer);
 		fetch('/userPictures', {
 			method: 'POST',
 			credentials: 'include'
 		})
 		.then(response => response.json())
-		.then(this.appendUserPicture)
+		.then(this.renderPhoto)
 		.catch(error => console.log(error.message));
 	}
 
@@ -123,18 +119,29 @@ class Account {
 			.then((stream) => {
 				this.video.srcObject = stream;
 			})
-			.catch((err0r) => {
+			.catch((error) => {
 				console.log('The camera cannot be used');
 			});
 		}
 	}
 
-	takePicture() {
-		this.canvas.width = this.scale;
-		this.canvas.height = (this.video.videoHeight * this.scale) / this.video.videoWidth;
-		this.canvas.getContext('2d').drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-		this.result.src = this.canvas.toDataURL();
-		this.preview.appendChild(this.result);
+	savePhoto() {
+		let canvas = document.createElement('canvas');
+
+		canvas.width = parseInt(getComputedStyle(this.videoContainer).width);
+		canvas.height = parseInt(getComputedStyle(this.videoContainer).height);
+		console.log(`canvas.width = ${canvas.width}, canvas.height = ${canvas.height}`);
+		for (let layer of this.videoContainer.children) {
+			let style = getComputedStyle(layer);
+
+			canvas.getContext('2d').drawImage(layer, parseInt(style.left), parseInt(style.top), parseInt(style.width), parseInt(style.height));
+		}
+		fetch('/savePicture', {
+			method: 'POST',
+			credentials: 'include',
+			body: canvas.toDataURL()
+		})
+		.then(this.renderPhotos);
 	}
 
 	renderStickers() {
@@ -143,37 +150,38 @@ class Account {
 			credentials: 'include'
 		})
 		.then(response => response.json())
-		.then(this.appendSticker)
+		.then(this.renderSticker)
 		.catch(error => console.log(error.message));
 	}
 
 	keydownHandler(event, sticker) {
-		console.log(event.key);
 		let currentLeft = parseInt(window.getComputedStyle(sticker).left);
 		let currentTop = parseInt(window.getComputedStyle(sticker).top);
-		let horizontalMoveLimit = this.container.clientWidth - sticker.clientWidth;
-		let verticalMoveLimit = this.container.clientHeight - sticker.clientHeight;
-		let horizontalSizeLimit = this.container.clientWidth - currentLeft;
-		let verticalSizeLimit = this.container.clientHeight - currentTop;
+		let horizontalMoveLimit = this.videoContainer.clientWidth - sticker.clientWidth;
+		let verticalMoveLimit = this.videoContainer.clientHeight - sticker.clientHeight;
+		let horizontalSizeLimit = this.videoContainer.clientWidth - currentLeft;
+		let verticalSizeLimit = this.videoContainer.clientHeight - currentTop;
 
 		if (event.key === LEFT && currentLeft > 0) {
-			sticker.style.left = currentLeft - 1 + 'px';
+			sticker.style.left = currentLeft - this.vmin(1) + 'px';
 		} else if (event.key === RIGHT && currentLeft < horizontalMoveLimit) {
-			sticker.style.left = currentLeft + 1 + 'px';
+			sticker.style.left = currentLeft + this.vmin(1) + 'px';
 		} else if (event.key === UP && currentTop > 0) {
-			sticker.style.top = currentTop - 1 + 'px';
+			sticker.style.top = currentTop - this.vmin(1) + 'px';
 		} else if (event.key === DOWN && currentTop < verticalMoveLimit) {
-			sticker.style.top = currentTop + 1 + 'px';
+			sticker.style.top = currentTop + this.vmin(1) + 'px';
 		} else if (event.key === W && sticker.clientHeight > 0) {
-			sticker.style.height = sticker.clientHeight - 1 + 'px';
+			sticker.style.height = sticker.clientHeight - this.vmin(1) + 'px';
+			// sticker.style.top = currentTop + this.vmin(1) / 2 + 'px';
 		} else if (event.key === S && sticker.clientHeight < verticalSizeLimit) {
-			sticker.style.height = sticker.clientHeight + 1 + 'px';
+			sticker.style.height = sticker.clientHeight + this.vmin(1) + 'px';
+			// sticker.style.top = currentTop - this.vmin(1) / 2 + 'px';
 		} else if (event.key === A && sticker.clientWidth > 0) {
-			sticker.style.width = sticker.clientWidth - 1 + 'px';
+			sticker.style.width = sticker.clientWidth - this.vmin(1) + 'px';
 		} else if (event.key === D && sticker.clientWidth < horizontalSizeLimit) {
-			sticker.style.width = sticker.clientWidth + 1 + 'px';
+			sticker.style.width = sticker.clientWidth + this.vmin(1) + 'px';
 		} else if (event.key === DELETE) {
-			this.container.removeChild(sticker);
+			this.videoContainer.removeChild(sticker);
 		}
 	}
 
@@ -188,56 +196,38 @@ class Account {
 		}
 	}
 
-	addSticker(event) {
+	renderStickedSticker(event) {
 		if (event.target.src) {
 			let sticker = document.createElement('img');
 
 			sticker.src = event.target.src;
 			sticker.classList.add('sticked-sticker');
-			this.container.appendChild(sticker);
+			this.videoContainer.appendChild(sticker);
 
 			sticker.addEventListener('click', this.changeSticker);
 		}
 	}
 
-	addStickersToCanvas() {
-		let stickers = this.preview.children;
-	
-		for (let sticker of stickers) {
-			if (sticker.src) {
-				let stickerStyle = window.getComputedStyle(sticker);
-	
-				this.canvas.getContext('2d').drawImage(sticker,
-														parseInt(stickerStyle.left),
-														parseInt(stickerStyle.top),
-														parseInt(stickerStyle.width),
-														parseInt(stickerStyle.height));
+	clearPhoto() {
+		let stickedStickers = [];
+		
+		for (let elem of this.videoContainer.children) {
+			if (elem.src) {
+				stickedStickers.push(elem);
 			}
 		}
-	}
-
-	savePicture() {
-		this.addStickersToCanvas();
-		fetch('/savePicture', {
-			method: 'POST',
-			credentials: 'include',
-			body: this.canvas.toDataURL()
-		})
-		.then(this.reloadUserPicture);
-	}
-
-	clearPicture() {
-		this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.removeAllChildren(this.preview);
+		stickedStickers.forEach((elem) => {
+			this.videoContainer.removeChild(elem);
+		});
 	}
 
 	render() {
 		this.renderCamera();
 		this.renderStickers();
-		this.reloadUserPicture();
-		document.getElementById('account-capture-button').addEventListener('click', this.takePicture);
-		document.getElementById('account-clear-button').addEventListener('click', this.clearPicture);
-		this.stickersContainer.addEventListener('click', this.addSticker);
+		this.renderPhotos();
+		document.getElementById('account-capture-button').addEventListener('click', this.savePhoto);
+		document.getElementById('account-clear-button').addEventListener('click', this.clearPhoto);
+		this.stickersContainer.addEventListener('click', this.renderStickedSticker);
 	}
 }
 

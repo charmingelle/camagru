@@ -76,16 +76,17 @@ header a:visited {
 #account-video-container {
 	position: relative;
 	overflow: hidden;
-	width: 50vmin;
-	height: 50vmin;
+	width: 80vmin;
+	height: 60vmin;
 	margin: 1vmin;
 	border: 1px solid black;
 }
 
 #account-video {
 	position: absolute;
-	width: 50vmin;
-	height: 50vmin;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .sticked-sticker {
