@@ -6,6 +6,8 @@ const W = 'w';
 const S = 's';
 const A = 'a';
 const D = 'd';
+const Q = 'q';
+const E = 'e';
 const DELETE = 'Delete';
 
 class Account {
@@ -16,22 +18,13 @@ class Account {
 		this.photosContainer = document.getElementById('account-user-pictures');
 		this.scale = this.vmin(50);
 
-		this.removeAllChildren = this.removeAllChildren.bind(this);
-		this.vh = this.vh.bind(this);
-		this.vw = this.vw.bind(this);
-		this.vmin = this.vmin.bind(this);
 		this.renderSticker = this.renderSticker.bind(this);
-		this.deletePhoto = this.deletePhoto.bind(this);
 		this.renderPhoto = this.renderPhoto.bind(this);
 		this.renderPhotos = this.renderPhotos.bind(this);
-		this.renderCamera = this.renderCamera.bind(this);
 		this.savePhoto = this.savePhoto.bind(this);
-		this.renderStickers = this.renderStickers.bind(this);
 		this.renderStickedSticker = this.renderStickedSticker.bind(this);
-		this.render = this.render.bind(this);
 		this.clearPhoto = this.clearPhoto.bind(this);
 		this.changeSticker = this.changeSticker.bind(this);
-		this.keydownHandler = this.keydownHandler.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -130,7 +123,6 @@ class Account {
 
 		canvas.width = parseInt(getComputedStyle(this.videoContainer).width);
 		canvas.height = parseInt(getComputedStyle(this.videoContainer).height);
-		console.log(`canvas.width = ${canvas.width}, canvas.height = ${canvas.height}`);
 		for (let layer of this.videoContainer.children) {
 			let style = getComputedStyle(layer);
 
@@ -154,32 +146,104 @@ class Account {
 		.catch(error => console.log(error.message));
 	}
 
+	stickerFits(sticker) {
+		let horizontalMoveLimit = this.videoContainer.clientWidth - sticker.width;
+		let verticalMoveLimit = this.videoContainer.clientHeight - sticker.height;
+		let horizontalSizeLimit = this.videoContainer.clientWidth - sticker.left;
+		let verticalSizeLimit = this.videoContainer.clientHeight - sticker.top;
+
+		
+		return sticker.left >= 0 && sticker.left <= horizontalMoveLimit
+				&& sticker.top >= 0 && sticker.top <= verticalMoveLimit
+				&& sticker.width >= 0 && sticker.width <= horizontalSizeLimit
+				&& sticker.height >= 0 && sticker.height <= verticalSizeLimit;
+	}
+
+	getChangedSticker(sticker, left = 0, top = 0, width = 0, height = 0) {
+		let stickerStyle = window.getComputedStyle(sticker);
+		
+		return {
+			'left': parseInt(stickerStyle.left) + left,
+			'top': parseInt(stickerStyle.top) + top,
+			'width': parseInt(stickerStyle.width) + width,
+			'height': parseInt(stickerStyle.height) + height
+		};
+	}
+
+	moveLeft(sticker, currentLeft, currentTop, shift) {
+		sticker.style.left = currentLeft - shift + 'px';
+	}
+
+	moveRight(sticker, currentLeft, currentTop, shift) {
+		sticker.style.left = currentLeft + shift + 'px';
+	}
+
+	moveUp(sticker, currentLeft, currentTop, shift) {
+		sticker.style.top = currentTop - shift + 'px';
+	}
+
+	moveDown(sticker, currentLeft, currentTop, shift) {
+		sticker.style.top = currentTop + shift + 'px';
+	}
+
+	makeShorter(sticker, currentLeft, currentTop, shift) {
+		sticker.style.top = currentTop + shift / 2 + 'px';
+		sticker.style.height = sticker.clientHeight - shift + 'px';
+	}
+
+	makeTaller(sticker, currentLeft, currentTop, shift) {
+		sticker.style.top = currentTop - shift / 2 + 'px';
+		sticker.style.height = sticker.clientHeight + shift + 'px';
+	}
+
+	makeThinner(sticker, currentLeft, currentTop, shift) {
+		sticker.style.left = currentLeft + shift / 2 + 'px';
+		sticker.style.width = sticker.clientWidth - shift + 'px';
+	}
+
+	makeThicker(sticker, currentLeft, currentTop, shift) {
+		sticker.style.left = currentLeft - shift / 2 + 'px';
+		sticker.style.width = sticker.clientWidth + shift + 'px';
+	}
+
+	makeSmaller(sticker, currentLeft, currentTop, shift) {
+		sticker.style.left = currentLeft + shift / 2 + 'px';
+		sticker.style.top = currentTop + shift / 2 + 'px';
+		sticker.style.width = sticker.clientWidth - shift + 'px';
+		sticker.style.height = sticker.clientHeight - shift + 'px';
+	}
+
+	makeBigger(sticker, currentLeft, currentTop, shift) {
+		sticker.style.left = currentLeft - shift / 2 + 'px';
+		sticker.style.top = currentTop - shift / 2 + 'px';
+		sticker.style.width = sticker.clientWidth + shift + 'px';
+		sticker.style.height = sticker.clientHeight + shift + 'px';
+	}
+
 	keydownHandler(event, sticker) {
 		let currentLeft = parseInt(window.getComputedStyle(sticker).left);
 		let currentTop = parseInt(window.getComputedStyle(sticker).top);
-		let horizontalMoveLimit = this.videoContainer.clientWidth - sticker.clientWidth;
-		let verticalMoveLimit = this.videoContainer.clientHeight - sticker.clientHeight;
-		let horizontalSizeLimit = this.videoContainer.clientWidth - currentLeft;
-		let verticalSizeLimit = this.videoContainer.clientHeight - currentTop;
+		let shift = this.vmin(1);
+		let keys = [LEFT, RIGHT, UP, DOWN, W, S, A, D, Q, E];
+		let changeArgs = [
+			[-shift],
+			[shift],
+			[0, -shift],
+			[0, shift],
+			[0, shift / 2, 0, -shift],
+			[0, -shift / 2, 0, shift],
+			[shift / 2, 0, -shift],
+			[-shift / 2, 0, shift],
+			[shift / 2, shift / 2, -shift, -shift],
+			[-shift / 2, -shift / 2, shift, shift]
+		];
+		let changeFunctions = [this.moveLeft, this.moveRight, this.moveUp, this.moveDown,
+								this.makeShorter, this.makeTaller, this.makeThinner, this.makeThicker,
+								this.makeSmaller, this.makeBigger];
+		let index = keys.indexOf(event.key);
 
-		if (event.key === LEFT && currentLeft > 0) {
-			sticker.style.left = currentLeft - this.vmin(1) + 'px';
-		} else if (event.key === RIGHT && currentLeft < horizontalMoveLimit) {
-			sticker.style.left = currentLeft + this.vmin(1) + 'px';
-		} else if (event.key === UP && currentTop > 0) {
-			sticker.style.top = currentTop - this.vmin(1) + 'px';
-		} else if (event.key === DOWN && currentTop < verticalMoveLimit) {
-			sticker.style.top = currentTop + this.vmin(1) + 'px';
-		} else if (event.key === W && sticker.clientHeight > 0) {
-			sticker.style.height = sticker.clientHeight - this.vmin(1) + 'px';
-			// sticker.style.top = currentTop + this.vmin(1) / 2 + 'px';
-		} else if (event.key === S && sticker.clientHeight < verticalSizeLimit) {
-			sticker.style.height = sticker.clientHeight + this.vmin(1) + 'px';
-			// sticker.style.top = currentTop - this.vmin(1) / 2 + 'px';
-		} else if (event.key === A && sticker.clientWidth > 0) {
-			sticker.style.width = sticker.clientWidth - this.vmin(1) + 'px';
-		} else if (event.key === D && sticker.clientWidth < horizontalSizeLimit) {
-			sticker.style.width = sticker.clientWidth + this.vmin(1) + 'px';
+		if (index != -1 && this.stickerFits(this.getChangedSticker(sticker, ...changeArgs[index]))) {
+			changeFunctions[index](sticker, currentLeft, currentTop, shift);
 		} else if (event.key === DELETE) {
 			this.videoContainer.removeChild(sticker);
 		}
