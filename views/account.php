@@ -23,7 +23,7 @@
 					</div>
 				</div>
 				<div id='account-photo-buttons'>
-					<button id='account-capture-button'>Take a picture</button>
+					<button id='account-capture-button' disabled>Take a picture</button>
 					<button id='account-clear-button'>Clear</button>
 				</div>
 				<h1 id='account-stickers-h1'>Stickers</h1>

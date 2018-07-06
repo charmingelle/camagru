@@ -16,6 +16,7 @@ class Account {
 		this.video = document.getElementById('account-video');
 		this.stickersContainer = document.getElementById('account-stickers');
 		this.photosContainer = document.getElementById('account-user-pictures');
+		this.captureButton = document.getElementById('account-capture-button');
 		this.scale = this.vmin(50);
 
 		this.renderSticker = this.renderSticker.bind(this);
@@ -220,6 +221,12 @@ class Account {
 		sticker.style.height = sticker.clientHeight + shift + 'px';
 	}
 
+	deleteStickedSticker(sticker) {
+		this.videoContainer.removeChild(sticker);
+		if (this.videoContainer.children.length === 1)
+			this.captureButton.disabled = 'disabled';
+	}
+
 	keydownHandler(event, sticker) {
 		let currentLeft = parseInt(window.getComputedStyle(sticker).left);
 		let currentTop = parseInt(window.getComputedStyle(sticker).top);
@@ -245,7 +252,7 @@ class Account {
 		if (index != -1 && this.stickerFits(this.getChangedSticker(sticker, ...changeArgs[index]))) {
 			changeFunctions[index](sticker, currentLeft, currentTop, shift);
 		} else if (event.key === DELETE) {
-			this.videoContainer.removeChild(sticker);
+			this.deleteStickedSticker(sticker);
 		}
 	}
 
@@ -253,6 +260,7 @@ class Account {
 		if (clickEvent.target.src) {
 			let sticker = clickEvent.target;
 			const keydownHandlerCover = (keydownEvent) => {
+				keydownEvent.preventDefault();
 				this.keydownHandler(keydownEvent, sticker);
 			};
 
@@ -269,6 +277,7 @@ class Account {
 			this.videoContainer.appendChild(sticker);
 
 			sticker.addEventListener('click', this.changeSticker);
+			this.captureButton.disabled = '';
 		}
 	}
 
@@ -289,7 +298,7 @@ class Account {
 		this.renderCamera();
 		this.renderStickers();
 		this.renderPhotos();
-		document.getElementById('account-capture-button').addEventListener('click', this.savePhoto);
+		this.captureButton.addEventListener('click', this.savePhoto);
 		document.getElementById('account-clear-button').addEventListener('click', this.clearPhoto);
 		this.stickersContainer.addEventListener('click', this.renderStickedSticker);
 	}

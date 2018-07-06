@@ -18,6 +18,7 @@ TODO
 + add the ability to like and comment photos
 + replace add comment input with the message "Sign in to leave a comment"
 + get rid of preview element
++ resolve the case with preventing scroll from scrolling when moving stickers
 - add Sign Out button to any page where needed
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -32,4 +33,3 @@ TODO
 - add the ability to delete comments (not mandatory)
 - add sign in verification on server side when like or comment is added
 - find out if I can export, import without webpack
-- resolve the case with preventing scroll from scrolling when moving stickers
