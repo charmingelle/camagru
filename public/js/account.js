@@ -54,13 +54,45 @@ class Account {
 		return Math.min(this.vh(v), this.vw(v));
 	}
 	
+	getCoords(elem) {
+		let box = elem.getBoundingClientRect();
+
+		return {
+			top: box.top + pageYOffset,
+			left: box.left + pageXOffset
+		};
+	}
+
 	renderSticker(sources) {
 		if (sources) {
 			const images = sources.map(source => {
 				let image = document.createElement('img');
+				let drag = false;
+				let imageCopy;
 				
 				image.src = source['url'];
 				image.classList.add('sticker');
+				image.onmousedown = () => {
+					imageCopy = document.createElement('img');
+					imageCopy.src = image.src;
+					imageCopy.classList.add('sticker');
+					document.body.appendChild(imageCopy);
+					imageCopy.style.position = 'absolute';
+					imageCopy.style.top = event.clientY + 'px';
+					imageCopy.style.left = event.clientX + 'px';
+					drag = true;
+				}
+
+				document.addEventListener("mousemove", (event) => {
+					if (drag) {
+						imageCopy.style.top = event.clientY + 'px';
+						imageCopy.style.left = event.clientX + 'px';
+					}
+				});
+
+				document.onmouseup = () => {
+					drag = false;
+				}
 				return image;
 			});
 		
