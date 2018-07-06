@@ -12,13 +12,15 @@ const DELETE = 'Delete';
 
 class Account {
 	constructor() {
-		this.videoContainer = document.getElementById('account-video-container');
-		this.video = document.getElementById('account-video');
+		this.container = document.getElementById('account-container');
 		this.stickersContainer = document.getElementById('account-stickers');
 		this.photosContainer = document.getElementById('account-user-pictures');
+		this.buttonBlock = document.getElementById('account-photo-buttons');
+		this.upload = document.getElementById('account-upload');
 		this.captureButton = document.getElementById('account-capture-button');
 		this.scale = this.vmin(50);
 
+		this.renderCamera = this.renderCamera.bind(this);
 		this.renderSticker = this.renderSticker.bind(this);
 		this.renderPhoto = this.renderPhoto.bind(this);
 		this.renderPhotos = this.renderPhotos.bind(this);
@@ -26,6 +28,8 @@ class Account {
 		this.renderStickedSticker = this.renderStickedSticker.bind(this);
 		this.clearPhoto = this.clearPhoto.bind(this);
 		this.changeSticker = this.changeSticker.bind(this);
+		this.uploadPhoto = this.uploadPhoto.bind(this);
+		this.backToCameraHandler = this.backToCameraHandler.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -111,10 +115,20 @@ class Account {
 		if (navigator.mediaDevices.getUserMedia) {
 			navigator.mediaDevices.getUserMedia({video: true})
 			.then((stream) => {
-				this.video.srcObject = stream;
+				let video = document.createElement('video');
+
+				video.id = 'account-video';
+				video.classList.add('sticker-base');
+				video.autoplay = 'true';
+				video.srcObject = stream;
+				this.container.insertBefore(video, this.container.firstChild);
 			})
 			.catch((error) => {
-				console.log('The camera cannot be used');
+				let errorMessage = document.createElement('p');
+				
+				errorMessage.innerHTML = 'Your camera cannot be used. Please upload a photo.';
+				errorMessage.id = 'account-video';
+				this.container.insertBefore(errorMessage, this.container.firstChild);
 			});
 		}
 	}
@@ -122,9 +136,9 @@ class Account {
 	savePhoto() {
 		let canvas = document.createElement('canvas');
 
-		canvas.width = parseInt(getComputedStyle(this.videoContainer).width);
-		canvas.height = parseInt(getComputedStyle(this.videoContainer).height);
-		for (let layer of this.videoContainer.children) {
+		canvas.width = parseInt(getComputedStyle(this.container).width);
+		canvas.height = parseInt(getComputedStyle(this.container).height);
+		for (let layer of this.container.children) {
 			let style = getComputedStyle(layer);
 
 			canvas.getContext('2d').drawImage(layer, parseInt(style.left), parseInt(style.top), parseInt(style.width), parseInt(style.height));
@@ -148,10 +162,10 @@ class Account {
 	}
 
 	stickerFits(sticker) {
-		let horizontalMoveLimit = this.videoContainer.clientWidth - sticker.width;
-		let verticalMoveLimit = this.videoContainer.clientHeight - sticker.height;
-		let horizontalSizeLimit = this.videoContainer.clientWidth - sticker.left;
-		let verticalSizeLimit = this.videoContainer.clientHeight - sticker.top;
+		let horizontalMoveLimit = this.container.clientWidth - sticker.width;
+		let verticalMoveLimit = this.container.clientHeight - sticker.height;
+		let horizontalSizeLimit = this.container.clientWidth - sticker.left;
+		let verticalSizeLimit = this.container.clientHeight - sticker.top;
 
 		
 		return sticker.left >= 0 && sticker.left <= horizontalMoveLimit
@@ -222,8 +236,8 @@ class Account {
 	}
 
 	deleteStickedSticker(sticker) {
-		this.videoContainer.removeChild(sticker);
-		if (this.videoContainer.children.length === 1)
+		this.container.removeChild(sticker);
+		if (this.container.children.length === 1)
 			this.captureButton.disabled = 'disabled';
 	}
 
@@ -269,12 +283,12 @@ class Account {
 	}
 
 	renderStickedSticker(event) {
-		if (event.target.src) {
+		if (event.target.src && document.getElementsByClassName('sticker-base')[0]) {
 			let sticker = document.createElement('img');
 
 			sticker.src = event.target.src;
 			sticker.classList.add('sticked-sticker');
-			this.videoContainer.appendChild(sticker);
+			this.container.appendChild(sticker);
 
 			sticker.addEventListener('click', this.changeSticker);
 			this.captureButton.disabled = '';
@@ -283,21 +297,61 @@ class Account {
 
 	clearPhoto() {
 		let stickedStickers = [];
-		
-		for (let elem of this.videoContainer.children) {
-			if (elem.src) {
+
+		for (let elem of this.container.children) {
+			if (elem.classList.contains('sticked-sticker')) {
 				stickedStickers.push(elem);
 			}
 		}
 		stickedStickers.forEach((elem) => {
-			this.videoContainer.removeChild(elem);
+			this.container.removeChild(elem);
 		});
+	}
+
+	uploadPhoto() {
+		let video = document.getElementById('account-video');
+		let uploadedImage = document.getElementById('uploaded-image');
+
+		if (video) {
+			this.container.removeChild(video);
+		}
+		if (uploadedImage) {
+			this.container.removeChild(uploadedImage);
+		}
+		uploadedImage = document.createElement('img');
+		uploadedImage.id = 'uploaded-image';
+		uploadedImage.classList.add('sticker-base');
+		uploadedImage.src = window.URL.createObjectURL(this.upload.files[0]);
+		this.container.insertBefore(uploadedImage, this.container.firstChild);
+		this.renderBackToCameraButton();
+	}
+
+	backToCameraHandler() {
+		let uploadedImage = document.getElementById('uploaded-image');
+		let backToCameraButton = document.getElementById('account-back-to-camera-button');
+
+		if (uploadedImage) {
+			this.container.removeChild(uploadedImage);
+		}
+		this.renderCamera();
+		this.upload.value = '';
+		this.buttonBlock.removeChild(backToCameraButton);
+	}
+
+	renderBackToCameraButton() {
+		let button = document.createElement('button');
+
+		button.id = 'account-back-to-camera-button';
+		button.innerHTML = 'Back to Camera';
+		button.addEventListener('click', this.backToCameraHandler);
+		this.buttonBlock.insertBefore(button, this.buttonBlock.firstChild);
 	}
 
 	render() {
 		this.renderCamera();
 		this.renderStickers();
 		this.renderPhotos();
+		this.upload.addEventListener('change', this.uploadPhoto);
 		this.captureButton.addEventListener('click', this.savePhoto);
 		document.getElementById('account-clear-button').addEventListener('click', this.clearPhoto);
 		this.stickersContainer.addEventListener('click', this.renderStickedSticker);

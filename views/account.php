@@ -16,14 +16,11 @@
 		<div id='account-content'>
 			<main id='account-main'>
 				<div id='account-photo-section'>
-					<div id='account-video-container'>
-						<video autoplay='true' id='account-video'>
-							Your browser does not support the video tag.
-						</video>
-					</div>
+					<div id='account-container'></div>
 				</div>
 				<div id='account-photo-buttons'>
-					<button id='account-capture-button' disabled>Take a picture</button>
+					<input type="file" id='account-upload' accept='.jpg, .jpeg, .png'>
+					<button id='account-capture-button' disabled>Take a Picture</button>
 					<button id='account-clear-button'>Clear</button>
 				</div>
 				<h1 id='account-stickers-h1'>Stickers</h1>

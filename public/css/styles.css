@@ -73,7 +73,7 @@ header a:visited {
 	justify-content: center;
 }
 
-#account-video-container {
+#account-container {
 	position: relative;
 	overflow: hidden;
 	width: 80vmin;
@@ -87,14 +87,25 @@ header a:visited {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+	text-align: center;
+}
+
+#account-video-error {
+	text-align: center;
 }
 
 .sticked-sticker {
+	position: absolute;
 	width: 100%;
 	height: 100%;
-	position: absolute;
 	left: 0;
 	right: 0;
+}
+
+#uploaded-image {
+	position: absolute;
+	width: 100%;
+	height: 100%;
 }
 
 #account-photo-buttons {
