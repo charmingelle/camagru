@@ -154,3 +154,7 @@ header a:visited {
 	top: 0;
 	left: 0;
 }
+
+.sticked:hover {
+	border: 1px solid red;
+}

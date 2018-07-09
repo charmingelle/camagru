@@ -30,6 +30,8 @@ class Account {
 		this.changeSticker = this.changeSticker.bind(this);
 		this.uploadPhoto = this.uploadPhoto.bind(this);
 		this.backToCameraHandler = this.backToCameraHandler.bind(this);
+		
+		this.showResizeControls = this.showResizeControls.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -63,39 +65,111 @@ class Account {
 		};
 	}
 
+	getCoords(elem) {
+		var box = elem.getBoundingClientRect();
+		
+		return {
+		  top: box.top + pageYOffset,
+		  left: box.left + pageXOffset
+		};
+	}
+	
+	stretchLeft(downEvent) {
+		let drag = true;
+		
+		downEvent.target.ondragstart = () => {
+			return false;
+		};
+		
+		document.onmousemove = (moveEvent) => {
+			if (drag) {
+				event.target.style.width = parseInt(window.getComputedStyle(event.target).width) + 1 + 'px';
+				event.target.style.left = parseInt(window.getComputedStyle(event.target).left) - 1 + 'px';
+			}
+		}
+
+		document.onmouseup = (upEvent) => {
+			if (drag) {
+				console.log('up');
+				drag = false;
+			}
+		}
+	}
+	
+	showResizeControls(event) {
+		let stickerRect = event.target.getBoundingClientRect();
+		let leftBorder = stickerRect.left;
+		let rightBorder = stickerRect.right;
+		let topBorder = stickerRect.top;
+		let bottomBorder = stickerRect.bottom;
+		let indent = 10;
+		let drag = false;
+		
+		// if (event.clientX > leftBorder && event.clientX < (leftBorder + indent)) {
+			event.target.onmousedown = this.stretchLeft;
+		// } else if (event.clientX > (rightBorder - indent) && event.clientX < rightBorder) {
+			// console.log('stretch right');
+		// }
+	}
+	
 	renderSticker(sources) {
 		if (sources) {
 			const images = sources.map(source => {
 				let image = document.createElement('img');
 				let drag = false;
-				let imageCopy;
+				let containerCoords = this.container.getBoundingClientRect();
 				
 				image.src = source['url'];
 				image.classList.add('sticker');
-				image.onmousedown = () => {
-					imageCopy = document.createElement('img');
+				
+				image.onmousedown = (downEvent) => {
+					let coords = this.getCoords(image);
+					let shiftX = downEvent.clientX - coords.left;
+					let shiftY = downEvent.clientY - coords.top;
+					let imageCopy = document.createElement('img');
+					
 					imageCopy.src = image.src;
 					imageCopy.classList.add('sticker');
+					imageCopy.classList.add('sticked');
 					document.body.appendChild(imageCopy);
 					imageCopy.style.position = 'absolute';
-					imageCopy.style.top = event.clientY + 'px';
-					imageCopy.style.left = event.clientX + 'px';
+					imageCopy.style.left = downEvent.clientX - shiftX + 'px';
+					imageCopy.style.top = downEvent.clientY - shiftY + 'px';
 					drag = true;
-				}
-
-				document.addEventListener("mousemove", (event) => {
-					if (drag) {
-						imageCopy.style.top = event.clientY + 'px';
-						imageCopy.style.left = event.clientX + 'px';
+					
+					imageCopy.ondragstart = () => {
+						return false;
+					};
+					
+					document.onmousemove = (moveEvent) => {
+						if (drag) {
+							imageCopy.style.left = moveEvent.clientX - shiftX + 'px';
+							imageCopy.style.top = moveEvent.clientY - shiftY + 'px';
+						}
 					}
-				});
-
-				document.onmouseup = () => {
-					drag = false;
+	
+					document.onmouseup = (upEvent) => {
+						if (drag) {
+							let {left: imageCopyLeft, top: imageCopyTop} = window.getComputedStyle(imageCopy);
+							
+							imageCopyLeft = parseInt(imageCopyLeft);
+							imageCopyTop = parseInt(imageCopyTop);
+							document.body.removeChild(imageCopy);
+							drag = false;
+							if (imageCopyLeft > containerCoords.left
+								&& imageCopyLeft < containerCoords.right
+								&& imageCopyTop > containerCoords.top
+								&& imageCopyTop < containerCoords.bottom) {
+								this.container.append(imageCopy);
+								imageCopy.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
+								imageCopy.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
+								imageCopy.onclick = this.showResizeControls;
+							}
+						}
+					}
 				}
 				return image;
 			});
-		
 			this.stickersContainer.append(...images);
 		}
 	}
