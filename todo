@@ -33,3 +33,4 @@ TODO
 - add the ability to delete comments (not mandatory)
 - add sign in verification on server side when like or comment is added
 - find out if I can export, import without webpack
+- fix logout issue

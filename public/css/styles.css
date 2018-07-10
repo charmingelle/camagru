@@ -147,14 +147,11 @@ header a:visited {
 	margin: 1vmin;
 }
 
-#sticked {
-	position: sticky;
-	width: 50vmin;
-	height: 50vmin;
-	top: 0;
-	left: 0;
-}
-
 .sticked:hover {
 	border: 1px solid red;
+}
+
+.control {
+	width: 1vmin;
+	height: 1vmin;
 }

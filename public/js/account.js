@@ -32,6 +32,10 @@ class Account {
 		this.backToCameraHandler = this.backToCameraHandler.bind(this);
 		
 		this.showResizeControls = this.showResizeControls.bind(this);
+		
+		this.renderControls = this.renderControls.bind(this);
+		this.stickControls = this.stickControls.bind(this);
+		this.stickedDragAndDrop = this.stickedDragAndDrop.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -62,15 +66,6 @@ class Account {
 		return {
 			top: box.top + pageYOffset,
 			left: box.left + pageXOffset
-		};
-	}
-
-	getCoords(elem) {
-		var box = elem.getBoundingClientRect();
-		
-		return {
-		  top: box.top + pageYOffset,
-		  left: box.left + pageXOffset
 		};
 	}
 	
@@ -112,6 +107,166 @@ class Account {
 		// }
 	}
 	
+	renderControls() {
+		this.leftControl = document.createElement('div');
+		this.rightControl = document.createElement('div');
+		this.upControl = document.createElement('div');
+		this.downControl = document.createElement('div');
+		this.leftUpControl = document.createElement('div');
+		this.rightUpControl = document.createElement('div');
+		this.leftDownControl = document.createElement('div');
+		this.rightDownControl = document.createElement('div');
+		let controls = [this.leftControl, this.rightControl, this.upControl, this.downControl, this.leftUpControl, this.rightUpControl, this.leftDownControl, this.rightDownControl];
+		
+		this.leftControl.innerHTML = '&#8592;';
+		this.leftControl.id = 'left-control';
+		this.rightControl.innerHTML = '&#8594;';
+		this.rightControl.id = 'right-control';
+		this.upControl.innerHTML = '&#8593;';
+		this.upControl.id = 'up-control';
+		this.downControl.innerHTML = '&#8595;';
+		this.downControl.id = 'down-control';
+		this.leftUpControl.innerHTML = '&#8598;';
+		this.leftUpControl.id = 'left-up-control';
+		this.rightUpControl.innerHTML = '&#8599;';
+		this.rightUpControl.id = 'right-up-control';
+		this.leftDownControl.innerHTML = '&#8601;';
+		this.leftDownControl.id = 'left-down-control';
+		this.rightDownControl.innerHTML = '&#8600;';
+		this.rightDownControl.id = 'right-down-control';
+		controls.forEach((control) => {
+			control.classList.add('control');
+		});
+		this.container.append(...controls);
+	}
+	
+	stickLeftUpControl(sticker, stickerStyle) {
+		this.leftUpControl.style.position = 'absolute';
+		this.leftUpControl.style.left = stickerStyle.left;
+		this.leftUpControl.style.top = stickerStyle.top;
+		
+		this.leftUpControl.onclick = () => {
+			sticker.style.left = parseInt(stickerStyle.left) - 1 + 'px';
+			sticker.style.width = parseInt(stickerStyle.width) + 1 + 'px';
+			sticker.style.top = parseInt(stickerStyle.top) - 1 + 'px';
+			sticker.style.height = parseInt(stickerStyle.height) + 1 + 'px';
+		};
+	}
+	
+	stickRightUpControl(sticker, stickerStyle) {
+		this.rightUpControl.style.position = 'absolute';
+		this.rightUpControl.style.left = parseInt(stickerStyle.left) + parseInt(stickerStyle.width) + 'px';
+		this.rightUpControl.style.top = stickerStyle.top;
+		
+		this.rightUpControl.onclick = () => {
+			sticker.style.width = parseInt(stickerStyle.width) + 1 + 'px';
+			sticker.style.top = parseInt(stickerStyle.top) - 1 + 'px';
+			sticker.style.height = parseInt(stickerStyle.height) + 1 + 'px';
+		};
+	}
+	
+	stickLeftDownControl(sticker, stickerStyle) {
+		this.leftDownControl.style.position = 'absolute';
+		this.leftDownControl.style.left = stickerStyle.left;
+		this.leftDownControl.style.top = parseInt(stickerStyle.top) + parseInt(stickerStyle.height) + 'px';
+		
+		this.leftDownControl.onclick = () => {
+			sticker.style.left = parseInt(stickerStyle.left) - 1 + 'px';
+			sticker.style.width = parseInt(stickerStyle.width) + 1 + 'px';
+			sticker.style.height = parseInt(stickerStyle.height) + 1 + 'px';
+		};
+	}
+	
+	stickRightDownControl(sticker, stickerStyle) {
+		this.rightDownControl.style.position = 'absolute';
+		this.rightDownControl.style.left = parseInt(stickerStyle.left) + parseInt(stickerStyle.width) + 'px';
+		this.rightDownControl.style.top = parseInt(stickerStyle.top) + parseInt(stickerStyle.height) + 'px';
+		
+		this.rightDownControl.onclick = () => {
+			sticker.style.left = parseInt(stickerStyle.left) + 1 + 'px';
+			sticker.style.width = parseInt(stickerStyle.width) + 1 + 'px';
+			sticker.style.top = parseInt(stickerStyle.top) + 1 + 'px';
+			sticker.style.height = parseInt(stickerStyle.height) + 1 + 'px';
+		};
+	}
+	
+	stickLeftControl(sticker, stickerStyle) {
+		this.leftControl.style.position = 'absolute';
+		this.leftControl.style.left = stickerStyle.left;
+		this.leftControl.style.top = parseInt(stickerStyle.top) + parseInt(stickerStyle.height) / 2 + 'px';
+	}
+	
+	stickRightControl(sticker, stickerStyle) {
+		this.rightControl.style.position = 'absolute';
+		this.rightControl.style.left = parseInt(stickerStyle.left) + parseInt(stickerStyle.width) + 'px';
+		this.rightControl.style.top = parseInt(stickerStyle.top) + parseInt(stickerStyle.height) / 2 + 'px';
+	}
+	
+	stickUpControl(sticker, stickerStyle) {
+		this.upControl.style.position = 'absolute';
+		this.upControl.style.left = parseInt(stickerStyle.left) + parseInt(stickerStyle.width) / 2 + 'px';
+		this.upControl.style.top = stickerStyle.top;
+	}
+	
+	stickDownControl(sticker, stickerStyle) {
+		this.downControl.style.position = 'absolute';
+		this.downControl.style.left = parseInt(stickerStyle.left) + parseInt(stickerStyle.width) / 2 + 'px';
+		this.downControl.style.top = parseInt(stickerStyle.top) + parseInt(stickerStyle.height) + 'px';
+	}
+	
+	stickControls(event) {
+		let stickerStyle = window.getComputedStyle(event.target);
+		
+		this.stickLeftUpControl(event.target, stickerStyle);
+		this.stickRightUpControl(event.target, stickerStyle);
+		this.stickLeftDownControl(event.target, stickerStyle);
+		this.stickRightDownControl(event.target, stickerStyle);
+		this.stickLeftControl(event.target, stickerStyle);
+		this.stickRightControl(event.target, stickerStyle);
+		this.stickUpControl(event.target, stickerStyle);
+		this.stickDownControl(event.target, stickerStyle);
+	}
+	
+	stickedDragAndDrop(event) {
+		let coords = this.getCoords(event.target);
+		let shiftX = event.clientX - coords.left;
+		let shiftY = event.clientY - coords.top;
+		let drag = true;
+		let containerCoords = this.container.getBoundingClientRect();
+		
+		document.body.appendChild(event.target);
+		event.target.style.position = 'absolute';
+		event.target.style.left = event.clientX - shiftX + 'px';
+		event.target.style.top = event.clientY - shiftY + 'px';
+		event.target.ondragstart = () => {
+			return false;
+		};
+		document.onmousemove = (moveEvent) => {
+			if (drag) {
+				event.target.style.left = moveEvent.clientX - shiftX + 'px';
+				event.target.style.top = moveEvent.clientY - shiftY + 'px';
+			}
+		}
+		document.onmouseup = (upEvent) => {
+			if (drag) {
+				let {left: eventTargetLeft, top: eventTargetTop} = window.getComputedStyle(event.target);
+				
+				eventTargetLeft = parseInt(eventTargetLeft);
+				eventTargetTop = parseInt(eventTargetTop);
+				document.body.removeChild(event.target);
+				drag = false;
+				if (eventTargetLeft > containerCoords.left
+					&& eventTargetLeft < containerCoords.right
+					&& eventTargetTop > containerCoords.top
+					&& eventTargetTop < containerCoords.bottom) {
+					this.container.append(event.target);
+					event.target.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
+					event.target.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
+				}
+			}
+		}
+	}
+	
 	renderSticker(sources) {
 		if (sources) {
 			const images = sources.map(source => {
@@ -130,24 +285,20 @@ class Account {
 					
 					imageCopy.src = image.src;
 					imageCopy.classList.add('sticker');
-					imageCopy.classList.add('sticked');
 					document.body.appendChild(imageCopy);
 					imageCopy.style.position = 'absolute';
 					imageCopy.style.left = downEvent.clientX - shiftX + 'px';
 					imageCopy.style.top = downEvent.clientY - shiftY + 'px';
 					drag = true;
-					
 					imageCopy.ondragstart = () => {
 						return false;
 					};
-					
 					document.onmousemove = (moveEvent) => {
 						if (drag) {
 							imageCopy.style.left = moveEvent.clientX - shiftX + 'px';
 							imageCopy.style.top = moveEvent.clientY - shiftY + 'px';
 						}
 					}
-	
 					document.onmouseup = (upEvent) => {
 						if (drag) {
 							let {left: imageCopyLeft, top: imageCopyTop} = window.getComputedStyle(imageCopy);
@@ -163,7 +314,8 @@ class Account {
 								this.container.append(imageCopy);
 								imageCopy.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
 								imageCopy.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
-								imageCopy.onclick = this.showResizeControls;
+								imageCopy.onclick = this.stickControls;
+								// imageCopy.onmousedown = this.stickedDragAndDrop;
 							}
 						}
 					}
@@ -461,6 +613,7 @@ class Account {
 		this.captureButton.addEventListener('click', this.savePhoto);
 		document.getElementById('account-clear-button').addEventListener('click', this.clearPhoto);
 		this.stickersContainer.addEventListener('click', this.renderStickedSticker);
+		this.renderControls();
 	}
 }
 
