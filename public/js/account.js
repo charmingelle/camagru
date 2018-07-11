@@ -251,36 +251,37 @@ class Account {
 			let coords = this.getCoords(element);
 			let shiftX = downEvent.clientX - coords.left;
 			let shiftY = downEvent.clientY - coords.top;
+			let toMove = element;
 			if (shouldCopy) {
-				element = element.cloneNode(true);
+				toMove = element.cloneNode(true);
 			}
 			
-			document.body.appendChild(element);
-			element.style.position = 'absolute';
-			element.style.left = downEvent.clientX - shiftX + 'px';
-			element.style.top = downEvent.clientY - shiftY + 'px';
+			document.body.appendChild(toMove);
+			toMove.style.position = 'absolute';
+			toMove.style.left = downEvent.clientX - shiftX + 'px';
+			toMove.style.top = downEvent.clientY - shiftY + 'px';
 			drag = true;
-			element.ondragstart = () => {
+			toMove.ondragstart = () => {
 				return false;
 			};
 			document.onmousemove = (moveEvent) => {
 				if (drag) {
-					element.style.left = moveEvent.clientX - shiftX + 'px';
-					element.style.top = moveEvent.clientY - shiftY + 'px';
+					toMove.style.left = moveEvent.clientX - shiftX + 'px';
+					toMove.style.top = moveEvent.clientY - shiftY + 'px';
 				}
 			}
 			document.onmouseup = (upEvent) => {
 				if (drag) {
 					drag = false;
-					if (this.isElementInsideContainer(element, containerCoords)) {
-						container.append(element);
-						element.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
-						element.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
+					if (this.isElementInsideContainer(toMove, containerCoords)) {
+						container.append(toMove);
+						toMove.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
+						toMove.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
 						if (shouldCopy) {
-							this.dragAndDropInsideContainer(element, container, false);
+							this.dragAndDropInsideContainer(toMove, container, false);
 						}
 					} else {
-						document.body.removeChild(element);
+						document.body.removeChild(toMove);
 					}
 				}
 			}
