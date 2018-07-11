@@ -35,7 +35,6 @@ class Account {
 		
 		this.renderControls = this.renderControls.bind(this);
 		this.stickControls = this.stickControls.bind(this);
-		this.stickedDragAndDrop = this.stickedDragAndDrop.bind(this);
 	}
 
 	removeAllChildren(elem) {
@@ -227,41 +226,62 @@ class Account {
 		this.stickDownControl(event.target, stickerStyle);
 	}
 	
-	stickedDragAndDrop(event) {
-		let coords = this.getCoords(event.target);
-		let shiftX = event.clientX - coords.left;
-		let shiftY = event.clientY - coords.top;
-		let drag = true;
-		let containerCoords = this.container.getBoundingClientRect();
+	isPointInsideRect(x, y, rect) {
+		return x >= rect.left && x <= rect.right
+		&& y >= rect.top && y <= rect.bottom;
+	}
+	
+	isElementInsideContainer(element, containerCoords) {
+		let elementCoords = element.getBoundingClientRect();
 		
-		document.body.appendChild(event.target);
-		event.target.style.position = 'absolute';
-		event.target.style.left = event.clientX - shiftX + 'px';
-		event.target.style.top = event.clientY - shiftY + 'px';
-		event.target.ondragstart = () => {
-			return false;
-		};
-		document.onmousemove = (moveEvent) => {
-			if (drag) {
-				event.target.style.left = moveEvent.clientX - shiftX + 'px';
-				event.target.style.top = moveEvent.clientY - shiftY + 'px';
-			}
+		if (this.isPointInsideRect(elementCoords.left, elementCoords.top, containerCoords)
+			|| this.isPointInsideRect(elementCoords.right, elementCoords.top, containerCoords)
+			|| this.isPointInsideRect(elementCoords.left, elementCoords.bottom, containerCoords)
+			|| this.isPointInsideRect(elementCoords.right, elementCoords.bottom, containerCoords)) {
+			return true;
 		}
-		document.onmouseup = (upEvent) => {
-			if (drag) {
-				let {left: eventTargetLeft, top: eventTargetTop} = window.getComputedStyle(event.target);
-				
-				eventTargetLeft = parseInt(eventTargetLeft);
-				eventTargetTop = parseInt(eventTargetTop);
-				document.body.removeChild(event.target);
-				drag = false;
-				if (eventTargetLeft > containerCoords.left
-					&& eventTargetLeft < containerCoords.right
-					&& eventTargetTop > containerCoords.top
-					&& eventTargetTop < containerCoords.bottom) {
-					this.container.append(event.target);
-					event.target.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
-					event.target.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
+		return false;
+	}
+	
+	dragAndDropInsideContainer(element, container, shouldCopy) {
+		let containerCoords = container.getBoundingClientRect();
+		let drag = false;
+		
+		element.onmousedown = (downEvent) => {
+			let coords = this.getCoords(element);
+			let shiftX = downEvent.clientX - coords.left;
+			let shiftY = downEvent.clientY - coords.top;
+			if (shouldCopy) {
+				element = element.cloneNode(true);
+			}
+			
+			document.body.appendChild(element);
+			element.style.position = 'absolute';
+			element.style.left = downEvent.clientX - shiftX + 'px';
+			element.style.top = downEvent.clientY - shiftY + 'px';
+			drag = true;
+			element.ondragstart = () => {
+				return false;
+			};
+			document.onmousemove = (moveEvent) => {
+				if (drag) {
+					element.style.left = moveEvent.clientX - shiftX + 'px';
+					element.style.top = moveEvent.clientY - shiftY + 'px';
+				}
+			}
+			document.onmouseup = (upEvent) => {
+				if (drag) {
+					drag = false;
+					if (this.isElementInsideContainer(element, containerCoords)) {
+						container.append(element);
+						element.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
+						element.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
+						if (shouldCopy) {
+							this.dragAndDropInsideContainer(element, container, false);
+						}
+					} else {
+						document.body.removeChild(element);
+					}
 				}
 			}
 		}
@@ -276,50 +296,7 @@ class Account {
 				
 				image.src = source['url'];
 				image.classList.add('sticker');
-				
-				image.onmousedown = (downEvent) => {
-					let coords = this.getCoords(image);
-					let shiftX = downEvent.clientX - coords.left;
-					let shiftY = downEvent.clientY - coords.top;
-					let imageCopy = document.createElement('img');
-					
-					imageCopy.src = image.src;
-					imageCopy.classList.add('sticker');
-					document.body.appendChild(imageCopy);
-					imageCopy.style.position = 'absolute';
-					imageCopy.style.left = downEvent.clientX - shiftX + 'px';
-					imageCopy.style.top = downEvent.clientY - shiftY + 'px';
-					drag = true;
-					imageCopy.ondragstart = () => {
-						return false;
-					};
-					document.onmousemove = (moveEvent) => {
-						if (drag) {
-							imageCopy.style.left = moveEvent.clientX - shiftX + 'px';
-							imageCopy.style.top = moveEvent.clientY - shiftY + 'px';
-						}
-					}
-					document.onmouseup = (upEvent) => {
-						if (drag) {
-							let {left: imageCopyLeft, top: imageCopyTop} = window.getComputedStyle(imageCopy);
-							
-							imageCopyLeft = parseInt(imageCopyLeft);
-							imageCopyTop = parseInt(imageCopyTop);
-							document.body.removeChild(imageCopy);
-							drag = false;
-							if (imageCopyLeft > containerCoords.left
-								&& imageCopyLeft < containerCoords.right
-								&& imageCopyTop > containerCoords.top
-								&& imageCopyTop < containerCoords.bottom) {
-								this.container.append(imageCopy);
-								imageCopy.style.left = upEvent.clientX - containerCoords.left - shiftX + 'px';
-								imageCopy.style.top = upEvent.clientY - containerCoords.top - shiftY + 'px';
-								imageCopy.onclick = this.stickControls;
-								// imageCopy.onmousedown = this.stickedDragAndDrop;
-							}
-						}
-					}
-				}
+				this.dragAndDropInsideContainer(image, this.container, true);
 				return image;
 			});
 			this.stickersContainer.append(...images);
