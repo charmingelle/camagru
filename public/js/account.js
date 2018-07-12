@@ -134,13 +134,16 @@ class Account {
 			() => {},
 			(moveEvent) => {
 				let diff = parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left;
-				let prevLeft = parseInt(element.style.left);
+				let prevLeft = element.getBoundingClientRect().left;
+				let currRight = prevLeft + element.getBoundingClientRect().width;
+				let currLeft = prevLeft - diff;
 				
-				element.style.left = prevLeft - diff + 'px';
-				
-				let currLeft = parseInt(element.style.left);
-				
-				element.style.width = element.getBoundingClientRect().width + prevLeft - currLeft + 'px';
+				if (currLeft < currRight) {
+					prevLeft = parseInt(element.style.left);
+					element.style.left = prevLeft - diff + 'px';
+					currLeft = parseInt(element.style.left);
+					element.style.width = element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
+				}
 			},
 			() => {});
 	}
@@ -161,13 +164,17 @@ class Account {
 			() => {},
 			(moveEvent) => {
 				let diff = parseInt(element.style.top) - moveEvent.clientY + this.containerRect.top;
-				let prevTop = parseInt(element.style.top);
+				let prevTop = element.getBoundingClientRect().top;
+				let currBottom = prevTop + element.getBoundingClientRect().height;
+				let currTop = prevTop - diff;
 				
-				element.style.top = prevTop - diff + 'px';
+				if (currTop < currBottom) {
+					prevTop = parseInt(element.style.top);
+					element.style.top = prevTop - diff + 'px';
+					currTop = parseInt(element.style.top);
+					element.style.height = element.getBoundingClientRect().height - currTop + prevTop + 'px';
+				}
 				
-				let currTop = parseInt(element.style.top);
-				
-				element.style.height = element.getBoundingClientRect().height + prevTop - currTop + 'px';
 			},
 			() => {});
 	}
@@ -189,17 +196,23 @@ class Account {
 			(moveEvent) => {
 				let diff = (parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left
 							+ parseInt(element.style.top) - moveEvent.clientY + this.containerRect.top) / 2;
-				let prevLeft = parseInt(element.style.left);
-				let prevTop = parseInt(element.style.top);
+				let prevLeft = element.getBoundingClientRect().left;
+				let currRight = prevLeft + element.getBoundingClientRect().width;
+				let currLeft = prevLeft - diff;
+				let prevTop = element.getBoundingClientRect().top;
+				let currBottom = prevTop + element.getBoundingClientRect().height;
+				let currTop = prevTop - diff;
 				
-				element.style.left = prevLeft - diff + 'px';
-				element.style.top = prevTop - diff + 'px';
-				
-				let currLeft = parseInt(element.style.left);
-				let currTop = parseInt(element.style.top);
-				
-				element.style.width = element.getBoundingClientRect().width + prevLeft - currLeft + 'px';
-				element.style.height = element.getBoundingClientRect().height + prevTop - currTop + 'px';
+				if (currLeft < currRight && currTop < currBottom) {
+					prevLeft = parseInt(element.style.left);
+					prevTop = parseInt(element.style.top);
+					element.style.left = prevLeft - diff + 'px';
+					element.style.top = prevTop - diff + 'px';
+					currLeft = parseInt(element.style.left);
+					currTop = parseInt(element.style.top);
+					element.style.width = element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
+					element.style.height = element.getBoundingClientRect().height - currTop + prevTop + 'px';
+				}
 			},
 			() => {});
 	}
@@ -210,14 +223,17 @@ class Account {
 			(moveEvent) => {
 				let diff = (moveEvent.clientX - element.getBoundingClientRect().right
 							+ parseInt(element.style.top) - moveEvent.clientY + this.containerRect.top) / 2;
-				let prevTop = parseInt(element.style.top);
+				let prevTop = element.getBoundingClientRect().top;
+				let currBottom = prevTop + element.getBoundingClientRect().height;
+				let currTop = prevTop - diff;
 				
-				element.style.top = prevTop - diff + 'px';
-				
-				let currTop = parseInt(element.style.top);
-				
-				element.style.width = element.getBoundingClientRect().width + prevTop - currTop + 'px';
-				element.style.height = element.getBoundingClientRect().height + prevTop - currTop + 'px';
+				if (currTop < currBottom) {
+					prevTop = parseInt(element.style.top);
+					element.style.top = prevTop - diff + 'px';
+					currTop = parseInt(element.style.top);
+					element.style.width = element.getBoundingClientRect().width - currTop + prevTop + 'px';
+					element.style.height = element.getBoundingClientRect().height - currTop + prevTop + 'px';
+				}
 			},
 			() => {});
 	}
@@ -226,16 +242,29 @@ class Account {
 		dragAndDrop(element,
 			() => {},
 			(moveEvent) => {
-				let diff = (parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left
-							+ moveEvent.clientY - element.getBoundingClientRect().bottom) / 2;
-				let prevLeft = parseInt(element.style.left);
+				let diff = (moveEvent.clientY - element.getBoundingClientRect().bottom
+							+ parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left) / 2;
+				let prevLeft = element.getBoundingClientRect().left;
+				let currRight = prevLeft + element.getBoundingClientRect().width;
+				let currLeft = prevLeft - diff;
 				
-				element.style.left = prevLeft - diff + 'px';
-				
-				let currLeft = parseInt(element.style.left);
-				
-				element.style.width = element.getBoundingClientRect().width + prevLeft - currLeft + 'px';
-				element.style.height = element.getBoundingClientRect().height + prevLeft - currLeft + 'px';
+				if (currLeft < currRight) {
+					// prevLeft = parseInt(element.style.left);
+					// element.style.left = prevLeft - diff + 'px';
+					// currLeft = parseInt(element.style.left);
+					// element.style.width = element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
+					// element.style.height = element.getBoundingClientRect().height - currLeft + prevLeft + 'px';
+
+					// prevLeft = parseInt(element.style.left);
+
+					currLeft = parseInt(element.style.left);
+					let currWidth = element.getBoundingClientRect().width;
+					let currHeight = element.getBoundingClientRect().height;
+
+					element.style.left = currLeft - diff + 'px';
+					element.style.width = currWidth + diff * (currWidth / currHeight) + 'px';
+					element.style.height = currHeight + diff * (currHeight / currWidth) + 'px';
+				}
 			},
 			() => {});
 	}
@@ -255,7 +284,7 @@ class Account {
 	
 	moveOrChangeStickerSize(mouseMoveEvent) {
 		let stickerCoords = mouseMoveEvent.target.getBoundingClientRect();
-		let shift = 5;
+		let shift = 20;
 		
 		mouseMoveEvent.target.style.cursor = '-webkit-grab';
 		mouseMoveEvent.target.style.cursor = 'grab';
