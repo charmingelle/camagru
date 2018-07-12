@@ -1,3 +1,9 @@
+// export const sayHello = () => alert('hello')
+
+// console.log('account.js')
+
+import { removeAllChildren } from '/js/utils.js';
+
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
 const LEFT = 'ArrowLeft';
@@ -35,12 +41,6 @@ class Account {
 		this.stretchLeft = this.stretchLeft.bind(this);
 		this.stretchRight = this.stretchRight.bind(this);
 		this.moveOrChangeStickerSize = this.moveOrChangeStickerSize.bind(this);
-	}
-
-	removeAllChildren(elem) {
-		while (elem.firstChild) {
-			elem.removeChild(elem.firstChild);
-		}
 	}
 
 	vh(v) {
@@ -101,7 +101,7 @@ class Account {
 	}
 	
 	renderPhotos() {
-		this.removeAllChildren(this.photosContainer);
+		removeAllChildren(this.photosContainer);
 		fetch('/userPictures', {
 			method: 'POST',
 			credentials: 'include'

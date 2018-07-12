@@ -2,9 +2,9 @@
 
 require_once(getRoot() . 'app/modules/Page.php');
 
-class SiteMapController {
+class SiteMapController {	
 	public static function showHome() {
-		Page::show('views/home.php');
+		Page::show('views/home.html');
 	}
 
 	public static function showSignin() {
@@ -24,7 +24,7 @@ class SiteMapController {
 	}
 
 	public static function showAccount() {
-		Page::show('views/account.php');
+		Page::show('views/account.html');
 	}
 
 	public static function show404() {

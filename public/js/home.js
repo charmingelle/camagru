@@ -1,3 +1,11 @@
+// import { sayHello } from '/js/account.js'
+
+// sayHello()
+
+// console.log(sayHello)
+
+import { removeAllChildren } from '/js/utils.js';
+
 const ENTER = '13';
 
 class Home {
@@ -6,7 +14,7 @@ class Home {
 		this.formContainer = document.getElementById('form-container');
 		this.headerButtonsDiv = document.getElementById('header-buttons-div');
 
-		this.removeAllChildren = this.removeAllChildren.bind(this);
+		// removeAllChildren = removeAllChildren.bind(this);
 		this.fillCommentsContainer = this.fillCommentsContainer.bind(this);
 		this.setSignedInAddComment = this.setSignedInAddComment.bind(this);
 		this.setNotSignedInAddComment = this.setNotSignedInAddComment.bind(this);
@@ -21,12 +29,6 @@ class Home {
 		this.renderHeaderButtonsDiv = this.renderHeaderButtonsDiv.bind(this);
 		this.renderGallery = this.renderGallery.bind(this);
 		this.renderSignedInOrAnonymousPage = this.renderSignedInOrAnonymousPage.bind(this);
-	}
-
-	removeAllChildren(elem) {
-		while (elem.firstChild) {
-			elem.removeChild(elem.firstChild);
-		}
 	}
 
 	fillCommentsContainer(commentsContainer, photoId) {
@@ -87,7 +89,7 @@ class Home {
 						comment.innerHTML = commentAmount;
 					});
 					addComment.value = '';
-					this.removeAllChildren(commentsContainer);
+					removeAllChildren(commentsContainer);
 					this.fillCommentsContainer(commentsContainer, photoId);
 				}
 			}
@@ -189,7 +191,7 @@ class Home {
 		submitInput.value = 'Sign in';
 
 		form.append(loginTextNode, loginInput, passwordTextNode, passwordInput, submitInput);
-		this.removeAllChildren(this.formContainer);
+		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
 	
@@ -219,7 +221,7 @@ class Home {
 		submitInput.value = 'Sign up';
 
 		form.append(emailTextNode, emailInput, loginTextNode, loginInput, passwordTextNode, passwordInput, submitInput);
-		this.removeAllChildren(this.formContainer);
+		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
 	
@@ -239,7 +241,7 @@ class Home {
 		submitInput.value = 'Get reset password link';
 
 		form.append(emailTextNode, emailInput, submitInput);
-		this.removeAllChildren(this.formContainer);
+		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
 	

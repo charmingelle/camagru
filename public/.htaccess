@@ -12,7 +12,6 @@ Options All -ExecCGI -Indexes -Includes +FollowSymLinks
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
-
 </IfModule>
 
 php_value date.timezone 'Europe/Kiev'
