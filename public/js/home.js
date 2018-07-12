@@ -1,9 +1,3 @@
-// import { sayHello } from '/js/account.js'
-
-// sayHello()
-
-// console.log(sayHello)
-
 import { removeAllChildren } from '/js/utils.js';
 
 const ENTER = '13';
@@ -14,7 +8,6 @@ class Home {
 		this.formContainer = document.getElementById('form-container');
 		this.headerButtonsDiv = document.getElementById('header-buttons-div');
 
-		// removeAllChildren = removeAllChildren.bind(this);
 		this.fillCommentsContainer = this.fillCommentsContainer.bind(this);
 		this.setSignedInAddComment = this.setSignedInAddComment.bind(this);
 		this.setNotSignedInAddComment = this.setNotSignedInAddComment.bind(this);

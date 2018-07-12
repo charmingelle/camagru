@@ -1,8 +1,4 @@
-// export const sayHello = () => alert('hello')
-
-// console.log('account.js')
-
-import { removeAllChildren } from '/js/utils.js';
+import { vmin, removeAllChildren, dragAndDrop } from '/js/utils.js';
 
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
@@ -25,7 +21,7 @@ class Account {
 		this.buttonBlock = document.getElementById('account-photo-buttons');
 		this.upload = document.getElementById('account-upload');
 		this.captureButton = document.getElementById('account-capture-button');
-		this.scale = this.vmin(50);
+		this.scale = vmin(50);
 
 		this.renderCamera = this.renderCamera.bind(this);
 		this.renderSticker = this.renderSticker.bind(this);
@@ -38,25 +34,7 @@ class Account {
 
 		this.isElementInsideContainer = this.isElementInsideContainer.bind(this);
 		this.dragAndDropInsideContainer = this.dragAndDropInsideContainer.bind(this);
-		this.stretchLeft = this.stretchLeft.bind(this);
-		this.stretchRight = this.stretchRight.bind(this);
 		this.moveOrChangeStickerSize = this.moveOrChangeStickerSize.bind(this);
-	}
-
-	vh(v) {
-		let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-	
-		return (v * h) / 100;
-	}
-
-	vw(v) {
-		let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-	
-		return (v * w) / 100;
-	}
-
-	vmin(v) {
-		return Math.min(this.vh(v), this.vw(v));
 	}
 	
 	getCoords(elem) {
@@ -152,50 +130,127 @@ class Account {
 	}
 	
 	stretchLeft(element) {
-		let drag = false;
-		
-		element.onmousedown = (downEvent) => {
-			drag = true;
-			downEvent.target.ondragstart = () => {
-				return false;
-			};
-			document.onmousemove = (moveEvent) => {
-				if (drag) {
-					let diff = parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left;
-					
-					element.style.width = element.getBoundingClientRect().width + diff + 'px';
-					element.style.left = parseInt(element.style.left) - diff + 'px';
-				}
-			}
-			document.onmouseup = (upEvent) => {
-				if (drag) {
-					drag = false;
-				}
-			}
-		}
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left;
+				let prevLeft = parseInt(element.style.left);
+				
+				element.style.left = prevLeft - diff + 'px';
+				
+				let currLeft = parseInt(element.style.left);
+				
+				element.style.width = element.getBoundingClientRect().width + prevLeft - currLeft + 'px';
+			},
+			() => {});
 	}
 	
 	stretchRight(element) {
-		let drag = false;
-		
-		element.onmousedown = (downEvent) => {
-			drag = true;
-			downEvent.target.ondragstart = () => {
-				return false;
-			};
-			document.onmousemove = (moveEvent) => {
-				if (drag) {
-					let diff = moveEvent.clientX - element.getBoundingClientRect().right;
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = moveEvent.clientX - element.getBoundingClientRect().right;
 					
-					element.style.width = element.getBoundingClientRect().width + diff + 'px';
-				}
-			}
-			document.onmouseup = (upEvent) => {
-				if (drag) {
-					drag = false;
-				}
-			}
-		}
+				element.style.width = element.getBoundingClientRect().width + diff + 'px';
+			},
+			() => {});
+	}
+	
+	stretchUp(element) {
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = parseInt(element.style.top) - moveEvent.clientY + this.containerRect.top;
+				let prevTop = parseInt(element.style.top);
+				
+				element.style.top = prevTop - diff + 'px';
+				
+				let currTop = parseInt(element.style.top);
+				
+				element.style.height = element.getBoundingClientRect().height + prevTop - currTop + 'px';
+			},
+			() => {});
+	}
+	
+	stretchDown(element) {
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = moveEvent.clientY - element.getBoundingClientRect().bottom;
+				
+				element.style.height = element.getBoundingClientRect().height + diff + 'px';
+			},
+			() => {});
+	}
+	
+	stretchLeftUp(element) {
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = (parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left
+							+ parseInt(element.style.top) - moveEvent.clientY + this.containerRect.top) / 2;
+				let prevLeft = parseInt(element.style.left);
+				let prevTop = parseInt(element.style.top);
+				
+				element.style.left = prevLeft - diff + 'px';
+				element.style.top = prevTop - diff + 'px';
+				
+				let currLeft = parseInt(element.style.left);
+				let currTop = parseInt(element.style.top);
+				
+				element.style.width = element.getBoundingClientRect().width + prevLeft - currLeft + 'px';
+				element.style.height = element.getBoundingClientRect().height + prevTop - currTop + 'px';
+			},
+			() => {});
+	}
+	
+	stretchRightUp(element) {
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = (moveEvent.clientX - element.getBoundingClientRect().right
+							+ parseInt(element.style.top) - moveEvent.clientY + this.containerRect.top) / 2;
+				let prevTop = parseInt(element.style.top);
+				
+				element.style.top = prevTop - diff + 'px';
+				
+				let currTop = parseInt(element.style.top);
+				
+				element.style.width = element.getBoundingClientRect().width + prevTop - currTop + 'px';
+				element.style.height = element.getBoundingClientRect().height + prevTop - currTop + 'px';
+			},
+			() => {});
+	}
+	
+	stretchLeftDown(element) {
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = (parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left
+							+ moveEvent.clientY - element.getBoundingClientRect().bottom) / 2;
+				let prevLeft = parseInt(element.style.left);
+				
+				element.style.left = prevLeft - diff + 'px';
+				
+				let currLeft = parseInt(element.style.left);
+				
+				element.style.width = element.getBoundingClientRect().width + prevLeft - currLeft + 'px';
+				element.style.height = element.getBoundingClientRect().height + prevLeft - currLeft + 'px';
+			},
+			() => {});
+	}
+	
+	stretchRightDown(element) {
+		dragAndDrop(element,
+			() => {},
+			(moveEvent) => {
+				let diff = (moveEvent.clientX - element.getBoundingClientRect().right +
+							moveEvent.clientY - element.getBoundingClientRect().bottom) / 2;
+					
+				element.style.width = element.getBoundingClientRect().width + diff + 'px';
+				element.style.height = element.getBoundingClientRect().height + diff + 'px';
+			},
+			() => {});
 	}
 	
 	moveOrChangeStickerSize(mouseMoveEvent) {
@@ -211,6 +266,7 @@ class Account {
 			'bottom': stickerCoords.top + shift
 		})) {
 			mouseMoveEvent.target.style.cursor = 'nw-resize';
+			this.stretchLeftUp(mouseMoveEvent.target);
 		} else if (this.isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 			'left': stickerCoords.right - shift,
 			'right': stickerCoords.right + shift,
@@ -218,6 +274,7 @@ class Account {
 			'bottom': stickerCoords.top + shift
 		})) {
 			mouseMoveEvent.target.style.cursor = 'sw-resize';
+			this.stretchRightUp(mouseMoveEvent.target);
 		} else if (this.isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 			'left': stickerCoords.left,
 			'right': stickerCoords.left + shift,
@@ -225,6 +282,7 @@ class Account {
 			'bottom': stickerCoords.bottom
 		})) {
 			mouseMoveEvent.target.style.cursor = 'sw-resize';
+			this.stretchLeftDown(mouseMoveEvent.target);
 		} else if (this.isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 			'left': stickerCoords.right - shift,
 			'right': stickerCoords.right + shift,
@@ -232,6 +290,7 @@ class Account {
 			'bottom': stickerCoords.bottom + shift
 		})) {
 			mouseMoveEvent.target.style.cursor = 'nw-resize';
+			this.stretchRightDown(mouseMoveEvent.target);
 		} else if (this.isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 			'left': stickerCoords.left,
 			'right': stickerCoords.right,
@@ -239,6 +298,7 @@ class Account {
 			'bottom': stickerCoords.top + shift
 		})) {
 			mouseMoveEvent.target.style.cursor = 's-resize';
+			this.stretchUp(mouseMoveEvent.target);
 		} else if (this.isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 			'left': stickerCoords.left,
 			'right': stickerCoords.right,
@@ -246,6 +306,7 @@ class Account {
 			'bottom': stickerCoords.bottom + shift
 		})) {
 			mouseMoveEvent.target.style.cursor = 's-resize';
+			this.stretchDown(mouseMoveEvent.target);
 		} else if (this.isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 			'left': stickerCoords.left - shift,
 			'right': stickerCoords.left + shift,
