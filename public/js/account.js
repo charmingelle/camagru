@@ -346,48 +346,86 @@ class Account {
 	}
 	
 	dragAndDropInsideContainer(element, shouldCopy) {
-		let drag = false;
+		let coords;
+		let shiftX;
+		let shiftY;
+		let toMove;
 		
-		element.onmousedown = (downEvent) => {
-			let coords = this.getCoords(element);
-			let shiftX = downEvent.clientX - coords.left;
-			let shiftY = downEvent.clientY - coords.top;
-			let toMove = element;
-			if (shouldCopy) {
-				toMove = element.cloneNode(true);
-			}
-			
-			document.body.appendChild(toMove);
-			toMove.style.position = 'absolute';
-			toMove.style.left = downEvent.clientX - shiftX + 'px';
-			toMove.style.top = downEvent.clientY - shiftY + 'px';
-			drag = true;
-			toMove.ondragstart = () => {
-				return false;
-			};
-			document.onmousemove = (moveEvent) => {
-				if (drag) {
-					toMove.style.left = moveEvent.clientX - shiftX + 'px';
-					toMove.style.top = moveEvent.clientY - shiftY + 'px';
+		dragAndDrop(element,
+			(downEvent) => {
+				toMove = element;
+				if (shouldCopy) {
+					toMove = element.cloneNode(true);
 				}
-			}
-			document.onmouseup = (upEvent) => {
-				if (drag) {
-					drag = false;
-					if (this.isElementInsideContainer(toMove)) {
-						this.container.append(toMove);
-						toMove.style.left = upEvent.clientX - this.containerRect.left - shiftX + 'px';
-						toMove.style.top = upEvent.clientY - this.containerRect.top - shiftY + 'px';
-						if (shouldCopy) {
-							toMove.onmousemove = this.moveOrChangeStickerSize;
-						}
-					} else {
-						document.body.removeChild(toMove);
+				coords = this.getCoords(element);
+				shiftX = downEvent.clientX - coords.left;
+				shiftY = downEvent.clientY - coords.top;
+				document.body.appendChild(toMove);
+				toMove.style.position = 'absolute';
+				toMove.style.left = downEvent.clientX - shiftX + 'px';
+				toMove.style.top = downEvent.clientY - shiftY + 'px';
+			},
+			(moveEvent) => {
+				toMove.style.left = moveEvent.clientX - shiftX + 'px';
+				toMove.style.top = moveEvent.clientY - shiftY + 'px';
+			},
+			(upEvent) => {
+				if (this.isElementInsideContainer(toMove)) {
+					this.container.append(toMove);
+					toMove.style.left = upEvent.clientX - this.containerRect.left - shiftX + 'px';
+					toMove.style.top = upEvent.clientY - this.containerRect.top - shiftY + 'px';
+					if (shouldCopy) {
+						toMove.onmousemove = this.moveOrChangeStickerSize;
 					}
+				} else {
+					document.body.removeChild(toMove);
 				}
-			}
-		}
+			});
 	}
+	
+	// dragAndDropInsideContainer(element, shouldCopy) {
+	// 	let drag = false;
+		
+	// 	element.onmousedown = (downEvent) => {
+	// 		let coords = this.getCoords(element);
+	// 		let shiftX = downEvent.clientX - coords.left;
+	// 		let shiftY = downEvent.clientY - coords.top;
+	// 		let toMove = element;
+	// 		if (shouldCopy) {
+	// 			toMove = element.cloneNode(true);
+	// 		}
+			
+	// 		document.body.appendChild(toMove);
+	// 		toMove.style.position = 'absolute';
+	// 		toMove.style.left = downEvent.clientX - shiftX + 'px';
+	// 		toMove.style.top = downEvent.clientY - shiftY + 'px';
+	// 		drag = true;
+	// 		toMove.ondragstart = () => {
+	// 			return false;
+	// 		};
+	// 		document.onmousemove = (moveEvent) => {
+	// 			if (drag) {
+	// 				toMove.style.left = moveEvent.clientX - shiftX + 'px';
+	// 				toMove.style.top = moveEvent.clientY - shiftY + 'px';
+	// 			}
+	// 		}
+	// 		document.onmouseup = (upEvent) => {
+	// 			if (drag) {
+	// 				drag = false;
+	// 				if (this.isElementInsideContainer(toMove)) {
+	// 					this.container.append(toMove);
+	// 					toMove.style.left = upEvent.clientX - this.containerRect.left - shiftX + 'px';
+	// 					toMove.style.top = upEvent.clientY - this.containerRect.top - shiftY + 'px';
+	// 					if (shouldCopy) {
+	// 						toMove.onmousemove = this.moveOrChangeStickerSize;
+	// 					}
+	// 				} else {
+	// 					document.body.removeChild(toMove);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 	
 	renderSticker(sources) {
 		if (sources) {
