@@ -197,21 +197,24 @@ class Account {
 				let diff = (parseInt(element.style.left) - moveEvent.clientX + this.containerRect.left
 							+ parseInt(element.style.top) - moveEvent.clientY + this.containerRect.top) / 2;
 				let prevLeft = element.getBoundingClientRect().left;
-				let currRight = prevLeft + element.getBoundingClientRect().width;
-				let currLeft = prevLeft - diff;
 				let prevTop = element.getBoundingClientRect().top;
-				let currBottom = prevTop + element.getBoundingClientRect().height;
-				let currTop = prevTop - diff;
+				let prevWidth = element.getBoundingClientRect().width;
+				let prevHeight = element.getBoundingClientRect().height;
+				let rightLimit = prevLeft + prevWidth;
+				let bottomLimit = prevTop + prevHeight;
+				let currLeft = prevLeft - diff;
+				let shiftY = (((diff + prevWidth) * prevHeight) / prevWidth) - prevHeight;
+				let currTop = prevTop - shiftY;
 				
-				if (currLeft < currRight && currTop < currBottom) {
+				if (currLeft < rightLimit && currTop < bottomLimit) {
 					prevLeft = parseInt(element.style.left);
 					prevTop = parseInt(element.style.top);
 					element.style.left = prevLeft - diff + 'px';
-					element.style.top = prevTop - diff + 'px';
+					element.style.top = prevTop - shiftY + 'px';
 					currLeft = parseInt(element.style.left);
 					currTop = parseInt(element.style.top);
-					element.style.width = element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
-					element.style.height = element.getBoundingClientRect().height - currTop + prevTop + 'px';
+					element.style.width = prevWidth - currLeft + prevLeft + 'px';
+					element.style.height = prevHeight - currTop + prevTop + 'px';
 				}
 			},
 			() => {});
@@ -229,10 +232,13 @@ class Account {
 				
 				if (currTop < currBottom) {
 					prevTop = parseInt(element.style.top);
+					let prevHeight = element.getBoundingClientRect().height;
+					let prevWidth = element.getBoundingClientRect().width;
 					element.style.top = prevTop - diff + 'px';
 					currTop = parseInt(element.style.top);
-					element.style.width = element.getBoundingClientRect().width - currTop + prevTop + 'px';
-					element.style.height = element.getBoundingClientRect().height - currTop + prevTop + 'px';
+					element.style.height = prevHeight - currTop + prevTop + 'px';
+					let currHeight = element.getBoundingClientRect().height;
+					element.style.width = prevWidth * (currHeight / prevHeight) + 'px';
 				}
 			},
 			() => {});
@@ -249,21 +255,14 @@ class Account {
 				let currLeft = prevLeft - diff;
 				
 				if (currLeft < currRight) {
-					// prevLeft = parseInt(element.style.left);
-					// element.style.left = prevLeft - diff + 'px';
-					// currLeft = parseInt(element.style.left);
-					// element.style.width = element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
-					// element.style.height = element.getBoundingClientRect().height - currLeft + prevLeft + 'px';
-
-					// prevLeft = parseInt(element.style.left);
-
+					prevLeft = parseInt(element.style.left);
+					let prevWidth = element.getBoundingClientRect().width;
+					let prevHeight = element.getBoundingClientRect().height
+					element.style.left = prevLeft - diff + 'px';
 					currLeft = parseInt(element.style.left);
+					element.style.width = prevWidth - currLeft + prevLeft + 'px';
 					let currWidth = element.getBoundingClientRect().width;
-					let currHeight = element.getBoundingClientRect().height;
-
-					element.style.left = currLeft - diff + 'px';
-					element.style.width = currWidth + diff * (currWidth / currHeight) + 'px';
-					element.style.height = currHeight + diff * (currHeight / currWidth) + 'px';
+					element.style.height = prevHeight * (currWidth / prevWidth)  + 'px';
 				}
 			},
 			() => {});
@@ -275,9 +274,11 @@ class Account {
 			(moveEvent) => {
 				let diff = (moveEvent.clientX - element.getBoundingClientRect().right +
 							moveEvent.clientY - element.getBoundingClientRect().bottom) / 2;
-					
-				element.style.width = element.getBoundingClientRect().width + diff + 'px';
-				element.style.height = element.getBoundingClientRect().height + diff + 'px';
+				let prevWidth = element.getBoundingClientRect().width;
+				let prevHeight = element.getBoundingClientRect().height;
+				element.style.width = prevWidth + diff + 'px';
+				let currWidth = element.getBoundingClientRect().width;
+				element.style.height = prevHeight * (currWidth / prevWidth) + 'px';
 			},
 			() => {});
 	}
