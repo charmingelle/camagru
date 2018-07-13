@@ -143,3 +143,7 @@ header a:visited {
 	height: 5vmin;
 	border: 1px solid black;
 }
+
+.invisible {
+	display:none
+}

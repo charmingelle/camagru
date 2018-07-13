@@ -217,7 +217,7 @@ class Home {
 				.then(response => response.json())
 				.then(data => {
 					if (data !== 'OK') {
-						this.errorContainer.innerHTML = data;
+						this.renderErrorContainer(data);
 					} else {
 						this.renderSignedInOrAnonymousPage(true);
 					}
@@ -280,8 +280,29 @@ class Home {
 		this.formContainer.append(form);
 	}
 	
-	renderErrorContainer() {
+	renderErrorContainer(errorMessage) {
 		removeAllChildren(this.errorContainer);
+		if (!errorMessage) {
+			this.errorContainer.classList.add('invisible');
+		} else {
+			this.errorContainer.classList.remove('invisible');
+			this.errorContainer.innerHTML = errorMessage;
+		}
+	}
+	
+	renderFormContainer(formName) {
+		removeAllChildren(this.formContainer);
+		if (!formName) {
+			this.formContainer.classList.add('invisible');
+		} else {
+			this.errorContainer.classList.remove('invisible');
+			if (formName === 'signin-form')
+				this.showSigninForm();
+			else if (formName === 'signup-form')
+				this.showSignupForm();
+			else if (formName === 'reset-password-form')
+				this.showResetPasswordForm();
+		}
 	}
 	
 	showSignedInHeader() {
@@ -304,13 +325,13 @@ class Home {
 		
 		signinButton.id = 'signin-button';
 		signinButton.innerHTML = 'Sign in';
-		signinButton.addEventListener('click', this.showSigninForm);
+		signinButton.addEventListener('click', this.renderFormContainer.bind(this, 'signin-form'));
 		signupButton.id = 'signup-button';
 		signupButton.innerHTML = 'Sign up';
-		signupButton.addEventListener('click', this.showSignupForm);
+		signupButton.addEventListener('click', this.renderFormContainer.bind(this, 'signup-form'));
 		resetPasswordButton.id = 'reset-password-button';
 		resetPasswordButton.innerHTML = 'Forgot password?';
-		resetPasswordButton.addEventListener('click', this.showResetPasswordForm);
+		resetPasswordButton.addEventListener('click', this.renderFormContainer.bind(this, 'reset-password-form'));
 		this.headerButtonsDiv.append(signinButton, signupButton, resetPasswordButton);
 	}
 	
@@ -338,6 +359,7 @@ class Home {
 		this.isSignedIn = isSignedIn;
 		this.renderHeaderButtonsDiv();
 		this.renderErrorContainer();
+		this.renderFormContainer();
 		this.renderGallery();
 	}
 	
