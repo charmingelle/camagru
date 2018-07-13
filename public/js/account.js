@@ -375,6 +375,10 @@ class Account {
 		return false;
 	}
 	
+	canSavePhoto() {
+		return this.container.children.length > 1;
+	}
+	
 	dragAndDropInsideContainer(element, shouldCopy) {
 		let drag = false;
 		
@@ -412,6 +416,11 @@ class Account {
 						}
 					} else {
 						document.body.removeChild(toMove);
+					}
+					if (this.canSavePhoto()) {
+						this.captureButton.disabled = ''
+					} else {
+						this.captureButton.disabled = 'disabled';
 					}
 				}
 			}
