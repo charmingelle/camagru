@@ -285,7 +285,7 @@ class Account {
 	
 	moveOrChangeStickerSize(mouseMoveEvent) {
 		let stickerCoords = mouseMoveEvent.target.getBoundingClientRect();
-		let shift = 20;
+		let shift = vmin(1);
 		
 		mouseMoveEvent.target.style.cursor = '-webkit-grab';
 		mouseMoveEvent.target.style.cursor = 'grab';
@@ -456,7 +456,7 @@ class Account {
 		let stickedStickers = [];
 
 		for (let elem of this.container.children) {
-			if (elem.classList.contains('sticked-sticker')) {
+			if (elem.classList.contains('sticker')) {
 				stickedStickers.push(elem);
 			}
 		}

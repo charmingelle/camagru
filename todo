@@ -37,3 +37,5 @@ TODO
 - add sign in verification on server side when like or comment is added
 - fix logout issue
 - check if I can make corner sticker resizing better
+- check if drag and drop works smoothly (not really now)
+- implement sticker adding (not necessary)
