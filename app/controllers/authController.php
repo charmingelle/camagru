@@ -36,15 +36,21 @@ class AuthController {
 	}
 	
 	public static function signin() {
-		if (!isset($_POST['login']) || $_POST['login'] === ''
-			|| !isset($_POST['password']) || $_POST['password'] === ''
-			|| !isset($_POST['submit']) || $_POST['submit'] !== 'Sign in') {
+		$body = file_get_contents('php://input');
+		$creds = json_decode($body, true);
+		
+		// echo json_encode($creds['password']);
+		
+		// echo json_encode($body);
+		if (!isset($creds['login']) || $creds['login'] === ''
+			|| !isset($creds['password']) || $creds['password'] === '') {
 			exit ;
 		}
-		if (Auth::signin($_POST['login'], hash('whirlpool', $_POST['password'])) === true) {
-			Route::redirect('/');
+		if (Auth::signin($creds['login'], hash('whirlpool', $creds['password'])) === true) {
+			echo json_encode('OK');
 		} else {
-			Page::show('views/invalidOrInactiveAccount.php');
+			echo json_encode('Please make sure that your login and password are correct and that your account has been activated via link sent to your email address.');
+			// Page::show('views/invalidOrInactiveAccount.php');
 		}
 	}
 	

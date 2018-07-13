@@ -30,4 +30,14 @@ class SiteMapController {
 	public static function show404() {
 		Page::show('views/404.php');
 	}
+	
+	// public static function test() {
+	// 	if (rand(0, 1) < 0.5) {
+	// 		http_response_code(400);
+	// 		echo json_encode('error');
+	// 	} else {
+	// 		http_response_code(200);
+	// 		echo json_encode('home');
+	// 	}
+	// }
 }

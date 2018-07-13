@@ -32,10 +32,12 @@ TODO
 - check how to make rediect if condition is set and it isn't true
 - commented 404 redirect from now; check what happens with it
 - replace names with "picture" with "photo"
-- add error messages to form section
 - add the ability to delete comments (not mandatory)
 - add sign in verification on server side when like or comment is added
 - fix logout issue
 - check if I can make corner sticker resizing better
 - check if drag and drop works smoothly (not really now)
-- implement sticker adding (not necessary)
+- implement sticker uploading (not necessary)
+- make sure that you verify all data received from client (before sending and when server receives it)
+- should I incrypt the password before sending it?
+- add error messages to form section

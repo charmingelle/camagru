@@ -44,7 +44,7 @@ require_once(getRoot() . 'app/core/Message.php');
 
 
 
-
+// Route::get('/test', 'SiteMapController@test');
 
 Route::get('/', 'SiteMapController@showHome');
 

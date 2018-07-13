@@ -7,6 +7,7 @@ class Home {
 		this.gallery = document.getElementById('gallery');
 		this.formContainer = document.getElementById('form-container');
 		this.headerButtonsDiv = document.getElementById('header-buttons-div');
+		this.errorContainer = document.getElementById('error-container');
 
 		this.fillCommentsContainer = this.fillCommentsContainer.bind(this);
 		this.setSignedInAddComment = this.setSignedInAddComment.bind(this);
@@ -163,27 +164,68 @@ class Home {
 		}
 	}
 	
+	// showSigninForm() {
+	// 	let form = document.createElement('form');
+	// 	let loginTextNode = document.createTextNode("Login:");
+	// 	let loginInput = document.createElement('input');
+	// 	let passwordTextNode = document.createTextNode("Password:");
+	// 	let passwordInput = document.createElement('input');
+	// 	let submitInput = document.createElement('input');
+
+	// 	form.action = '/signin'
+	// 	form.method = 'post';
+	// 	loginInput.type = 'text';
+	// 	loginInput.name = 'login';
+	// 	loginInput.value = '';
+	// 	passwordInput.type = 'password';
+	// 	passwordInput.name = 'password';
+	// 	passwordInput.value = '';
+	// 	submitInput.type = 'submit';
+	// 	submitInput.name = 'submit';
+	// 	submitInput.value = 'Sign in';
+
+	// 	form.append(loginTextNode, loginInput, passwordTextNode, passwordInput, submitInput);
+	// 	removeAllChildren(this.formContainer);
+	// 	this.formContainer.append(form);
+	// }
+	
 	showSigninForm() {
-		let form = document.createElement('form');
+		let form = document.createElement('div');
 		let loginTextNode = document.createTextNode("Login:");
 		let loginInput = document.createElement('input');
 		let passwordTextNode = document.createTextNode("Password:");
 		let passwordInput = document.createElement('input');
-		let submitInput = document.createElement('input');
+		let submitButton = document.createElement('button');
 
-		form.action = '/signin'
-		form.method = 'post';
 		loginInput.type = 'text';
 		loginInput.name = 'login';
 		loginInput.value = '';
 		passwordInput.type = 'password';
 		passwordInput.name = 'password';
 		passwordInput.value = '';
-		submitInput.type = 'submit';
-		submitInput.name = 'submit';
-		submitInput.value = 'Sign in';
+		submitButton.innerHTML = 'Sign in';
+		submitButton.addEventListener('click', () => {
+			if (loginInput.value !== '' && passwordInput.value != '') {
+				fetch('/signin', {
+					method: 'POST',
+					credentials: 'include',
+					body: JSON.stringify({
+						'login': loginInput.value,
+						'password': passwordInput.value
+					})
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data !== 'OK') {
+						this.errorContainer.innerHTML = data;
+					} else {
+						this.renderSignedInOrAnonymousPage(true);
+					}
+				});
+			}
+		});
 
-		form.append(loginTextNode, loginInput, passwordTextNode, passwordInput, submitInput);
+		form.append(loginTextNode, loginInput, passwordTextNode, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
@@ -238,6 +280,10 @@ class Home {
 		this.formContainer.append(form);
 	}
 	
+	renderErrorContainer() {
+		removeAllChildren(this.errorContainer);
+	}
+	
 	showSignedInHeader() {
 		let myAccountButton = document.createElement('a');
 		let signoutButton = document.createElement('a');
@@ -269,6 +315,8 @@ class Home {
 	}
 	
 	renderHeaderButtonsDiv() {
+		// console.log('renderHeaderButtonsDiv called');
+		removeAllChildren(this.headerButtonsDiv);
 		if (this.isSignedIn) {
 			this.showSignedInHeader();
 		} else {
@@ -277,6 +325,7 @@ class Home {
 	}
 	
 	renderGallery() {
+		removeAllChildren(this.gallery);
 		fetch('/photos', {
 			method: 'POST',
 			credentials: 'include'
@@ -288,6 +337,7 @@ class Home {
 	renderSignedInOrAnonymousPage(isSignedIn) {
 		this.isSignedIn = isSignedIn;
 		this.renderHeaderButtonsDiv();
+		this.renderErrorContainer();
 		this.renderGallery();
 	}
 	
