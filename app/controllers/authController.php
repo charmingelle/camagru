@@ -30,7 +30,7 @@ class AuthController {
 				echo json_encode(Message::$invalidPassword);
 				exit ;
 			}
-			Auth::sendLink($creds['email'], $creds['login'], hash('whirlpool', $creds['password']));
+			Auth::sendSignupEmail($creds['email'], $creds['login'], hash('whirlpool', $creds['password']));
 		}
 	}
 	
@@ -66,7 +66,7 @@ class AuthController {
 	
 	public static function signout() {
 		unset($_SESSION['auth-data']);
-		SiteMapController::showHome();
+		Route::redirect('/');
 	}
 
 	public static function changeEmail() {
@@ -110,6 +110,7 @@ class AuthController {
 			&& isset($_GET['login']) && $_GET['login'] !== ''
 			&& isset($_GET['hash']) && $_GET['hash'] !== ''
 			&& Auth::isHashValid(urldecode($_GET['email']), urldecode($_GET['login']), urldecode($_GET['hash']))) {
+			Auth::cleanHash(urldecode($_GET['login']));
 			$_SESSION['auth-data']['login'] = $_GET['login'];
 			SiteMapController::showAccount();
 		} else {
@@ -135,7 +136,7 @@ class AuthController {
 		}
 	}
 	
-	public static function sendResetLink() {
+	public static function sendForgotPasswordEmail() {
 		$body = file_get_contents('php://input');
 		
 		if ($body) {
@@ -145,7 +146,7 @@ class AuthController {
 				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
-			Auth::sendResetLink($creds['email']);
+			Auth::sendForgotPasswordEmail($creds['email']);
 		}
 	}
 	

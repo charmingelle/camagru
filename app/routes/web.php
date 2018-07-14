@@ -26,7 +26,7 @@ require_once(getRoot() . 'app/core/Message.php');
 // Route::post(['uri' => '/changePassword', 'controller' => 'AuthController@changePassword', 'condition' => 'signed in']);
 
 // Route::get(['uri' => '/forgotPassword', 'controller' => 'SiteMapController@showForgotPassword', 'condition' => 'not signed in']);
-// Route::post(['uri' => '/forgotPassword', 'controller' => 'AuthController@sendResetLink']);
+// Route::post(['uri' => '/forgotPassword', 'controller' => 'AuthController@sendForgotPasswordEmail']);
 
 // Route::post(['uri' => '/photos', 'controller' => 'DataController@getPhotos']);
 
@@ -46,9 +46,6 @@ require_once(getRoot() . 'app/core/Message.php');
 
 Route::get('/', 'SiteMapController@showHome');
 
-Route::get('/js/home.js', 'SiteMapController@showJS');
-
-// verify this
 Route::get('/signup', 'AuthController@signup');
 Route::post('/signup', 'AuthController@sendVerification');
 
@@ -63,7 +60,7 @@ Route::post('/changeLogin', 'AuthController@changeLogin');
 Route::get('/changePassword', 'AuthController@tempAccountAccess');
 Route::post('/changePassword', 'AuthController@changePassword');
 
-Route::post('/forgotPassword', 'AuthController@sendResetLink');
+Route::post('/forgotPassword', 'AuthController@sendForgotPasswordEmail');
 
 Route::post('/photos', 'DataController@getPhotos');
 

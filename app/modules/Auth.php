@@ -10,11 +10,25 @@ class Auth {
 		return true;
 	}
 
-	public static function sendLink($email, $login, $password) {
+	private static function _renewHash($email) {
+		$hash = md5(rand(0, 1000));
+
+		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE email = :email', ['hash' => $hash, 'email' => $email]);
+		return $hash;
+	}
+
+	public static function cleanHash($login) {
+		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE login = :login', ['hash' => "", 'login' => $login]);
+	}
+
+	public static function sendSignupEmail($email, $login, $password) {
 		if (self::_busyLogin($login)) {
 			echo json_encode(Message::$busyLogin);
 		} else {
-			$hash = md5(rand(0, 1000));
+			DBConnect::sendQuery('INSERT INTO account(email, login, password) VALUES (:email, :login, :password)',
+								['email' => $email, 'login' => $login, 'password' => $password])->fetchAll();
+			
+			$hash = self::_renewHash($email);
 			$message = 'Thanks for signing up to Camagru website!
 			
 			Please click this link to activate your account:
@@ -23,8 +37,6 @@ class Auth {
 			';
 			
 			mail($email, 'Confirm your signing up to Camagru website', $message, 'From:noreply@camagru.com\r\n');
-			DBConnect::sendQuery('INSERT INTO account(email, login, password, hash) VALUES (:email, :login, :password, :hash)',
-							['email' => $email, 'login' => $login, 'password' => $password, 'hash' => $hash])->fetchAll();
 			echo json_encode(Message::$verificationEmail);
 		}
 	}
@@ -41,7 +53,8 @@ class Auth {
 	
 	public static function signup($email, $login, $hash) {
 		if (self::isHashValid($email, $login, $hash)) {
-			DBConnect::sendQuery('UPDATE account SET active = :active WHERE login = :login', ['active' => true, 'login' => $login])->fetchAll();
+			DBConnect::sendQuery('UPDATE account SET active = :active WHERE login = :login', ['active' => true, 'login' => $login]);
+			self::cleanHash($login);
 			return true;
 		}
 		return false;
@@ -81,14 +94,15 @@ class Auth {
 		echo json_encode(Message::$passwordChanged);
 	}
 	
-	public static function sendResetLink($email) {
-		$query_result = DBConnect::sendQuery('SELECT login, hash FROM account WHERE email = :email', ['email' => $email])->fetchAll();
+	public static function sendForgotPasswordEmail($email) {
+		$hash = self::_renewHash($email);
+
+		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE email = :email', ['email' => $email])->fetchAll();
 		
 		if (empty($query_result)) {
 			echo json_encode(Message::$invalidEmail);
 		} else {
 			$login = $query_result[0]['login'];
-			$hash = $query_result[0]['hash'];
 			$message = 'Please click this link to reset your Camagru account password:
 			http://localhost:7777/changePassword?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash).'
 			

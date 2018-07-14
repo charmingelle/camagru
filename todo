@@ -21,8 +21,10 @@ TODO
 + resolve the case with preventing scroll from scrolling when moving stickers
 + find out if I can export, import without webpack
 + fix photo saving after drag and drop implementation
++ replace all exits with messages on server
++ add Sign Out button to any page where needed
++ think how to make hash in database temporary
 
-- add Sign Out button to any page where needed
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
 - rename all class files
@@ -42,8 +44,6 @@ TODO
 - should I incrypt the password before sending it?
 - add error messages to form section
 
-- replace all exits with messages on server
 - make sure you use JSON in body in fetch everywhere
 - think about covering fetch in some shorter function
 - think if you should return DB errors
-- think how to make HASH in database temporary

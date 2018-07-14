@@ -86,4 +86,8 @@ class Route {
 			return $controller_name::$controller_method();
 		}
 	}
+
+	public static function redirect($uri) {
+		header('Location: http://' . $_SERVER['HTTP_HOST'] . $uri);
+	}
 }
