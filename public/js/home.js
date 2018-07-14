@@ -1,13 +1,11 @@
-import { removeAllChildren } from '/js/utils.js';
-
-const ENTER = '13';
+import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer } from '/js/utils.js';
 
 class Home {
 	constructor() {
 		this.gallery = document.getElementById('gallery');
 		this.formContainer = document.getElementById('form-container');
 		this.headerButtonsDiv = document.getElementById('header-buttons-div');
-		this.errorContainer = document.getElementById('error-container');
+		this.messageContainer = document.getElementById('message-container');
 
 		this.fillCommentsContainer = this.fillCommentsContainer.bind(this);
 		this.setSignedInAddComment = this.setSignedInAddComment.bind(this);
@@ -23,6 +21,10 @@ class Home {
 		this.renderHeaderButtonsDiv = this.renderHeaderButtonsDiv.bind(this);
 		this.renderGallery = this.renderGallery.bind(this);
 		this.renderSignedInOrAnonymousPage = this.renderSignedInOrAnonymousPage.bind(this);
+
+		this.signupFormHandler = this.signupFormHandler.bind(this);
+		this.signinFormHandler = this.signinFormHandler.bind(this);
+		this.resetPasswordFormHandler = this.resetPasswordFormHandler.bind(this);
 	}
 
 	fillCommentsContainer(commentsContainer, photoId) {
@@ -57,7 +59,7 @@ class Home {
 		});
 	}
 
-	setSignedInAddComment(addComment, commentsContainer, photoId) {
+	setSignedInAddComment(addComment, commentsContainer, photoId, commentAmountDiv) {
 		addComment.placeholder = 'Add a comment...';
 		addComment.maxLength = '8000';
 		addComment.addEventListener('keypress', (event) => {
@@ -80,7 +82,7 @@ class Home {
 					})
 					.then(response => response.json())
 					.then(commentAmount => {
-						comment.innerHTML = commentAmount;
+						commentAmountDiv.innerHTML = commentAmount;
 					});
 					addComment.value = '';
 					removeAllChildren(commentsContainer);
@@ -95,9 +97,9 @@ class Home {
 		addComment.disabled = 'disabled';
 	}
 	
-	setAddComment(addComment, commentsContainer, photoId) {
+	setAddComment(addComment, commentsContainer, photoId, commentAmountDiv) {
 		if (this.isSignedIn) {
-			this.setSignedInAddComment(addComment, commentsContainer, photoId);
+			this.setSignedInAddComment(addComment, commentsContainer, photoId, commentAmountDiv);
 		} else {
 			this.setNotSignedInAddComment(addComment);
 		}
@@ -154,7 +156,7 @@ class Home {
 				commentsContainer.classList.add('comments');
 				this.fillCommentsContainer(commentsContainer, source['id']);
 				addComment.type = 'text';
-				this.setAddComment(addComment, commentsContainer, source['id']);
+				this.setAddComment(addComment, commentsContainer, source['id'], comment);
 		
 				likeComment.append(likeIcon, like, commentIcon, comment);
 				imageContainer.append(login, image, likeComment, commentsContainer, addComment);
@@ -164,31 +166,27 @@ class Home {
 		}
 	}
 	
-	// showSigninForm() {
-	// 	let form = document.createElement('form');
-	// 	let loginTextNode = document.createTextNode("Login:");
-	// 	let loginInput = document.createElement('input');
-	// 	let passwordTextNode = document.createTextNode("Password:");
-	// 	let passwordInput = document.createElement('input');
-	// 	let submitInput = document.createElement('input');
+	signinFormHandler(login, password) {
+		if (login !== '' && password != '') {
+			fetch('/signin', {
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					'login': login,
+					'password': password
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data !== 'OK') {
+					renderMessageContainer(this.messageContainer, data);
+				} else {
+					this.renderSignedInOrAnonymousPage(true);
+				}
+			});
+		}
+	}
 
-	// 	form.action = '/signin'
-	// 	form.method = 'post';
-	// 	loginInput.type = 'text';
-	// 	loginInput.name = 'login';
-	// 	loginInput.value = '';
-	// 	passwordInput.type = 'password';
-	// 	passwordInput.name = 'password';
-	// 	passwordInput.value = '';
-	// 	submitInput.type = 'submit';
-	// 	submitInput.name = 'submit';
-	// 	submitInput.value = 'Sign in';
-
-	// 	form.append(loginTextNode, loginInput, passwordTextNode, passwordInput, submitInput);
-	// 	removeAllChildren(this.formContainer);
-	// 	this.formContainer.append(form);
-	// }
-	
 	showSigninForm() {
 		let form = document.createElement('div');
 		let loginTextNode = document.createTextNode("Login:");
@@ -198,96 +196,90 @@ class Home {
 		let submitButton = document.createElement('button');
 
 		loginInput.type = 'text';
-		loginInput.name = 'login';
 		loginInput.value = '';
 		passwordInput.type = 'password';
-		passwordInput.name = 'password';
 		passwordInput.value = '';
 		submitButton.innerHTML = 'Sign in';
 		submitButton.addEventListener('click', () => {
-			if (loginInput.value !== '' && passwordInput.value != '') {
-				fetch('/signin', {
-					method: 'POST',
-					credentials: 'include',
-					body: JSON.stringify({
-						'login': loginInput.value,
-						'password': passwordInput.value
-					})
-				})
-				.then(response => response.json())
-				.then(data => {
-					if (data !== 'OK') {
-						this.renderErrorContainer(data);
-					} else {
-						this.renderSignedInOrAnonymousPage(true);
-					}
-				});
-			}
+			this.signinFormHandler(loginInput.value, passwordInput.value);
 		});
-
+		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput.value, passwordInput.value));
+		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput.value, passwordInput.value));
 		form.append(loginTextNode, loginInput, passwordTextNode, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
-	
+
+	signupFormHandler(email, login, password) {
+		if (email !== '' && login !== '' && password != '') {
+			fetch('/signup', {
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					'email': email,
+					'login': login,
+					'password': password
+				})
+			})
+			.then(response => response.json())
+			.then(data => renderMessageContainer(this.messageContainer, data));
+		}
+	}
+
 	showSignupForm() {
-		let form = document.createElement('form');
+		let form = document.createElement('div');
 		let emailTextNode = document.createTextNode("Email:");
 		let emailInput = document.createElement('input');
 		let loginTextNode = document.createTextNode("Login:");
 		let loginInput = document.createElement('input');
 		let passwordTextNode = document.createTextNode("Password:");
 		let passwordInput = document.createElement('input');
-		let submitInput = document.createElement('input');
+		let submitButton = document.createElement('button');
 
-		form.action = '/signup'
-		form.method = 'post';
 		emailInput.type = 'text';
-		emailInput.name = 'email';
 		emailInput.value = '';
 		loginInput.type = 'text';
-		loginInput.name = 'login';
 		loginInput.value = '';
 		passwordInput.type = 'password';
-		passwordInput.name = 'password';
 		passwordInput.value = '';
-		submitInput.type = 'submit';
-		submitInput.name = 'submit';
-		submitInput.value = 'Sign up';
-
-		form.append(emailTextNode, emailInput, loginTextNode, loginInput, passwordTextNode, passwordInput, submitInput);
+		submitButton.innerHTML = 'Sign up';
+		submitButton.addEventListener('click', () => this.signupFormHandler(emailInput.value, loginInput.value, passwordInput.value));
+		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
+		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
+		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
+		form.append(emailTextNode, emailInput, loginTextNode, loginInput, passwordTextNode, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
+	}
+
+	resetPasswordFormHandler(email) {
+		if (email !== '') {
+			fetch('/forgotPassword', {
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					'email': email
+				})
+			})
+			.then(response => response.json())
+			.then(data => renderMessageContainer(this.messageContainer, data));
+		}
 	}
 	
 	showResetPasswordForm() {
-		let form = document.createElement('form');
+		let form = document.createElement('div');
 		let emailTextNode = document.createTextNode("Email:");
 		let emailInput = document.createElement('input');
-		let submitInput = document.createElement('input');
+		let submitButton = document.createElement('button');
 
-		form.action = '/forgotPassword'
-		form.method = 'post';
 		emailInput.type = 'text';
-		emailInput.name = 'email';
 		emailInput.value = '';
-		submitInput.type = 'submit';
-		submitInput.name = 'submit';
-		submitInput.value = 'Get reset password link';
-
-		form.append(emailTextNode, emailInput, submitInput);
+		submitButton.innerHTML = 'Get reset password link';
+		submitButton.addEventListener('click', () => this.resetPasswordFormHandler(emailInput.value));
+		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.resetPasswordFormHandler, emailInput.value));
+		form.append(emailTextNode, emailInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
-	}
-	
-	renderErrorContainer(errorMessage) {
-		removeAllChildren(this.errorContainer);
-		if (!errorMessage) {
-			this.errorContainer.classList.add('invisible');
-		} else {
-			this.errorContainer.classList.remove('invisible');
-			this.errorContainer.innerHTML = errorMessage;
-		}
 	}
 	
 	renderFormContainer(formName) {
@@ -295,7 +287,7 @@ class Home {
 		if (!formName) {
 			this.formContainer.classList.add('invisible');
 		} else {
-			this.errorContainer.classList.remove('invisible');
+			this.formContainer.classList.remove('invisible');
 			if (formName === 'signin-form')
 				this.showSigninForm();
 			else if (formName === 'signup-form')
@@ -336,7 +328,6 @@ class Home {
 	}
 	
 	renderHeaderButtonsDiv() {
-		// console.log('renderHeaderButtonsDiv called');
 		removeAllChildren(this.headerButtonsDiv);
 		if (this.isSignedIn) {
 			this.showSignedInHeader();
@@ -358,7 +349,7 @@ class Home {
 	renderSignedInOrAnonymousPage(isSignedIn) {
 		this.isSignedIn = isSignedIn;
 		this.renderHeaderButtonsDiv();
-		this.renderErrorContainer();
+		renderMessageContainer(this.messageContainer);
 		this.renderFormContainer();
 		this.renderGallery();
 	}

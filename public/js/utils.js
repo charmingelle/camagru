@@ -1,3 +1,5 @@
+export const ENTER = 13;
+
 const vh = (v) => {
 	let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
@@ -40,5 +42,23 @@ export const dragAndDrop = (element, mouseDownHandler, mouseMoveHandler, mouseUp
 				mouseUpHandler(upEvent);
 			}
 		}
+	}
+}
+
+export const enterPressHandler = (event, callback, ...params) => {
+	let keycode = (event.keyCode ? event.keyCode : event.which);
+	
+	if (keycode === ENTER) {
+		callback(...params);
+	}
+}
+
+export const renderMessageContainer = (container, message) => {
+	removeAllChildren(container);
+	if (!message) {
+		container.classList.add('invisible');
+	} else {
+		container.classList.remove('invisible');
+		container.innerHTML = message;
 	}
 }

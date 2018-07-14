@@ -138,7 +138,7 @@ header a:visited {
 	cursor: pointer;
 }
 
-#error-container {
+#message-container {
 	width: 100%;
 	height: 5vmin;
 	border: 1px solid black;

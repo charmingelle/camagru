@@ -17,13 +17,13 @@ require_once(getRoot() . 'app/core/Message.php');
 // Route::get(['uri' => '/signout', 'controller' => 'AuthController@signout', 'condition' => 'signed in']);
 
 // Route::get(['uri' => '/changeEmail', 'controller' => 'SiteMapController@showChangeEmail', 'condition' => 'signed in']);
-// Route::post(['uri' => '/changeEmail', 'controller' => 'AuthController@changeEmail']);
+// Route::post(['uri' => '/changeEmail', 'controller' => 'AuthController@changeEmail', 'condition' => 'signed in']);
 
 // Route::get(['uri' => '/changeLogin', 'controller' => 'SiteMapController@showChangeLogin', 'condition' => 'signed in']);
-// Route::post(['uri' => '/changeLogin', 'controller' => 'AuthController@changeLogin']);
+// Route::post(['uri' => '/changeLogin', 'controller' => 'AuthController@changeLogin', 'condition' => 'signed in']);
 
 // Route::get(['uri' => '/changePassword', 'controller' => 'AuthController@showChangePassword']);
-// Route::post(['uri' => '/changePassword', 'controller' => 'AuthController@changePassword']);
+// Route::post(['uri' => '/changePassword', 'controller' => 'AuthController@changePassword', 'condition' => 'signed in']);
 
 // Route::get(['uri' => '/forgotPassword', 'controller' => 'SiteMapController@showForgotPassword', 'condition' => 'not signed in']);
 // Route::post(['uri' => '/forgotPassword', 'controller' => 'AuthController@sendResetLink']);
@@ -44,30 +44,26 @@ require_once(getRoot() . 'app/core/Message.php');
 
 
 
-// Route::get('/test', 'SiteMapController@test');
-
 Route::get('/', 'SiteMapController@showHome');
 
 Route::get('/js/home.js', 'SiteMapController@showJS');
 
+// verify this
 Route::get('/signup', 'AuthController@signup');
 Route::post('/signup', 'AuthController@sendVerification');
 
-Route::get('/signin', 'SiteMapController@showSignin');
 Route::post('/signin', 'AuthController@signin');
 
 Route::get('/signout', 'AuthController@signout');
 
-Route::get('/changeEmail', 'SiteMapController@showChangeEmail');
 Route::post('/changeEmail', 'AuthController@changeEmail');
 
-Route::get('/changeLogin', 'SiteMapController@showChangeLogin');
 Route::post('/changeLogin', 'AuthController@changeLogin');
 
+// verify this
 Route::get('/changePassword', 'AuthController@showChangePassword');
 Route::post('/changePassword', 'AuthController@changePassword');
 
-Route::get('/forgotPassword', 'SiteMapController@showForgotPassword');
 Route::post('/forgotPassword', 'AuthController@sendResetLink');
 
 Route::post('/photos', 'DataController@getPhotos');

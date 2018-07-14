@@ -1,4 +1,4 @@
-import { vmin, removeAllChildren, dragAndDrop } from '/js/utils.js';
+import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer } from '/js/utils.js';
 
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
@@ -22,6 +22,10 @@ class Account {
 		this.upload = document.getElementById('account-upload');
 		this.captureButton = document.getElementById('account-capture-button');
 		this.scale = vmin(50);
+		this.messageContainer = document.getElementById('message-container');
+		this.accountEmail = document.getElementById('account-email');
+		this.accountLogin = document.getElementById('account-login');
+		this.accountPassword = document.getElementById('account-password');
 
 		this.renderCamera = this.renderCamera.bind(this);
 		this.renderSticker = this.renderSticker.bind(this);
@@ -35,6 +39,9 @@ class Account {
 		this.isElementInsideContainer = this.isElementInsideContainer.bind(this);
 		this.dragAndDropInsideContainer = this.dragAndDropInsideContainer.bind(this);
 		this.moveOrChangeStickerSize = this.moveOrChangeStickerSize.bind(this);
+		this.changeEmailHandler = this.changeEmailHandler.bind(this);
+		this.changeLoginHandler = this.changeLoginHandler.bind(this);
+		this.changePasswordHandler = this.changePasswordHandler.bind(this);
 	}
 	
 	getCoords(elem) {
@@ -504,13 +511,62 @@ class Account {
 		this.buttonBlock.insertBefore(button, this.buttonBlock.firstChild);
 	}
 
+	changeEmailHandler() {
+		if (this.accountEmail.value !== '') {
+			fetch('/changeEmail', {
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					'email': this.accountEmail.value
+				})
+			})
+			.then(response => response.json())
+			.then(data => renderMessageContainer(this.messageContainer, data));
+		}
+	}
+
+	changeLoginHandler() {
+		if (this.accountLogin.value !== '') {
+			fetch('/changeLogin', {
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					'login': this.accountLogin.value
+				})
+			})
+			.then(response => response.json())
+			.then(data => renderMessageContainer(this.messageContainer, data));
+		}
+	}
+
+	changePasswordHandler() {
+		if (this.accountPassword.value !== '') {
+			fetch('/changePassword', {
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					'password': this.accountPassword.value
+				})
+			})
+			.then(response => response.json())
+			.then(data => renderMessageContainer(this.messageContainer, data));
+		}
+	}
+
 	render() {
 		this.renderCamera();
 		this.renderStickers();
 		this.renderPhotos();
 		this.upload.addEventListener('change', this.uploadPhoto);
 		this.captureButton.addEventListener('click', this.savePhoto);
+		renderMessageContainer(this.messageContainer);
 		document.getElementById('account-clear-button').addEventListener('click', this.clearPhoto);
+		this.accountEmail.addEventListener('keypress', (event) => enterPressHandler(event, this.changeEmailHandler));
+		document.getElementById('account-change-email-button').addEventListener('click', this.changeEmailHandler);
+		this.accountLogin.addEventListener('keypress', (event) => enterPressHandler(event, this.changeLoginHandler));
+		document.getElementById('account-change-login-button').addEventListener('click', this.changeLoginHandler);
+		this.accountPassword.addEventListener('keypress', (event) => enterPressHandler(event, this.changePasswordHandler));
+		document.getElementById('account-change-password-button').addEventListener('click', this.changePasswordHandler);
 	}
 }
 

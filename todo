@@ -41,3 +41,8 @@ TODO
 - make sure that you verify all data received from client (before sending and when server receives it)
 - should I incrypt the password before sending it?
 - add error messages to form section
+
+- replace all exits with messages on server
+- make sure you use JSON in body in fetch everywhere
+- think about covering fetch in some shorter function
+- think if you should return DB errors

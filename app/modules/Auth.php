@@ -23,6 +23,9 @@ class Auth {
 			mail($email, 'Confirm your signing up to Camagru website', $message, 'From:noreply@camagru.com\r\n');
 			DBConnect::sendQuery('INSERT INTO account(email, login, password, hash) VALUES (:email, :login, :password, :hash)',
 							['email' => $email, 'login' => $login, 'password' => $password, 'hash' => $hash])->fetchAll();
+			echo json_encode(Message::$verificationEmail);
+		} else {
+			echo json_encode(Message::$busyLogin);
 		}
 	}
 	
@@ -56,35 +59,44 @@ class Auth {
 	}
 	
 	public static function changeEmail($email, $login) {
-		$query_result = DBConnect::sendQuery('UPDATE account SET email = :email WHERE login = :login',
+		DBConnect::sendQuery('UPDATE account SET email = :email WHERE login = :login',
 											['email' => $email, 'login' => $login])->fetchAll();
+		echo json_encode(Message::$emailChanged);
 	}
 	
 	public static function changeLogin($new_login, $login) {
-		$query_result = DBConnect::sendQuery('UPDATE account SET login = :new_login WHERE login = :login',
-											['new_login' => $new_login, 'login' => $login])->fetchAll();
+		if (self::_loginExists($new_login)) {
+			echo json_encode(Message::$busyLogin);
+		} else {
+			DBConnect::sendQuery('UPDATE account SET login = :new_login WHERE login = :login',
+												['new_login' => $new_login, 'login' => $login])->fetchAll();
+			$_SESSION['auth-data']['login'] = $new_login;
+			echo json_encode(Message::$loginChanged);
+		}
 	}
 	
 	public static function changePassword($password, $login) {
-		$query_result = DBConnect::sendQuery('UPDATE account SET password = :password WHERE login = :login',
+		DBConnect::sendQuery('UPDATE account SET password = :password WHERE login = :login',
 											['password' => $password, 'login' => $login])->fetchAll();
+		echo json_encode(Message::$passwordChanged);
 	}
 	
 	public static function sendResetLink($email) {
 		$query_result = DBConnect::sendQuery('SELECT login, hash FROM account WHERE email = :email', ['email' => $email])->fetchAll();
 		
 		if (empty($query_result)) {
-			return false;
+			echo json_encode(Message::$invalidEmail);
+		} else {
+			$login = $query_result[0]['login'];
+			$hash = $query_result[0]['hash'];
+			$message = 'Please click this link to reset your Camagru account password:
+			http://localhost:7777/changePassword?login='.$login.'&hash='.$hash.'
+			
+			';
+			
+			mail($email, 'Reset your Camagru website password', $message, 'From:noreply@camagru.com\r\n');
+			echo json_encode(Message::$resetPasswordEmailSent);
 		}
-		$login = $query_result[0]['login'];
-		$hash = $query_result[0]['hash'];
-		$message = 'Please click this link to reset your Camagru account password:
-		http://localhost:7777/changePassword?login='.$login.'&hash='.$hash.'
-		
-		';
-		
-		mail($email, 'Reset your Camagru website password', $message, 'From:noreply@camagru.com\r\n');
-		return true;
 	}
 	
 	public static function isSignedIn() {

@@ -11,22 +11,22 @@ class Route {
 		return explode('@', $controller_name_and_method)[1];
 	}
 
-	private static function _isTrueCondition($condition) {
-		if ($condition === 'signed in') {
-			if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
-				return true;
-			} else {
-				return false;
-			}
-		} else if ($condition === 'not signed in') {
-			if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '') {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
+	// private static function _isTrueCondition($condition) {
+	// 	if ($condition === 'signed in') {
+	// 		if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
+	// 			return true;
+	// 		} else {
+	// 			return false;
+	// 		}
+	// 	} else if ($condition === 'not signed in') {
+	// 		if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '') {
+	// 			return true;
+	// 		} else {
+	// 			return false;
+	// 		}
+	// 	}
+	// 	return false;
+	// }
 
 	// public static function get(array $params) {
 	// 	if (!isset($params['condition']) || self::_isTrueCondition($params['condition'])) {

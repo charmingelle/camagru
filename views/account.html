@@ -27,11 +27,19 @@
 				<div id='account-stickers'></div>
 			</main>
 			<aside id='account-aside'>
-				<?php
-					require_once(getRoot() . 'views/changeEmail.php');
-					require_once(getRoot() . 'views/changeLogin.php');
-					require_once(getRoot() . 'views/changePassword.php');	
-				?>
+				<div id='message-container'></div>
+				<div>
+					Change email: <input id='account-email' type='text' value=''>
+					<button id='account-change-email-button'>Submit</button>
+				</div>
+				<div>
+					Change login: <input id='account-login' type='text' value=''>
+					<button id='account-change-login-button'>Submit</button>
+				</div>
+				<div>
+					Change password: <input id='account-password' type='password' value=''>
+					<button id='account-change-password-button'>Submit</button>
+				</div>	
 				<div id='account-user-pictures'></div>
 			</aside>
 		</div>

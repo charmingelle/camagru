@@ -7,22 +7,30 @@ require_once(getRoot() . 'app/modules/Validate.php');
 
 class AuthController {
 	public static function sendVerification() {
-		if (!isset($_POST['email']) || $_POST['email'] === ''
-			|| !isset($_POST['login']) || $_POST['login'] === ''
-			|| !isset($_POST['password']) || $_POST['password'] === ''
-			|| !isset($_POST['submit']) || $_POST['submit'] !== 'Sign up') {
-			exit ;
+		$body = file_get_contents('php://input');
+		
+		if ($body) {
+			$creds = json_decode($body, true);
+			
+			if (!isset($creds['email']) || $creds['email'] === ''
+				|| !isset($creds['login']) || $creds['login'] === ''
+				|| !isset($creds['password']) || $creds['password'] === '') {
+				exit ;
+			}
+			if (!Validate::isValidEmail($creds['email'])) {
+				echo json_encode(Message::$invalidEmail);
+				exit ;
+			}
+			if (!Validate::isValidLogin($creds['login'])) {
+				echo json_encode(Message::$invalidLogin);
+				exit ;
+			}
+			if (!Validate::isValidPassword($creds['password'])) {
+				echo json_encode(Message::$invalidPassword);
+				exit ;
+			}
+			Auth::sendLink($creds['email'], $creds['login'], hash('whirlpool', $creds['password']));
 		}
-		if (!Validate::isValidEmail($_POST['email'])) {
-			$_SESSION['auth-data']['change-status'] = Message::$invalidEmail;
-		}
-		if (!Validate::isValidLogin($_POST['login'])) {
-			$_SESSION['auth-data']['change-status'] = Message::$invalidLogin;
-		}
-		if (!Validate::isValidPassword($_POST['password'])) {
-			$_SESSION['auth-data']['change-status'] = Message::$invalidPassword;
-		}
-		Auth::sendLink($_POST['email'], $_POST['login'], hash('whirlpool', $_POST['password']));
 	}
 	
 	public static function signup() {
@@ -37,20 +45,19 @@ class AuthController {
 	
 	public static function signin() {
 		$body = file_get_contents('php://input');
-		$creds = json_decode($body, true);
-		
-		// echo json_encode($creds['password']);
-		
-		// echo json_encode($body);
-		if (!isset($creds['login']) || $creds['login'] === ''
-			|| !isset($creds['password']) || $creds['password'] === '') {
-			exit ;
-		}
-		if (Auth::signin($creds['login'], hash('whirlpool', $creds['password'])) === true) {
-			echo json_encode('OK');
-		} else {
-			echo json_encode('Please make sure that your login and password are correct and that your account has been activated via link sent to your email address.');
-			// Page::show('views/invalidOrInactiveAccount.php');
+
+		if ($body) {
+			$creds = json_decode($body, true);
+			
+			if (!isset($creds['login']) || $creds['login'] === ''
+				|| !isset($creds['password']) || $creds['password'] === '') {
+				exit ;
+			}
+			if (Auth::signin($creds['login'], hash('whirlpool', $creds['password'])) === true) {
+				echo json_encode('OK');
+			} else {
+				echo json_encode(Message::$invalidOrInactiveAccount);
+			}
 		}
 	}
 	
@@ -60,28 +67,37 @@ class AuthController {
 	}
 
 	public static function changeEmail() {
-		if (!isset($_POST['email']) || $_POST['email'] === ''
-		|| !isset($_POST['submit']) || $_POST['submit'] !== 'Submit') {
-			exit ;
+		$body = file_get_contents('php://input');
+		
+		if ($body) {
+			$creds = json_decode($body, true);
+
+			if (!isset($creds['email']) || $creds['email'] === '') {
+				exit ;
+			}
+			if (!Validate::isValidEmail($creds['email'])) {
+				echo json_encode(Message::$invalidEmail);
+			} else {
+				Auth::changeEmail($creds['email'], $_SESSION['auth-data']['login']);
+			}
 		}
-		if (!Validate::isValidEmail($_POST['email'])) {
-			$_SESSION['auth-data']['change-status'] = Message::$invalidEmail;
-		}
-		Auth::changeEmail($_POST['email'], $_SESSION['auth-data']['login']);
-		Route::redirect('/account');
 	}
 	
 	public static function changeLogin() {
-		if (!isset($_POST['login']) || $_POST['login'] === ''
-			|| !isset($_POST['submit']) || $_POST['submit'] !== 'Submit') {
-			exit ;
+		$body = file_get_contents('php://input');
+		
+		if ($body) {
+			$creds = json_decode($body, true);
+
+			if (!isset($creds['login']) || $creds['login'] === '') {
+				exit ;
+			}
+			if (!Validate::isValidLogin($creds['login'])) {
+				echo json_encode(Message::$invalidLogin);
+			} else {
+				Auth::changeLogin($creds['login'], $_SESSION['auth-data']['login']);
+			}
 		}
-		if (!Validate::isValidLogin($_POST['login'])) {
-			$_SESSION['auth-data']['change-status'] = Message::$invalidLogin;
-		}
-		Auth::changeLogin($_POST['login'], $_SESSION['auth-data']['login']);
-		$_SESSION['auth-data']['login'] = $_POST['login'];
-		Route::redirect('/account');
 	}
 
 	public static function showChangePassword() {
@@ -98,25 +114,34 @@ class AuthController {
 	}
 	
 	public static function changePassword() {
-		if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '' ||
-			!isset($_POST['password']) || $_POST['password'] === ''
-		|| !isset($_POST['submit']) || $_POST['submit'] !== 'Submit') {
-			exit ;
+		$body = file_get_contents('php://input');
+		
+		if ($body) {
+			$creds = json_decode($body, true);
+
+			// echo json_encode($_SESSION['auth-data']['login']);
+
+			if (!isset($creds['password']) || $creds['password'] === '') {
+				exit ;
+			}
+			if (!Validate::isValidPassword($creds['password'])) {
+				echo json_encode(Message::$invalidPassword);
+			} else {
+				Auth::changePassword(hash('whirlpool', $creds['password']), $_SESSION['auth-data']['login']);
+			}
 		}
-		if (!Validate::isValidPassword($_POST['password'])) {
-			$_SESSION['auth-data']['change-status'] = Message::$invalidPassword;
-		}
-		Auth::changePassword(hash('whirlpool', $_POST['password']), $_SESSION['auth-data']['login']);
-		Route::redirect('/account');
 	}
 	
 	public static function sendResetLink() {
-		if (!isset($_POST['email']) || $_POST['email'] === ''
-			|| !isset($_POST['submit']) || $_POST['submit'] !== 'Get reset password link') {
-			exit ;
-		}
-		if (Auth::sendResetLink($_POST['email']) === false) {
-			$_SESSION['auth-data']['change-status'] = Message::$invalidEmail;
+		$body = file_get_contents('php://input');
+		
+		if ($body) {
+			$creds = json_decode($body, true);
+
+			if (!isset($creds['email']) || $creds['email'] === '') {
+				exit ;
+			}
+			Auth::sendResetLink($creds['email']);
 		}
 	}
 	
