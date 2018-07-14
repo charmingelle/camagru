@@ -60,8 +60,7 @@ Route::post('/changeEmail', 'AuthController@changeEmail');
 
 Route::post('/changeLogin', 'AuthController@changeLogin');
 
-// verify this
-Route::get('/changePassword', 'AuthController@showChangePassword');
+Route::get('/changePassword', 'AuthController@tempAccountAccess');
 Route::post('/changePassword', 'AuthController@changePassword');
 
 Route::post('/forgotPassword', 'AuthController@sendResetLink');

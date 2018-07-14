@@ -15,6 +15,7 @@ class AuthController {
 			if (!isset($creds['email']) || $creds['email'] === ''
 				|| !isset($creds['login']) || $creds['login'] === ''
 				|| !isset($creds['password']) || $creds['password'] === '') {
+				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
 			if (!Validate::isValidEmail($creds['email'])) {
@@ -35,11 +36,12 @@ class AuthController {
 	
 	public static function signup() {
 		if (isset($_GET['email']) && $_GET['email'] !== ''
+			&& isset($_GET['login']) && $_GET['login'] !== ''
 			&& isset($_GET['hash']) && $_GET['hash'] !== ''
-			&& Auth::signup($_GET['email'], $_GET['hash']) === true) {
-			Route::redirect('/');
+			&& Auth::signup(urldecode($_GET['email']), urldecode($_GET['login']), urldecode($_GET['hash'])) === true) {
+			SiteMapController::showHome();
 		} else {
-			Page::show('views/signup.php');
+			SiteMapController::show404();
 		}
 	}
 	
@@ -51,6 +53,7 @@ class AuthController {
 			
 			if (!isset($creds['login']) || $creds['login'] === ''
 				|| !isset($creds['password']) || $creds['password'] === '') {
+				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
 			if (Auth::signin($creds['login'], hash('whirlpool', $creds['password'])) === true) {
@@ -63,7 +66,7 @@ class AuthController {
 	
 	public static function signout() {
 		unset($_SESSION['auth-data']);
-		Route::redirect('/');
+		SiteMapController::showHome();
 	}
 
 	public static function changeEmail() {
@@ -73,6 +76,7 @@ class AuthController {
 			$creds = json_decode($body, true);
 
 			if (!isset($creds['email']) || $creds['email'] === '') {
+				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
 			if (!Validate::isValidEmail($creds['email'])) {
@@ -90,6 +94,7 @@ class AuthController {
 			$creds = json_decode($body, true);
 
 			if (!isset($creds['login']) || $creds['login'] === '') {
+				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
 			if (!Validate::isValidLogin($creds['login'])) {
@@ -100,16 +105,15 @@ class AuthController {
 		}
 	}
 
-	public static function showChangePassword() {
-		if (isset($_SESSION['auth-data']['login']) && $_SESSION['auth-data']['login'] !== '') {
-			Page::show('views/changePassword.php');
-		} else if ($_SERVER['REQUEST_METHOD'] === 'GET'
+	public static function tempAccountAccess() {
+		if (isset($_GET['email']) && $_GET['email'] !== ''
 			&& isset($_GET['login']) && $_GET['login'] !== ''
-			&& isset($_GET['hash']) && $_GET['hash'] !== '') {
+			&& isset($_GET['hash']) && $_GET['hash'] !== ''
+			&& Auth::isHashValid(urldecode($_GET['email']), urldecode($_GET['login']), urldecode($_GET['hash']))) {
 			$_SESSION['auth-data']['login'] = $_GET['login'];
-			Page::show('views/changePassword.php');
+			SiteMapController::showAccount();
 		} else {
-			Route::redirect('/account');
+			SiteMapController::show404();
 		}
 	}
 	
@@ -119,9 +123,8 @@ class AuthController {
 		if ($body) {
 			$creds = json_decode($body, true);
 
-			// echo json_encode($_SESSION['auth-data']['login']);
-
 			if (!isset($creds['password']) || $creds['password'] === '') {
+				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
 			if (!Validate::isValidPassword($creds['password'])) {
@@ -139,6 +142,7 @@ class AuthController {
 			$creds = json_decode($body, true);
 
 			if (!isset($creds['email']) || $creds['email'] === '') {
+				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
 			Auth::sendResetLink($creds['email']);

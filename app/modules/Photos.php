@@ -4,15 +4,11 @@ require_once(getRoot() . 'app/core/DBConnect.php');
 
 class Photos {
 	public static function getPhotos() {
-		$result = DBConnect::sendQuery('SELECT `id`, `url`, `likes`, `comments`, `login` FROM `photo`')->fetchAll();
-		
-		return $result;
+		return DBConnect::sendQuery('SELECT `id`, `url`, `likes`, `comments`, `login` FROM `photo`')->fetchAll();
 	}
 
 	private static function getUrl() {
-		$filename = substr(hash("whirlpool", uniqid() . time()), 0, 16) . '.png';
-
-		return ('photo/' . $filename);
+		return 'photo/' . substr(hash("whirlpool", uniqid() . time()), 0, 16) . '.png';
 	}
 
 	public static function savePhoto($source) {

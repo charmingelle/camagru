@@ -86,9 +86,4 @@ class Route {
 			return $controller_name::$controller_method();
 		}
 	}
-
-	public static function redirect($uri) {
-		header('Location: ' . $uri);
-		exit ;
-	}
 }

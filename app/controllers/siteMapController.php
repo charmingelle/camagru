@@ -12,6 +12,6 @@ class SiteMapController {
 	}
 
 	public static function show404() {
-		Page::show('views/404.php');
+		Page::show('views/404.html');
 	}
 }

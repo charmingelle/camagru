@@ -1,7 +1,7 @@
 <?php
 
 class Auth {
-	private static function _loginExists($login) {
+	private static function _busyLogin($login) {
 		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE login = :login', ['login' => $login])->fetchAll();
 		
 		if (empty($query_result)) {
@@ -9,14 +9,16 @@ class Auth {
 		}
 		return true;
 	}
-	
+
 	public static function sendLink($email, $login, $password) {
-		if (!self::_loginExists($login)) {
+		if (self::_busyLogin($login)) {
+			echo json_encode(Message::$busyLogin);
+		} else {
 			$hash = md5(rand(0, 1000));
 			$message = 'Thanks for signing up to Camagru website!
 			
 			Please click this link to activate your account:
-			http://localhost:7777/signup?email='.$email.'&hash='.$hash.'
+			http://localhost:7777/signup?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash).'
 			
 			';
 			
@@ -24,14 +26,12 @@ class Auth {
 			DBConnect::sendQuery('INSERT INTO account(email, login, password, hash) VALUES (:email, :login, :password, :hash)',
 							['email' => $email, 'login' => $login, 'password' => $password, 'hash' => $hash])->fetchAll();
 			echo json_encode(Message::$verificationEmail);
-		} else {
-			echo json_encode(Message::$busyLogin);
 		}
 	}
 	
-	private static function _validHash($email, $hash) {
-		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email AND hash = :hash',
-											['email' => $email, 'hash' => $hash])->fetchAll();
+	public static function isHashValid($email, $login, $hash) {
+		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email AND login = :login AND hash = :hash',
+											['email' => $email, 'login' => $login, 'hash' => $hash])->fetchAll();
 		
 		if (empty($query_result)) {
 			return false;
@@ -39,9 +39,9 @@ class Auth {
 		return true;
 	}
 	
-	public static function signup($email, $hash) {
-		if (self::_validHash($email, $hash)) {
-			DBConnect::sendQuery('INSERT INTO account(active) VALUES (:active)', ['active' => true])->fetchAll();
+	public static function signup($email, $login, $hash) {
+		if (self::isHashValid($email, $login, $hash)) {
+			DBConnect::sendQuery('UPDATE account SET active = :active WHERE login = :login', ['active' => true, 'login' => $login])->fetchAll();
 			return true;
 		}
 		return false;
@@ -65,7 +65,7 @@ class Auth {
 	}
 	
 	public static function changeLogin($new_login, $login) {
-		if (self::_loginExists($new_login)) {
+		if (self::_busyLogin($new_login)) {
 			echo json_encode(Message::$busyLogin);
 		} else {
 			DBConnect::sendQuery('UPDATE account SET login = :new_login WHERE login = :login',
@@ -90,7 +90,7 @@ class Auth {
 			$login = $query_result[0]['login'];
 			$hash = $query_result[0]['hash'];
 			$message = 'Please click this link to reset your Camagru account password:
-			http://localhost:7777/changePassword?login='.$login.'&hash='.$hash.'
+			http://localhost:7777/changePassword?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash).'
 			
 			';
 			
