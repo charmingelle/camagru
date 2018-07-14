@@ -107,12 +107,11 @@ class AuthController {
 
 	public static function tempAccountAccess() {
 		if (isset($_GET['email']) && $_GET['email'] !== ''
-			&& isset($_GET['login']) && $_GET['login'] !== ''
 			&& isset($_GET['hash']) && $_GET['hash'] !== ''
-			&& Auth::isHashValid(urldecode($_GET['email']), urldecode($_GET['login']), urldecode($_GET['hash']))) {
-			Auth::cleanHash(urldecode($_GET['login']));
-			$_SESSION['auth-data']['login'] = $_GET['login'];
-			SiteMapController::showAccount();
+			&& Auth::isHashValid(urldecode($_GET['email']), urldecode($_GET['hash']))) {
+			Auth::cleanHash(urldecode($_GET['email']));
+			$_SESSION['auth-data']['email'] = $_GET['email'];
+			SiteMapController::showResetPasswordPage();
 		} else {
 			SiteMapController::show404();
 		}
@@ -147,6 +146,24 @@ class AuthController {
 				exit ;
 			}
 			Auth::sendForgotPasswordEmail($creds['email']);
+		}
+	}
+
+	public static function resetPassword() {
+		$body = file_get_contents('php://input');
+		
+		if ($body) {
+			$creds = json_decode($body, true);
+
+			if (!isset($creds['password']) || $creds['password'] === '') {
+				echo json_encode(Message::$emptyPassword);
+				exit ;
+			}
+			if (!Validate::isValidPassword($creds['password'])) {
+				echo json_encode(Message::$invalidPassword);
+			} else {
+				Auth::resetPassword(hash('whirlpool', $creds['password']));
+			}
 		}
 	}
 	

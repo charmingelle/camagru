@@ -28,6 +28,9 @@ require_once(getRoot() . 'app/core/Message.php');
 // Route::get(['uri' => '/forgotPassword', 'controller' => 'SiteMapController@showForgotPassword', 'condition' => 'not signed in']);
 // Route::post(['uri' => '/forgotPassword', 'controller' => 'AuthController@sendForgotPasswordEmail']);
 
+// in case $_SESSION['auth-data']['email'] is set !!!!!!!!!
+// Route::post(['uri' => 'resetPassword', 'controller' => 'AuthController@resetPassword', 'condition' => 'emailed']);
+
 // Route::post(['uri' => '/photos', 'controller' => 'DataController@getPhotos']);
 
 // Route::get(['uri' => '/account', 'controller' => 'SiteMapController@showAccount', 'condition' => 'signed in']);
@@ -61,6 +64,8 @@ Route::get('/changePassword', 'AuthController@tempAccountAccess');
 Route::post('/changePassword', 'AuthController@changePassword');
 
 Route::post('/forgotPassword', 'AuthController@sendForgotPasswordEmail');
+
+Route::post('/resetPassword', 'AuthController@resetPassword');
 
 Route::post('/photos', 'DataController@getPhotos');
 

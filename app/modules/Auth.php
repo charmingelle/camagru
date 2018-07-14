@@ -17,8 +17,8 @@ class Auth {
 		return $hash;
 	}
 
-	public static function cleanHash($login) {
-		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE login = :login', ['hash' => "", 'login' => $login]);
+	public static function cleanHash($email) {
+		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE email = :email', ['hash' => "", 'email' => $email]);
 	}
 
 	public static function sendSignupEmail($email, $login, $password) {
@@ -41,9 +41,9 @@ class Auth {
 		}
 	}
 	
-	public static function isHashValid($email, $login, $hash) {
-		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email AND login = :login AND hash = :hash',
-											['email' => $email, 'login' => $login, 'hash' => $hash])->fetchAll();
+	public static function isHashValid($email, $hash) {
+		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email AND hash = :hash',
+											['email' => $email, 'hash' => $hash])->fetchAll();
 		
 		if (empty($query_result)) {
 			return false;
@@ -52,9 +52,9 @@ class Auth {
 	}
 	
 	public static function signup($email, $login, $hash) {
-		if (self::isHashValid($email, $login, $hash)) {
+		if (self::isHashValid($email, $hash)) {
 			DBConnect::sendQuery('UPDATE account SET active = :active WHERE login = :login', ['active' => true, 'login' => $login]);
-			self::cleanHash($login);
+			self::cleanHash($email);
 			return true;
 		}
 		return false;
@@ -95,22 +95,26 @@ class Auth {
 	}
 	
 	public static function sendForgotPasswordEmail($email) {
-		$hash = self::_renewHash($email);
-
-		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE email = :email', ['email' => $email])->fetchAll();
+		
+		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email', ['email' => $email])->fetchAll();
 		
 		if (empty($query_result)) {
 			echo json_encode(Message::$invalidEmail);
 		} else {
-			$login = $query_result[0]['login'];
+			$hash = self::_renewHash($email);
 			$message = 'Please click this link to reset your Camagru account password:
-			http://localhost:7777/changePassword?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash).'
+			http://localhost:7777/changePassword?email=' . urlencode($email) . '&hash=' . urlencode($hash).'
 			
 			';
 			
 			mail($email, 'Reset your Camagru website password', $message, 'From:noreply@camagru.com\r\n');
 			echo json_encode(Message::$resetPasswordEmailSent);
 		}
+	}
+
+	public static function resetPassword($password) {
+		DBConnect::sendQuery('UPDATE account SET password = :password WHERE email = :email', ['password' => $password, 'email' => $_SESSION['auth-data']['email']]);
+		echo json_encode(Message::$passwordChanged);
 	}
 	
 	public static function isSignedIn() {

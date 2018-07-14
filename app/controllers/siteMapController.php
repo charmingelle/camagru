@@ -14,4 +14,8 @@ class SiteMapController {
 	public static function show404() {
 		Page::show('views/404.html');
 	}
+
+	public static function showResetPasswordPage() {
+		Page::show('views/resetPassword.html');
+	}
 }
