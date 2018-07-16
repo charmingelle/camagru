@@ -189,14 +189,14 @@ class Home {
 
 	showSigninForm() {
 		let form = document.createElement('div');
-		let loginTextNode = document.createTextNode("Login:");
 		let loginInput = document.createElement('input');
-		let passwordTextNode = document.createTextNode("Password:");
 		let passwordInput = document.createElement('input');
 		let submitButton = document.createElement('button');
 
+		loginInput.placeholder = 'Login';
 		loginInput.type = 'text';
 		loginInput.value = '';
+		passwordInput.placeholder = 'Password';
 		passwordInput.type = 'password';
 		passwordInput.value = '';
 		submitButton.innerHTML = 'Sign in';
@@ -205,7 +205,7 @@ class Home {
 		});
 		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput.value, passwordInput.value));
 		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput.value, passwordInput.value));
-		form.append(loginTextNode, loginInput, passwordTextNode, passwordInput, submitButton);
+		form.append(loginInput, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
@@ -228,18 +228,18 @@ class Home {
 
 	showSignupForm() {
 		let form = document.createElement('div');
-		let emailTextNode = document.createTextNode("Email:");
 		let emailInput = document.createElement('input');
-		let loginTextNode = document.createTextNode("Login:");
 		let loginInput = document.createElement('input');
-		let passwordTextNode = document.createTextNode("Password:");
 		let passwordInput = document.createElement('input');
 		let submitButton = document.createElement('button');
 
+		emailInput.placeholder = 'Email';
 		emailInput.type = 'text';
 		emailInput.value = '';
+		loginInput.placeholder = 'Login';
 		loginInput.type = 'text';
 		loginInput.value = '';
+		passwordInput.placeholder = 'Password';
 		passwordInput.type = 'password';
 		passwordInput.value = '';
 		submitButton.innerHTML = 'Sign up';
@@ -247,7 +247,7 @@ class Home {
 		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
 		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
 		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
-		form.append(emailTextNode, emailInput, loginTextNode, loginInput, passwordTextNode, passwordInput, submitButton);
+		form.append(emailInput, loginInput, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
@@ -268,16 +268,16 @@ class Home {
 	
 	showResetPasswordForm() {
 		let form = document.createElement('div');
-		let emailTextNode = document.createTextNode("Email:");
 		let emailInput = document.createElement('input');
 		let submitButton = document.createElement('button');
 
+		emailInput.placeholder = 'Email';
 		emailInput.type = 'text';
 		emailInput.value = '';
 		submitButton.innerHTML = 'Get reset password link';
 		submitButton.addEventListener('click', () => this.resetPasswordFormHandler(emailInput.value));
 		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.resetPasswordFormHandler, emailInput.value));
-		form.append(emailTextNode, emailInput, submitButton);
+		form.append(emailInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}

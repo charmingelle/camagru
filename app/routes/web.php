@@ -71,6 +71,8 @@ Route::post('/photos', 'DataController@getPhotos');
 
 Route::get('/account', 'SiteMapController@showAccount');
 
+Route::post('/getLogin', 'DataController@getLogin');
+
 Route::post('/stickers', 'DataController@getStickers');
 
 Route::post('/savePicture', 'DataController@savePicture');
@@ -78,6 +80,10 @@ Route::post('/savePicture', 'DataController@savePicture');
 Route::post('/userPictures', 'DataController@getUserPictures');
 
 Route::post('/deleteUserPicture', 'DataController@deleteUserPicture');
+
+Route::post('/getPhotoPrivate', 'DataController@getPhotoPrivate');
+
+Route::post('/publish', 'DataController@publish');
 
 Route::post('/like', 'DataController@likePicture');
 

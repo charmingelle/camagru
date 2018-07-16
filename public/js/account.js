@@ -14,18 +14,19 @@ const DELETE = 'Delete';
 
 class Account {
 	constructor() {
-		this.container = document.getElementById('account-container');
+		this.hello = document.getElementById('hello');
+		this.container = document.getElementById('container');
 		this.containerRect = this.container.getBoundingClientRect();
-		this.stickersContainer = document.getElementById('account-stickers');
-		this.photosContainer = document.getElementById('account-user-pictures');
-		this.buttonBlock = document.getElementById('account-photo-buttons');
-		this.upload = document.getElementById('account-upload');
-		this.captureButton = document.getElementById('account-capture-button');
+		this.stickersContainer = document.getElementById('stickers');
+		this.photosContainer = document.getElementById('user-photos');
+		this.buttonBlock = document.getElementById('photo-buttons');
+		this.upload = document.getElementById('upload');
+		this.captureButton = document.getElementById('capture-button');
 		this.scale = vmin(50);
 		this.messageContainer = document.getElementById('message-container');
-		this.accountEmail = document.getElementById('account-email');
-		this.accountLogin = document.getElementById('account-login');
-		this.accountPassword = document.getElementById('account-password');
+		this.email = document.getElementById('email');
+		this.login = document.getElementById('login');
+		this.password = document.getElementById('password');
 
 		this.renderCamera = this.renderCamera.bind(this);
 		this.renderSticker = this.renderSticker.bind(this);
@@ -54,30 +55,65 @@ class Account {
 	}
 
 	deletePhoto(id, imageContainer) {
-		if (confirm("Are you sure you would like to delete a picture?")) {
+		if (confirm("Are you sure you would like to delete this photo?")) {
 			fetch('/deleteUserPicture', {
 				method: 'POST',
 				credentials: 'include',
 				body: id
 			})
-			.then(() => {
-				this.photosContainer.removeChild(imageContainer);
-			});
+			.then(() => this.photosContainer.removeChild(imageContainer));
 		}
 	}
 
+	publish(button, id, privateStatus) {
+		if (confirm("Are you sure you would like to publish this photo?")) {
+			fetch('/publish', {
+				method: 'POST',
+				credentials: 'include',
+				body: id
+			})
+			.then(() => {
+				if (privateStatus) {
+					button.innerHTML = 'Hide';
+				} else {
+					button.innerHTML = 'Publish';
+				}
+			});
+		}
+	}
+	
+	renderPublishButton(button, id) {
+		fetch('/getPhotoPrivate', {
+			method: 'POST',
+			credentials: 'include',
+			body: id
+		})
+		.then(response => response.json())
+		.then(privateStatus => {
+			if (privateStatus) {
+				button.innerHTML = 'Publish';
+			} else {
+				button.innerHTML = 'Hide';
+			}
+			button.addEventListener('click', this.publish.bind(this, button, id, privateStatus));
+		})
+	}
+	
+	
 	renderPhoto(sources) {
 		if (sources) {
 			const images = sources.map(source => {
 				let imageContainer = document.createElement('div');
 				let image = document.createElement('img');
 				let deleteButton = document.createElement('button');
+				let publishButton = document.createElement('button');
 				
 				image.src = source['url'];
-				image.classList.add('user-picture');
+				image.classList.add('user-photo');
 				deleteButton.innerHTML = 'Delete';
 				deleteButton.addEventListener('click', this.deletePhoto.bind(this, source['id'], imageContainer));
-				imageContainer.append(image, deleteButton);
+				this.renderPublishButton(publishButton, source['id']);
+				imageContainer.append(image, deleteButton, publishButton);
 				return imageContainer;
 			});
 		
@@ -102,7 +138,7 @@ class Account {
 			.then((stream) => {
 				let video = document.createElement('video');
 
-				video.id = 'account-video';
+				video.id = 'video';
 				video.classList.add('sticker-base');
 				video.autoplay = 'true';
 				video.srcObject = stream;
@@ -112,7 +148,7 @@ class Account {
 				let errorMessage = document.createElement('p');
 				
 				errorMessage.innerHTML = 'Your camera cannot be used. Please upload a photo.';
-				errorMessage.id = 'account-video';
+				errorMessage.id = 'video-error';
 				this.container.insertBefore(errorMessage, this.container.firstChild);
 			});
 		}
@@ -473,7 +509,7 @@ class Account {
 	}
 
 	uploadPhoto() {
-		let video = document.getElementById('account-video');
+		let video = document.getElementById('video');
 		let uploadedImage = document.getElementById('uploaded-image');
 
 		if (video) {
@@ -492,7 +528,7 @@ class Account {
 
 	backToCameraHandler() {
 		let uploadedImage = document.getElementById('uploaded-image');
-		let backToCameraButton = document.getElementById('account-back-to-camera-button');
+		let backToCameraButton = document.getElementById('back-to-camera-button');
 
 		if (uploadedImage) {
 			this.container.removeChild(uploadedImage);
@@ -505,19 +541,19 @@ class Account {
 	renderBackToCameraButton() {
 		let button = document.createElement('button');
 
-		button.id = 'account-back-to-camera-button';
+		button.id = 'back-to-camera-button';
 		button.innerHTML = 'Back to Camera';
 		button.addEventListener('click', this.backToCameraHandler);
 		this.buttonBlock.insertBefore(button, this.buttonBlock.firstChild);
 	}
 
 	changeEmailHandler() {
-		if (this.accountEmail.value !== '') {
+		if (this.email.value !== '') {
 			fetch('/changeEmail', {
 				method: 'POST',
 				credentials: 'include',
 				body: JSON.stringify({
-					'email': this.accountEmail.value
+					'email': this.email.value
 				})
 			})
 			.then(response => response.json())
@@ -526,12 +562,12 @@ class Account {
 	}
 
 	changeLoginHandler() {
-		if (this.accountLogin.value !== '') {
+		if (this.login.value !== '') {
 			fetch('/changeLogin', {
 				method: 'POST',
 				credentials: 'include',
 				body: JSON.stringify({
-					'login': this.accountLogin.value
+					'login': this.login.value
 				})
 			})
 			.then(response => response.json())
@@ -540,12 +576,12 @@ class Account {
 	}
 
 	changePasswordHandler() {
-		if (this.accountPassword.value !== '') {
+		if (this.password.value !== '') {
 			fetch('/changePassword', {
 				method: 'POST',
 				credentials: 'include',
 				body: JSON.stringify({
-					'password': this.accountPassword.value
+					'password': this.password.value
 				})
 			})
 			.then(response => response.json())
@@ -553,20 +589,30 @@ class Account {
 		}
 	}
 
+	renderHello() {
+		fetch('/getLogin', {
+			method: 'POST',
+			credentials: 'include'
+		})
+		.then(response => response.json())
+		.then(login => {this.hello.innerHTML = `Hello, ${login}`});
+	}
+	
 	render() {
+		this.renderHello();
 		this.renderCamera();
 		this.renderStickers();
 		this.renderPhotos();
 		this.upload.addEventListener('change', this.uploadPhoto);
 		this.captureButton.addEventListener('click', this.savePhoto);
 		renderMessageContainer(this.messageContainer);
-		document.getElementById('account-clear-button').addEventListener('click', this.clearPhoto);
-		this.accountEmail.addEventListener('keypress', (event) => enterPressHandler(event, this.changeEmailHandler));
-		document.getElementById('account-change-email-button').addEventListener('click', this.changeEmailHandler);
-		this.accountLogin.addEventListener('keypress', (event) => enterPressHandler(event, this.changeLoginHandler));
-		document.getElementById('account-change-login-button').addEventListener('click', this.changeLoginHandler);
-		this.accountPassword.addEventListener('keypress', (event) => enterPressHandler(event, this.changePasswordHandler));
-		document.getElementById('account-change-password-button').addEventListener('click', this.changePasswordHandler);
+		document.getElementById('clear-button').addEventListener('click', this.clearPhoto);
+		this.email.addEventListener('keypress', (event) => enterPressHandler(event, this.changeEmailHandler));
+		document.getElementById('change-email-button').addEventListener('click', this.changeEmailHandler);
+		this.login.addEventListener('keypress', (event) => enterPressHandler(event, this.changeLoginHandler));
+		document.getElementById('change-login-button').addEventListener('click', this.changeLoginHandler);
+		this.password.addEventListener('keypress', (event) => enterPressHandler(event, this.changePasswordHandler));
+		document.getElementById('change-password-button').addEventListener('click', this.changePasswordHandler);
 	}
 }
 

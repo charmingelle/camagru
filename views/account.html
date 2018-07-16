@@ -2,46 +2,47 @@
 <html>
 	<head>
 		<title>My account</title>
-		<link rel='stylesheet' href='css/styles.css'>
+		<link rel='stylesheet' href='css/account.css'>
 		<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
 	</head>
 	<body>
 		<header>
-			<div>My account</div>
+			<div id='hello'></div>
 			<div>
 				<a id='home-button' href='/'>Home</a>
 				<a id='signout-button' href='/signout'>Sign out</a>
 			</div>
 		</header>
-		<div id='account-content'>
-			<main id='account-main'>
-				<div id='account-photo-section'>
-					<div id='account-container'></div>
+		<div id='content'>
+			<main>
+				<div id='photo-buttons'>
+					<input type="file" id='upload' accept='.jpg, .jpeg, .png'>
+					<button id='capture-button' disabled>Take a Picture</button>
+					<button id='clear-button'>Clear</button>
 				</div>
-				<div id='account-photo-buttons'>
-					<input type="file" id='account-upload' accept='.jpg, .jpeg, .png'>
-					<button id='account-capture-button' disabled>Take a Picture</button>
-					<button id='account-clear-button'>Clear</button>
+				<div id='photo-section'>
+					<div id='container'></div>
 				</div>
-				<h1 id='account-stickers-h1'>Stickers</h1>
-				<div id='account-stickers'></div>
+				<div id='stickers'></div>
 			</main>
-			<aside id='account-aside'>
+			<section id='change-section'>
 				<div id='message-container'></div>
-				<div>
-					Change email: <input id='account-email' type='text' value=''>
-					<button id='account-change-email-button'>Submit</button>
+				<div id='change-container'>
+					<div>
+						<input id='email' placeholder='Email' type='text' value=''>
+						<button id='change-email-button'>Change</button>
+					</div>
+					<div>
+						<input id='login' placeholder='Login' type='text' value=''>
+						<button id='change-login-button'>Change</button>
+					</div>
+					<div>
+						<input id='password' placeholder='Password' type='password' value=''>
+						<button id='change-password-button'>Change</button>
+					</div>
 				</div>
-				<div>
-					Change login: <input id='account-login' type='text' value=''>
-					<button id='account-change-login-button'>Submit</button>
-				</div>
-				<div>
-					Change password: <input id='account-password' type='password' value=''>
-					<button id='account-change-password-button'>Submit</button>
-				</div>	
-				<div id='account-user-pictures'></div>
-			</aside>
+			</section>
+			<div id='user-photos'></div>
 		</div>
 		<footer>@ grevenko 2018</footer>
 	</body>

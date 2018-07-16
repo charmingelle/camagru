@@ -7,6 +7,10 @@ class DataController {
 	public static function getPhotos() {
 		echo json_encode(Photos::getPhotos());
 	}
+	
+	public static function getLogin() {
+		echo json_encode($_SESSION['auth-data']['login']);
+	}
 
 	public static function getStickers() {
 		echo json_encode(Stickers::getStickers());
@@ -29,6 +33,22 @@ class DataController {
 
 		if ($id !== FALSE) {
 			Photos::deleteUserPicture($id);
+		}
+	}
+	
+	public static function getPhotoPrivate() {
+		$id = file_get_contents('php://input');
+
+		if ($id !== FALSE) {
+			echo json_encode(Photos::getPhotoPrivate($id));
+		}
+	}
+	
+	public static function publish() {
+		$id = file_get_contents('php://input');
+
+		if ($id !== FALSE) {
+			Photos::publish($id);
 		}
 	}
 

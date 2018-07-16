@@ -13,68 +13,26 @@ header a {
 	text-decoration: none;
 }
 
-header a:visited {
-	text-decoration: none;
-}
-
-#form-container {
+/* #content {
 	display: flex;
-	justify-content: flex-end;
+	flex-direction: row;
+	padding: 1vmin;
+} */
+
+#photo-buttons {
+	display: flex;
+	justify-content: center;
 	margin: 1vmin;
-}
-
-#gallery {
-	display: flex;
-	flex-direction: column;
 	align-items: center;
 }
 
-.photo-container {
-	width: 50%;
-	margin: 1vmin;
-}
-
-.photo {
-	width: 100%;
-}
-
-.like-comment {
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-end;
-	padding: 1vmin;
-}
-
-.like {
-	margin-right: 2vmin;
-}
-
-/* #account-content {
-	display: flex;
-	flex-direction: row;
-	padding: 1vmin;
-} */
-
-.comment-container {
-	display: flex;
-}
-
-.login-div {
-	font-weight: bold;
-	margin-right: 1vmin;
-}
-
-/* #account-main {
-	width: 80%;
-} */
-
-#account-photo-section {
+#photo-section {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 }
 
-#account-container {
+#container {
 	position: relative;
 	overflow: hidden;
 	width: 80vmin;
@@ -83,7 +41,7 @@ header a:visited {
 	border: 1px solid black;
 }
 
-#account-video {
+#video {
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -91,7 +49,7 @@ header a:visited {
 	text-align: center;
 }
 
-#account-video-error {
+#video-error {
 	text-align: center;
 }
 
@@ -101,23 +59,18 @@ header a:visited {
 	height: 100%;
 }
 
-#account-photo-buttons {
-	display: flex;
-	justify-content: center;
+#message-container {
 	margin: 1vmin;
-	align-items: center;
 }
 
-/* #account-aside {
-	width: 30%;
-	padding: 1vmin;
-} */
-
-#account-stickers-h1 {
-	text-align: center;
+#change-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin: 1vmin;
 }
 
-#account-stickers {
+#stickers {
 	width: 100%;
 	height: 25vmin;
 	display: flex;
@@ -134,21 +87,15 @@ header a:visited {
 	cursor: pointer;
 }
 
-#account-user-pictures {
+#user-photos {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-.user-picture {
+.user-photo {
 	width: 100%;
 	margin-top: 1%;
-}
-
-#message-container {
-	width: 100%;
-	height: 5vmin;
-	border: 1px solid black;
 }
 
 .invisible {
