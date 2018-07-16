@@ -1,0 +1,73 @@
+body {
+	font-family: Georgia;
+}
+
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+header a {
+	margin: 1vmin;
+	text-decoration: none;
+}
+
+header a:visited {
+	text-decoration: none;
+}
+
+#message-container {
+	margin: 1vmin;
+}
+
+#form-container {
+	display: flex;
+	justify-content: flex-end;
+	margin: 1vmin;
+}
+
+#gallery {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.photo-container {
+	width: 50%;
+	margin: 1vmin;
+}
+
+.photo {
+	width: 100%;
+}
+
+.like-comment {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	padding: 1vmin;
+}
+
+.like {
+	margin-right: 2vmin;
+}
+
+.comment-container {
+	display: flex;
+}
+
+.login-div {
+	font-weight: bold;
+	margin-right: 1vmin;
+}
+
+#uploaded-image {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.invisible {
+	display:none
+}

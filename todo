@@ -24,6 +24,7 @@ TODO
 + replace all exits with messages on server
 + add Sign Out button to any page where needed
 + think how to make hash in database temporary
++ add publishing and hiding photos from account
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in

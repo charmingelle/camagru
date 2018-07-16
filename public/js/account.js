@@ -43,6 +43,8 @@ class Account {
 		this.changeEmailHandler = this.changeEmailHandler.bind(this);
 		this.changeLoginHandler = this.changeLoginHandler.bind(this);
 		this.changePasswordHandler = this.changePasswordHandler.bind(this);
+		this.stickersForwardHander = this.stickersForwardHander.bind(this);
+		this.stickerBackHandler = this.stickerBackHandler.bind(this);
 	}
 	
 	getCoords(elem) {
@@ -485,6 +487,14 @@ class Account {
 		}
 	}
 
+	stickersForwardHander() {
+		this.stickersContainer.scrollLeft += vmin(25);
+	}
+	
+	stickerBackHandler() {
+		this.stickersContainer.scrollLeft -= vmin(25);
+	}
+	
 	renderStickers() {
 		fetch('/stickers', {
 			method: 'POST',
@@ -493,6 +503,8 @@ class Account {
 		.then(response => response.json())
 		.then(this.renderSticker)
 		.catch(error => console.log(error.message));
+		document.getElementById('stickers-forward').addEventListener('click', this.stickersForwardHander);
+		document.getElementById('stickers-back').addEventListener('click', this.stickerBackHandler);
 	}
 
 	clearPhoto() {

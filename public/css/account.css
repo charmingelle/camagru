@@ -70,15 +70,22 @@ header a {
 	margin: 1vmin;
 }
 
+#stickers-container {
+	display: flex;
+}
+
+#stickers-container button {
+	width: 5%;
+}
+
 #stickers {
-	width: 100%;
+	width: 90%;
 	height: 25vmin;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	margin: 1vmin;
-	overflow-x: scroll;
-    overflow-y: hidden;
+	overflow: hidden;
 }
 
 .sticker {
