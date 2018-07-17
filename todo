@@ -28,7 +28,6 @@ TODO
 + add error messages to form section
 + check how to make rediect if condition is set and it isn't true
 + add sign in verification on server side when like or comment is added
-+ fix logout issue
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -44,6 +43,7 @@ TODO
 - implement sticker uploading (not necessary)
 - make sure that you verify all data received from client (before sending and when server receives it)
 - should I incrypt the password before sending it?
+- fix logout issue
 
 - make sure you use JSON in body in fetch everywhere
 - think about covering fetch in some shorter function

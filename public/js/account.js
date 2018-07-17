@@ -149,13 +149,17 @@ class Account {
 				video.autoplay = 'true';
 				video.srcObject = stream;
 				this.container.insertBefore(video, this.container.firstChild);
+				this.renderCaptureButton();
 			})
 			.catch((error) => {
-				let errorMessage = document.createElement('p');
-				
-				errorMessage.innerHTML = 'Your camera cannot be used. Please upload a photo.';
-				errorMessage.id = 'video-error';
-				this.container.insertBefore(errorMessage, this.container.firstChild);
+				if (!document.getElementById('video-error')) {
+					let errorMessage = document.createElement('p');
+					
+					errorMessage.innerHTML = 'Your camera cannot be used. Please upload a photo.';
+					errorMessage.id = 'video-error';
+					this.container.insertBefore(errorMessage, this.container.firstChild);
+					this.renderCaptureButton();
+				}
 			});
 		}
 	}
@@ -425,7 +429,15 @@ class Account {
 	}
 	
 	canSavePhoto() {
-		return this.container.children.length > 1;
+		return this.container.children.length > 1 && !document.getElementById('video-error');
+	}
+
+	renderCaptureButton() {
+		if (this.canSavePhoto()) {
+			this.captureButton.disabled = ''
+		} else {
+			this.captureButton.disabled = 'disabled';
+		}
 	}
 	
 	dragAndDropInsideContainer(element, shouldCopy) {
@@ -466,11 +478,7 @@ class Account {
 					} else {
 						document.body.removeChild(toMove);
 					}
-					if (this.canSavePhoto()) {
-						this.captureButton.disabled = ''
-					} else {
-						this.captureButton.disabled = 'disabled';
-					}
+					this.renderCaptureButton();
 				}
 			}
 		}
@@ -522,14 +530,19 @@ class Account {
 		stickedStickers.forEach((elem) => {
 			this.container.removeChild(elem);
 		});
+		this.renderCaptureButton();
 	}
 
 	uploadPhoto() {
 		let video = document.getElementById('video');
+		let videoError = document.getElementById('video-error');
 		let uploadedImage = document.getElementById('uploaded-image');
 
 		if (video) {
 			this.container.removeChild(video);
+		}
+		if (videoError) {
+			this.container.removeChild(videoError);
 		}
 		if (uploadedImage) {
 			this.container.removeChild(uploadedImage);
@@ -540,6 +553,7 @@ class Account {
 		uploadedImage.src = window.URL.createObjectURL(this.upload.files[0]);
 		this.container.insertBefore(uploadedImage, this.container.firstChild);
 		this.renderBackToCameraButton();
+		this.renderCaptureButton();
 	}
 
 	backToCameraHandler() {
