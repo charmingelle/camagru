@@ -23,10 +23,10 @@ class Account {
 		this.upload = document.getElementById('upload');
 		this.captureButton = document.getElementById('capture-button');
 		this.scale = vmin(50);
-		this.messageContainer = document.getElementById('message-container');
-		this.email = document.getElementById('email');
+		this.messageContainer = document.getElementById('message-container');		this.email = document.getElementById('email');
 		this.login = document.getElementById('login');
 		this.password = document.getElementById('password');
+		this.notification = document.getElementById('notification');
 
 		this.renderCamera = this.renderCamera.bind(this);
 		this.renderSticker = this.renderSticker.bind(this);
@@ -45,6 +45,7 @@ class Account {
 		this.changePasswordHandler = this.changePasswordHandler.bind(this);
 		this.stickersForwardHander = this.stickersForwardHander.bind(this);
 		this.stickerBackHandler = this.stickerBackHandler.bind(this);
+		this.changeNotification = this.changeNotification.bind(this);
 	}
 	
 	getCoords(elem) {
@@ -627,7 +628,44 @@ class Account {
 		.then(response => response.json())
 		.then(login => {this.hello.innerHTML = `Hello, ${login}`});
 	}
+
+	changeNotification() {
+		let action = this.notification.innerHTML.split(' ')[0];
+
+		action = `${action[0].toLowerCase()}${action.slice(1)}`;
+		if (confirm(`Are you sure you would like to ${action} email notifications?`)) {
+			fetch('/changeNotification', {
+				method: 'POST',
+				credentials: 'include'
+			})
+			.then(() => {
+				renderMessageContainer(this.messageContainer, `Email notifications have been ${action}d for your account`);
+				this.notification.innerHTML === 'Disable Email Notifications' ?
+					this.notification.innerHTML = 'Enable Email Notifications' :
+					this.notification.innerHTML = 'Disable Email Notifications';
+			});
+		}
+	}
 	
+	renderNotification() {
+		this.notification = document.getElementById('notification');
+
+		fetch('/getNotification', {
+			method: 'POST',
+			credentials: 'include'
+		})
+		.then(response => response.json())
+		.then(data => {
+			// Amazing moment
+			if (data == true) {
+				this.notification.innerHTML = 'Disable Email Notifications';
+			} else {
+				this.notification.innerHTML = 'Enable Email Notifications';
+			}
+			notification.addEventListener('click', this.changeNotification);
+		});
+	}
+
 	render() {
 		this.renderHello();
 		this.renderCamera();
@@ -643,6 +681,7 @@ class Account {
 		document.getElementById('change-login-button').addEventListener('click', this.changeLoginHandler);
 		this.password.addEventListener('keypress', (event) => enterPressHandler(event, this.changePasswordHandler));
 		document.getElementById('change-password-button').addEventListener('click', this.changePasswordHandler);
+		this.renderNotification();
 	}
 }
 

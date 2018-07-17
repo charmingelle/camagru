@@ -92,4 +92,13 @@ class DataController {
 			echo json_encode(Photos::getComments($id));
 		}
 	}
+
+	public static function getNotification() {
+		// echo json_encode('here');
+		echo json_encode(Auth::getNotification());
+	}
+
+	public static function changeNotification() {
+		Auth::changeNotification();
+	}
 }

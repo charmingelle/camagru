@@ -31,7 +31,6 @@ TODO
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
-- rename all class files
 - create account page layout
 - find out what to do with image size
 - check if more Route conditions should be added to web.php
@@ -50,3 +49,4 @@ TODO
 - think if you should return DB errors
 - remove fetchAll from DB requests where it isn't needed
 - empty $_SESSION data in one function
+- add email notifications about received comments

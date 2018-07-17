@@ -3,7 +3,7 @@
 require_once(getRoot() . 'app/controllers/AuthController.php');
 require_once(getRoot() . 'app/controllers/DataController.php');
 require_once(getRoot() . 'app/controllers/SiteMapController.php');
-require_once(getRoot() . 'app/core/Route.class.php');
+require_once(getRoot() . 'app/core/Route.php');
 require_once(getRoot() . 'app/core/Message.php');
 
 // Route::get(['uri' => '/', 'controller' => 'SiteMapController@showHome']);
@@ -148,3 +148,7 @@ Route::post(['uri' => '/deleteUserPicture', 'controller' => 'DataController@dele
 Route::post(['uri' => '/getPhotoPrivate', 'controller' => 'DataController@getPhotoPrivate', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/publish', 'controller' => 'DataController@publish', 'condition' => 'signed in']);
+
+Route::post(['uri' => '/getNotification', 'controller' => 'DataController@getNotification', 'condition' => 'signed in']);
+
+Route::post(['uri' => '/changeNotification', 'controller' => 'DataController@changeNotification', 'condition' => 'signed in']);
