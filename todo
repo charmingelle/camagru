@@ -25,6 +25,10 @@ TODO
 + add Sign Out button to any page where needed
 + think how to make hash in database temporary
 + add publishing and hiding photos from account
++ add error messages to form section
++ check how to make rediect if condition is set and it isn't true
++ add sign in verification on server side when like or comment is added
++ fix logout issue
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -32,18 +36,14 @@ TODO
 - create account page layout
 - find out what to do with image size
 - check if more Route conditions should be added to web.php
-- check how to make rediect if condition is set and it isn't true
 - commented 404 redirect from now; check what happens with it
 - replace names with "picture" with "photo"
 - add the ability to delete comments (not mandatory)
-- add sign in verification on server side when like or comment is added
-- fix logout issue
 - check if I can make corner sticker resizing better
 - check if drag and drop works smoothly (not really now)
 - implement sticker uploading (not necessary)
 - make sure that you verify all data received from client (before sending and when server receives it)
 - should I incrypt the password before sending it?
-- add error messages to form section
 
 - make sure you use JSON in body in fetch everywhere
 - think about covering fetch in some shorter function
