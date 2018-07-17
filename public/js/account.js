@@ -68,18 +68,20 @@ class Account {
 	}
 
 	publish(button, id, privateStatus) {
-		if (confirm("Are you sure you would like to publish this photo?")) {
+		let action = 'hide';
+
+		if (privateStatus == true) {
+			action = 'publish';
+		}
+		if (confirm(`Are you sure you would like to ${action} this photo?`)) {
 			fetch('/publish', {
 				method: 'POST',
 				credentials: 'include',
 				body: id
 			})
 			.then(() => {
-				if (privateStatus) {
-					button.innerHTML = 'Hide';
-				} else {
-					button.innerHTML = 'Publish';
-				}
+				action === 'hide' ? action = 'publish' : action = 'hide';
+				button.innerHTML = `${action[0].toUpperCase()}${action.slice(1)}`;
 			});
 		}
 	}
@@ -92,7 +94,7 @@ class Account {
 		})
 		.then(response => response.json())
 		.then(privateStatus => {
-			if (privateStatus) {
+			if (privateStatus == true) {
 				button.innerHTML = 'Publish';
 			} else {
 				button.innerHTML = 'Hide';

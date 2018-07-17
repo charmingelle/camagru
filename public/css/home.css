@@ -19,6 +19,7 @@ header a:visited {
 
 #message-container {
 	margin: 1vmin;
+	text-align: right;
 }
 
 #form-container {
