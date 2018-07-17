@@ -106,6 +106,8 @@ class Account {
 	
 	renderPhoto(sources) {
 		if (sources) {
+			sources.reverse();
+
 			const images = sources.map(source => {
 				let imageContainer = document.createElement('div');
 				let image = document.createElement('img');

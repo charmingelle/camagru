@@ -126,6 +126,8 @@ class Home {
 	
 	appendImg(sources) {
 		if (sources) {
+			sources.reverse();
+			
 			const images = sources.map(source => {
 				let imageContainer = document.createElement('div');
 				let login = document.createElement('div');
