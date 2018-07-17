@@ -94,11 +94,19 @@ class DataController {
 	}
 
 	public static function getNotification() {
-		// echo json_encode('here');
-		echo json_encode(Auth::getNotification());
+		echo json_encode(Auth::getNotification($_SESSION['auth-data']['login']));
 	}
 
 	public static function changeNotification() {
 		Auth::changeNotification();
+	}
+
+	public static function getNotificationForLogin() {
+		$login = file_get_contents('php://input');
+		
+		if ($login !== FALSE) {
+			$login = json_decode($login, TRUE);
+			echo json_encode(Auth::getNotification($login));
+		}
 	}
 }

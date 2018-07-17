@@ -122,8 +122,8 @@ class Auth {
 				&& $_SESSION['auth-data']['login'] !== '';
 	}
 
-	public static function getNotification() {
-		$notification = DBConnect::sendQuery('SELECT notification FROM account WHERE login = :login', ['login' => $_SESSION['auth-data']['login']])->fetchAll();
+	public static function getNotification($login) {
+		$notification = DBConnect::sendQuery('SELECT notification FROM account WHERE login = :login', ['login' => $login])->fetchAll();
 
 		return $notification[0]['notification'];
 	}
