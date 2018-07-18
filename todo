@@ -28,6 +28,7 @@ TODO
 + add error messages to form section
 + check how to make rediect if condition is set and it isn't true
 + add sign in verification on server side when like or comment is added
++ add email notifications about received comments
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -49,4 +50,6 @@ TODO
 - think if you should return DB errors
 - remove fetchAll from DB requests where it isn't needed
 - empty $_SESSION data in one function
-- add email notifications about received comments
+- add gallery pagination
+- add creating image on server side
+- add sharing image on social networks
