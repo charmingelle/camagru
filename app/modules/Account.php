@@ -1,6 +1,6 @@
 <?php
 
-class Auth {
+class Account {
 	private static function _busyLogin($login) {
 		$query_result = DBConnect::sendQuery('SELECT login FROM account WHERE login = :login', ['login' => $login])->fetchAll();
 		
@@ -130,5 +130,18 @@ class Auth {
 
 	public static function changeNotification() {
 		DBConnect::sendQuery('UPDATE account SET notification = NOT notification WHERE login = :login', ['login' => $_SESSION['auth-data']['login']]);
-	}	
+	}
+	
+	private static function _getEmail($login) {
+		$email = DBConnect::sendQuery('SELECT email FROM account WHERE login = :login', ['login' => $login])->fetchAll();
+
+		return $email[0]['email'];
+	}
+	
+	public static function notify($login, $comment, $author) {
+		$email = Account::_getEmail($login);
+		$message = '$author commented your photo: "$comment"';
+		
+		mail($email, 'Your photo received a new comment!', $message, 'From:noreply@camagru.com\r\n');
+	}
 }

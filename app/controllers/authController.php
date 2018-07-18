@@ -1,7 +1,7 @@
 <?php
 
 require_once(getRoot() . 'app/core/DBConnect.php');
-require_once(getRoot() . 'app/modules/Auth.php');
+require_once(getRoot() . 'app/modules/Account.php');
 require_once(getRoot() . 'app/modules/Page.php');
 require_once(getRoot() . 'app/modules/Validate.php');
 
@@ -30,7 +30,7 @@ class AuthController {
 				echo json_encode(Message::$invalidPassword);
 				exit ;
 			}
-			Auth::sendSignupEmail($creds['email'], $creds['login'], hash('whirlpool', $creds['password']));
+			Account::sendSignupEmail($creds['email'], $creds['login'], hash('whirlpool', $creds['password']));
 		}
 	}
 	
@@ -38,7 +38,7 @@ class AuthController {
 		if (isset($_GET['email']) && $_GET['email'] !== ''
 			&& isset($_GET['login']) && $_GET['login'] !== ''
 			&& isset($_GET['hash']) && $_GET['hash'] !== ''
-			&& Auth::signup(urldecode($_GET['email']), urldecode($_GET['login']), urldecode($_GET['hash'])) === true) {
+			&& Account::signup(urldecode($_GET['email']), urldecode($_GET['login']), urldecode($_GET['hash'])) === true) {
 			SiteMapController::showHome();
 		} else {
 			SiteMapController::show404();
@@ -56,7 +56,7 @@ class AuthController {
 				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
-			if (Auth::signin($creds['login'], hash('whirlpool', $creds['password'])) === true) {
+			if (Account::signin($creds['login'], hash('whirlpool', $creds['password'])) === true) {
 				echo json_encode('OK');
 			} else {
 				echo json_encode(Message::$invalidOrInactiveAccount);
@@ -82,7 +82,7 @@ class AuthController {
 			if (!Validate::isValidEmail($creds['email'])) {
 				echo json_encode(Message::$invalidEmail);
 			} else {
-				Auth::changeEmail($creds['email'], $_SESSION['auth-data']['login']);
+				Account::changeEmail($creds['email'], $_SESSION['auth-data']['login']);
 			}
 		}
 	}
@@ -100,7 +100,7 @@ class AuthController {
 			if (!Validate::isValidLogin($creds['login'])) {
 				echo json_encode(Message::$invalidLogin);
 			} else {
-				Auth::changeLogin($creds['login'], $_SESSION['auth-data']['login']);
+				Account::changeLogin($creds['login'], $_SESSION['auth-data']['login']);
 			}
 		}
 	}
@@ -108,8 +108,8 @@ class AuthController {
 	public static function tempAccountAccess() {
 		if (isset($_GET['email']) && $_GET['email'] !== ''
 			&& isset($_GET['hash']) && $_GET['hash'] !== ''
-			&& Auth::isHashValid(urldecode($_GET['email']), urldecode($_GET['hash']))) {
-			Auth::cleanHash(urldecode($_GET['email']));
+			&& Account::isHashValid(urldecode($_GET['email']), urldecode($_GET['hash']))) {
+			Account::cleanHash(urldecode($_GET['email']));
 			$_SESSION['auth-data']['email'] = $_GET['email'];
 			SiteMapController::showResetPasswordPage();
 		} else {
@@ -130,7 +130,7 @@ class AuthController {
 			if (!Validate::isValidPassword($creds['password'])) {
 				echo json_encode(Message::$invalidPassword);
 			} else {
-				Auth::changePassword(hash('whirlpool', $creds['password']), $_SESSION['auth-data']['login']);
+				Account::changePassword(hash('whirlpool', $creds['password']), $_SESSION['auth-data']['login']);
 			}
 		}
 	}
@@ -145,7 +145,7 @@ class AuthController {
 				echo json_encode(Message::$emptyFields);
 				exit ;
 			}
-			Auth::sendForgotPasswordEmail($creds['email']);
+			Account::sendForgotPasswordEmail($creds['email']);
 		}
 	}
 
@@ -162,12 +162,12 @@ class AuthController {
 			if (!Validate::isValidPassword($creds['password'])) {
 				echo json_encode(Message::$invalidPassword);
 			} else {
-				Auth::resetPassword(hash('whirlpool', $creds['password']));
+				Account::resetPassword(hash('whirlpool', $creds['password']));
 			}
 		}
 	}
 	
 	public static function isSignedIn() {
-		echo json_encode(Auth::isSignedIn());
+		echo json_encode(Account::isSignedIn());
 	}
 }
