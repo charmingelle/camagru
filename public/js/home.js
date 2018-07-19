@@ -34,7 +34,7 @@ class Home {
 		fetch('/getComments', {
 			method: 'POST',
 			credentials: 'include',
-			body: photoId
+			body: JSON.stringify({'id': photoId})
 		})
 		.then(response => response.json(), printError)
 		.then((comments) => {
@@ -81,7 +81,7 @@ class Home {
 					fetch('/increaseCommentCount', {
 						method: 'POST',
 						credentials: 'include',
-						body: photoId
+						body: JSON.stringify({'id': photoId})
 					})
 					.then(response => response.json(), printError)
 					.then(commentAmount => {
@@ -112,13 +112,13 @@ class Home {
 		fetch('/like', {
 			method: 'POST',
 			credentials: 'include',
-			body: photoId
+			body: JSON.stringify({'id': photoId})
 		})
 		.then(
 			fetch('/getLikes', {
 				method: 'POST',
 				credentials: 'include',
-				body: photoId
+				body: JSON.stringify({'id': photoId})
 			})
 			.then(response => response.json(), printError)
 			.then(data => {
@@ -260,9 +260,7 @@ class Home {
 			fetch('/forgotPassword', {
 				method: 'POST',
 				credentials: 'include',
-				body: JSON.stringify({
-					'email': email
-				})
+				body: JSON.stringify({'email': email})
 			})
 			.then(response => response.json(), printError)
 			.then(data => renderMessageContainer(this.messageContainer, data), printError);
@@ -344,9 +342,7 @@ class Home {
 		fetch('/photos', {
 			method: 'POST',
 			credentials: 'include',
-			body: JSON.stringify({
-				'lastId': this.lastPhotoId
-			})
+			body: JSON.stringify({'lastId': this.lastPhotoId})
 		})
 		.then(response => response.json(), printError)
 		.then(data => {

@@ -10,9 +10,7 @@ const resetPasswordHandler = () => {
 		fetch('/resetPassword', {
 			method: 'POST',
 			credentials: 'include',
-			body: JSON.stringify({
-				'password': password
-			})
+			body: JSON.stringify({'password': password})
 		})
 		.then(response => response.json(), printError)
 		.then(data => renderMessageContainer(messageContainer, data), printError);

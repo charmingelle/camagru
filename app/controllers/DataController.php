@@ -6,9 +6,7 @@ require_once(getRoot() . 'app/modules/Stickers.php');
 
 class DataController {
 	public static function getPhotos() {
-		$body = Utils::getBodyFromJson();
-
-		echo json_encode(Photos::getPhotos($body['lastId']));
+		echo json_encode(Photos::getPhotos(Utils::getBodyFromJson()['lastId']));
 	}
 	
 	public static function getLogin() {
@@ -20,11 +18,7 @@ class DataController {
 	}
 
 	public static function savePicture() {
-		$source = file_get_contents('php://input');
-		
-		if ($source !== FALSE) {
-			Photos::savePhoto($source);
-		}
+		Photos::savePhoto(Utils::getBodyFromJson()['source']);
 	}
 
 	public static function getUserPictures() {
@@ -32,49 +26,29 @@ class DataController {
 	}
 
 	public static function deleteUserPicture() {
-		$id = file_get_contents('php://input');
-
-		if ($id !== FALSE) {
-			Photos::deleteUserPicture($id);
-		}
+		Photos::deleteUserPicture(Utils::getBodyFromJson()['id']);
 	}
 	
 	public static function getPhotoPrivate() {
-		$id = file_get_contents('php://input');
-
-		if ($id !== FALSE) {
-			echo json_encode(Photos::getPhotoPrivate($id));
-		}
+		echo json_encode(Photos::getPhotoPrivate(Utils::getBodyFromJson()['id']));
 	}
 	
 	public static function publish() {
-		$id = file_get_contents('php://input');
-
-		if ($id !== FALSE) {
-			Photos::publish($id);
-		}
+		Photos::publish(Utils::getBodyFromJson()['id']);
 	}
 
 	public static function likePicture() {
-		$id = file_get_contents('php://input');
-
-		if ($id !== FALSE) {
-			Photos::likePicture($id);
-		}
+		Photos::likePicture(Utils::getBodyFromJson()['id']);
 	}
 
 	public static function getLikes() {
-		$id = file_get_contents('php://input');
-		
-		if ($id !== FALSE) {
-			echo json_encode(Photos::getLikes($id));
-		}
+		echo json_encode(Photos::getLikes(Utils::getBodyFromJson()['id']));
 	}
 
 	public static function addComment() {
 		$body = Utils::getBodyFromJson();
 		$login = Photos::getAuthor($body['photo-id']);
-		
+
 		Photos::addComment($body['comment'], $body['photo-id']);
 		if (Account::getNotification($body['login'])) {
 			Account::notify($login, $body['comment'], $_SESSION['auth-data']['login']);
@@ -82,19 +56,11 @@ class DataController {
 	}
 
 	public static function increaseCommentCount() {
-		$id = file_get_contents('php://input');
-		
-		if ($id !== FALSE) {
-			echo json_encode(Photos::increaseCommentCount($id));
-		}
+		echo json_encode(Photos::increaseCommentCount(Utils::getBodyFromJson()['id']));
 	}
 
 	public static function getComments() {
-		$id = file_get_contents('php://input');
-		
-		if ($id !== FALSE) {
-			echo json_encode(Photos::getComments($id));
-		}
+		echo json_encode(Photos::getComments(Utils::getBodyFromJson()['id']));
 	}
 
 	public static function getNotification() {

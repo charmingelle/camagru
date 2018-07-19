@@ -62,7 +62,7 @@ class Account {
 			fetch('/deleteUserPicture', {
 				method: 'POST',
 				credentials: 'include',
-				body: id
+				body: JSON.stringify({'id': id})
 			})
 			.then(() => this.photosContainer.removeChild(imageContainer), printError);
 		}
@@ -78,7 +78,7 @@ class Account {
 			fetch('/publish', {
 				method: 'POST',
 				credentials: 'include',
-				body: id
+				body: JSON.stringify({'id': id})
 			})
 			.then(() => {
 				action === 'hide' ? action = 'publish' : action = 'hide';
@@ -91,7 +91,7 @@ class Account {
 		fetch('/getPhotoPrivate', {
 			method: 'POST',
 			credentials: 'include',
-			body: id
+			body: JSON.stringify({'id': id})
 		})
 		.then(response => response.json(), printError)
 		.then(privateStatus => {
@@ -177,7 +177,7 @@ class Account {
 		fetch('/savePicture', {
 			method: 'POST',
 			credentials: 'include',
-			body: canvas.toDataURL()
+			body: JSON.stringify({'source': canvas.toDataURL()})
 		})
 		.then(this.renderPhotos, printError);
 	}
@@ -581,9 +581,7 @@ class Account {
 			fetch('/changeEmail', {
 				method: 'POST',
 				credentials: 'include',
-				body: JSON.stringify({
-					'email': this.email.value
-				})
+				body: JSON.stringify({'email': this.email.value})
 			})
 			.then(response => response.json(), printError)
 			.then(data => renderMessageContainer(this.messageContainer, data), printError);
@@ -595,9 +593,7 @@ class Account {
 			fetch('/changeLogin', {
 				method: 'POST',
 				credentials: 'include',
-				body: JSON.stringify({
-					'login': this.login.value
-				})
+				body: JSON.stringify({'login': this.login.value})
 			})
 			.then(response => response.json(), printError)
 			.then(data => renderMessageContainer(this.messageContainer, data), printError);
@@ -609,9 +605,7 @@ class Account {
 			fetch('/changePassword', {
 				method: 'POST',
 				credentials: 'include',
-				body: JSON.stringify({
-					'password': this.password.value
-				})
+				body: JSON.stringify({'password': this.password.value})
 			})
 			.then(response => response.json(), printError)
 			.then(data => renderMessageContainer(this.messageContainer, data), printError);
