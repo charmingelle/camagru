@@ -53,3 +53,7 @@ TODO
 - add gallery pagination
 - add creating image on server side
 - add sharing image on social networks
+- add error callback to all fetches
+- remove ` from all DB requests where not needed
+- check why sendQuery doesn't work with limit param in external variable
+- make sure that body of all fetches is an object

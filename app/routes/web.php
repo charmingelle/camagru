@@ -133,6 +133,8 @@ Route::post(['uri' => '/increaseCommentCount', 'controller' => 'DataController@i
 
 Route::post(['uri' => '/getComments', 'controller' => 'DataController@getComments']);
 
+Route::post(['uri' => '/getLastPublicPhotoId', 'controller' => 'DataController@getLastPublicPhotoId']);
+
 Route::get(['uri' => '/account', 'controller' => 'SiteMapController@showAccount', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/getLogin', 'controller' => 'DataController@getLogin', 'condition' => 'signed in']);

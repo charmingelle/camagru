@@ -1,4 +1,4 @@
-import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer } from '/js/utils.js';
+import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom } from '/js/utils.js';
 
 class Home {
 	constructor() {
@@ -6,6 +6,9 @@ class Home {
 		this.formContainer = document.getElementById('form-container');
 		this.headerButtonsDiv = document.getElementById('header-buttons-div');
 		this.messageContainer = document.getElementById('message-container');
+		this.lastPhotoId = 0;
+		this.currentPhotoId = 0;
+		this.isLoading = false;
 
 		this.fillCommentsContainer = this.fillCommentsContainer.bind(this);
 		this.setSignedInAddComment = this.setSignedInAddComment.bind(this);
@@ -25,6 +28,8 @@ class Home {
 		this.signupFormHandler = this.signupFormHandler.bind(this);
 		this.signinFormHandler = this.signinFormHandler.bind(this);
 		this.resetPasswordFormHandler = this.resetPasswordFormHandler.bind(this);
+		this.getLastPhotoId = this.getLastPhotoId.bind(this);
+		this.loadNewPhotos = this.loadNewPhotos.bind(this);
 	}
 
 	fillCommentsContainer(commentsContainer, photoId) {
@@ -339,21 +344,67 @@ class Home {
 	}
 	
 	renderGallery() {
-		removeAllChildren(this.gallery);
+		this.isLoading = true;
+		console.log(`this.currentPhotoId = ${this.currentPhotoId}`);
 		fetch('/photos', {
 			method: 'POST',
-			credentials: 'include'
+			credentials: 'include',
+			body: JSON.stringify({
+				'lastId': this.currentPhotoId
+			})
 		})
-		.then(response => response.json())
-		.then(this.appendImg);
+		.then(response => response.json(), error => console.error(error))
+		.then(data => {
+			console.log(data);
+			this.currentPhotoId = parseInt(data[data.length - 1]['id']);
+			console.log(`this.currentPhotoId = ${this.currentPhotoId}`);
+			this.appendImg(data);
+			this.isLoading = false;
+		}, error => console.error(error));
+	}
+	
+	initiateVariables() {
+		this.lastPhotoId = 0;
+		this.currentPhotoId = 0;
 	}
 	
 	renderSignedInOrAnonymousPage(isSignedIn) {
 		this.isSignedIn = isSignedIn;
+		this.getLastPhotoId();
 		this.renderHeaderButtonsDiv();
 		renderMessageContainer(this.messageContainer);
 		this.renderFormContainer();
+		window.addEventListener('scroll', this.loadNewPhotos);
+		this.initiateVariables();
+		removeAllChildren(this.gallery);
 		this.renderGallery();
+	}
+
+	getLastPhotoId() {
+		fetch('/getLastPublicPhotoId', {
+			method: 'POST',
+			credentials: 'include'
+		})
+		.then(response => response.json(), error => console.error(error))
+		.then(data => {
+			this.lastPhotoId = parseInt(data);
+			console.log(`this.lastPhotoId = ${this.lastPhotoId}`);
+		}, error => console.error(error));
+	}
+
+	loadNewPhotos() {
+		console.log(isScrolledToBottom());
+		if (isScrolledToBottom()) {
+			console.log(`this.currentPhotoId = ${this.currentPhotoId}, this.lastPhotoId = ${this.lastPhotoId}`);
+			if (this.currentPhotoId < this.lastPhotoId) {
+				console.log('can render gallery');
+				if (!this.isLoading) {
+					this.renderGallery();
+				}
+			} else {
+				window.removeEventListener('scroll', this.loadNewPhotos);
+			}
+		}
 	}
 	
 	render() {

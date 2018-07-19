@@ -5,7 +5,12 @@ require_once(getRoot() . 'app/modules/Stickers.php');
 
 class DataController {
 	public static function getPhotos() {
-		echo json_encode(Photos::getPhotos());
+		$data = file_get_contents('php://input');
+		
+		if ($data !== FALSE) {
+			$data = json_decode($data, TRUE);
+			echo json_encode(Photos::getPhotos($data['lastId']));
+		}
 	}
 	
 	public static function getLogin() {
@@ -104,5 +109,9 @@ class DataController {
 
 	public static function changeNotification() {
 		Account::changeNotification();
+	}
+
+	public static function getLastPublicPhotoId() {
+		echo json_encode(Photos::getLastPublicPhotoId());
 	}
 }

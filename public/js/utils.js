@@ -62,3 +62,9 @@ export const renderMessageContainer = (container, message) => {
 		container.innerHTML = message;
 	}
 }
+
+export const isScrolledToBottom = () => {
+	return (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
+	// return (window.innerHeight + document.body.scrollTop + 1)
+	// 	>= document.body.scrollHeight;
+}
