@@ -7,7 +7,6 @@ class Home {
 		this.headerButtonsDiv = document.getElementById('header-buttons-div');
 		this.messageContainer = document.getElementById('message-container');
 		this.lastPhotoId = 0;
-		this.currentPhotoId = 0;
 		this.isLoading = false;
 
 		this.fillCommentsContainer = this.fillCommentsContainer.bind(this);
@@ -28,7 +27,6 @@ class Home {
 		this.signupFormHandler = this.signupFormHandler.bind(this);
 		this.signinFormHandler = this.signinFormHandler.bind(this);
 		this.resetPasswordFormHandler = this.resetPasswordFormHandler.bind(this);
-		this.getLastPhotoId = this.getLastPhotoId.bind(this);
 		this.loadNewPhotos = this.loadNewPhotos.bind(this);
 	}
 
@@ -131,8 +129,6 @@ class Home {
 	
 	appendImg(sources) {
 		if (sources) {
-			sources.reverse();
-			
 			const images = sources.map(source => {
 				let imageContainer = document.createElement('div');
 				let login = document.createElement('div');
@@ -345,42 +341,23 @@ class Home {
 	
 	renderGallery() {
 		this.isLoading = true;
-		console.log(`this.currentPhotoId = ${this.currentPhotoId}`);
 		fetch('/photos', {
 			method: 'POST',
 			credentials: 'include',
 			body: JSON.stringify({
-				'lastId': this.currentPhotoId
+				'lastId': this.lastPhotoId
 			})
 		})
 		.then(response => response.json(), error => console.error(error))
 		.then(data => {
-			console.log(data);
-			this.currentPhotoId = parseInt(data[data.length - 1]['id']);
-			console.log(`this.currentPhotoId = ${this.currentPhotoId}`);
+			this.lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
 			this.appendImg(data);
 			this.isLoading = false;
 		}, error => console.error(error));
 	}
 	
-	initiateVariables() {
-		this.lastPhotoId = 0;
-		this.currentPhotoId = 0;
-	}
-	
-	renderSignedInOrAnonymousPage(isSignedIn) {
-		this.isSignedIn = isSignedIn;
-		this.getLastPhotoId();
-		this.renderHeaderButtonsDiv();
-		renderMessageContainer(this.messageContainer);
-		this.renderFormContainer();
-		window.addEventListener('scroll', this.loadNewPhotos);
-		this.initiateVariables();
-		removeAllChildren(this.gallery);
-		this.renderGallery();
-	}
-
 	getLastPhotoId() {
+		removeAllChildren(this.gallery);
 		fetch('/getLastPublicPhotoId', {
 			method: 'POST',
 			credentials: 'include'
@@ -388,16 +365,13 @@ class Home {
 		.then(response => response.json(), error => console.error(error))
 		.then(data => {
 			this.lastPhotoId = parseInt(data);
-			console.log(`this.lastPhotoId = ${this.lastPhotoId}`);
+			this.renderGallery();
 		}, error => console.error(error));
 	}
 
 	loadNewPhotos() {
-		console.log(isScrolledToBottom());
 		if (isScrolledToBottom()) {
-			console.log(`this.currentPhotoId = ${this.currentPhotoId}, this.lastPhotoId = ${this.lastPhotoId}`);
-			if (this.currentPhotoId < this.lastPhotoId) {
-				console.log('can render gallery');
+			if (this.lastPhotoId > 0) {
 				if (!this.isLoading) {
 					this.renderGallery();
 				}
@@ -406,7 +380,16 @@ class Home {
 			}
 		}
 	}
-	
+
+	renderSignedInOrAnonymousPage(isSignedIn) {
+		this.isSignedIn = isSignedIn;
+		this.renderHeaderButtonsDiv();
+		renderMessageContainer(this.messageContainer);
+		this.renderFormContainer();
+		this.getLastPhotoId();
+		window.addEventListener('scroll', this.loadNewPhotos);
+	}
+
 	render() {
 		fetch('/isSignedIn', {
 			method: 'POST',
