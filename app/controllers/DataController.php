@@ -1,16 +1,14 @@
 <?php
 
+require_once(getRoot() . 'app/controllers/Utils.php');
 require_once(getRoot() . 'app/modules/Photos.php');
 require_once(getRoot() . 'app/modules/Stickers.php');
 
 class DataController {
 	public static function getPhotos() {
-		$data = file_get_contents('php://input');
-		
-		if ($data !== FALSE) {
-			$data = json_decode($data, TRUE);
-			echo json_encode(Photos::getPhotos($data['lastId']));
-		}
+		$body = Utils::getBodyFromJson();
+
+		echo json_encode(Photos::getPhotos($body['lastId']));
 	}
 	
 	public static function getLogin() {
@@ -74,16 +72,12 @@ class DataController {
 	}
 
 	public static function addComment() {
-		$data = file_get_contents('php://input');
-
-		if ($data !== FALSE) {
-			$data = json_decode($data, TRUE);
-			$login = Photos::getAuthor($data['photo-id']);
-			
-			Photos::addComment($data['comment'], $data['photo-id']);
-			if (Account::getNotification($data['login'])) {
-				Account::notify($login, $data['comment'], $_SESSION['auth-data']['login']);
-			}
+		$body = Utils::getBodyFromJson();
+		$login = Photos::getAuthor($body['photo-id']);
+		
+		Photos::addComment($body['comment'], $body['photo-id']);
+		if (Account::getNotification($body['login'])) {
+			Account::notify($login, $body['comment'], $_SESSION['auth-data']['login']);
 		}
 	}
 

@@ -57,3 +57,4 @@ TODO
 - remove ` from all DB requests where not needed
 - check why sendQuery doesn't work with limit param in external variable
 - make sure that body of all fetches is an object
+- find out if fetch body containing of one value is OK

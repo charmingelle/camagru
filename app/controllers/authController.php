@@ -1,5 +1,6 @@
 <?php
 
+require_once(getRoot() . 'app/controllers/Utils.php');
 require_once(getRoot() . 'app/core/DBConnect.php');
 require_once(getRoot() . 'app/modules/Account.php');
 require_once(getRoot() . 'app/modules/Page.php');
@@ -7,31 +8,27 @@ require_once(getRoot() . 'app/modules/Validate.php');
 
 class AuthController {
 	public static function sendVerification() {
-		$body = file_get_contents('php://input');
+		$body = Utils::getBodyFromJson();
 		
-		if ($body) {
-			$creds = json_decode($body, true);
-			
-			if (!isset($creds['email']) || $creds['email'] === ''
-				|| !isset($creds['login']) || $creds['login'] === ''
-				|| !isset($creds['password']) || $creds['password'] === '') {
-				echo json_encode(Message::$emptyFields);
-				exit ;
-			}
-			if (!Validate::isValidEmail($creds['email'])) {
-				echo json_encode(Message::$invalidEmail);
-				exit ;
-			}
-			if (!Validate::isValidLogin($creds['login'])) {
-				echo json_encode(Message::$invalidLogin);
-				exit ;
-			}
-			if (!Validate::isValidPassword($creds['password'])) {
-				echo json_encode(Message::$invalidPassword);
-				exit ;
-			}
-			Account::sendSignupEmail($creds['email'], $creds['login'], hash('whirlpool', $creds['password']));
+		if (!isset($body['email']) || $body['email'] === ''
+			|| !isset($body['login']) || $body['login'] === ''
+			|| !isset($body['password']) || $body['password'] === '') {
+			echo json_encode(Message::$emptyFields);
+			exit ;
 		}
+		if (!Validate::isValidEmail($body['email'])) {
+			echo json_encode(Message::$invalidEmail);
+			exit ;
+		}
+		if (!Validate::isValidLogin($body['login'])) {
+			echo json_encode(Message::$invalidLogin);
+			exit ;
+		}
+		if (!Validate::isValidPassword($body['password'])) {
+			echo json_encode(Message::$invalidPassword);
+			exit ;
+		}
+		Account::sendSignupEmail($body['email'], $body['login'], hash('whirlpool', $body['password']));
 	}
 	
 	public static function signup() {
@@ -46,21 +43,17 @@ class AuthController {
 	}
 	
 	public static function signin() {
-		$body = file_get_contents('php://input');
-
-		if ($body) {
-			$creds = json_decode($body, true);
-			
-			if (!isset($creds['login']) || $creds['login'] === ''
-				|| !isset($creds['password']) || $creds['password'] === '') {
-				echo json_encode(Message::$emptyFields);
-				exit ;
-			}
-			if (Account::signin($creds['login'], hash('whirlpool', $creds['password'])) === true) {
-				echo json_encode('OK');
-			} else {
-				echo json_encode(Message::$invalidOrInactiveAccount);
-			}
+		$body = Utils::getBodyFromJson();
+		
+		if (!isset($body['login']) || $body['login'] === ''
+			|| !isset($body['password']) || $body['password'] === '') {
+			echo json_encode(Message::$emptyFields);
+			exit ;
+		}
+		if (Account::signin($body['login'], hash('whirlpool', $body['password'])) === true) {
+			echo json_encode('OK');
+		} else {
+			echo json_encode(Message::$invalidOrInactiveAccount);
 		}
 	}
 	
@@ -70,38 +63,30 @@ class AuthController {
 	}
 
 	public static function changeEmail() {
-		$body = file_get_contents('php://input');
-		
-		if ($body) {
-			$creds = json_decode($body, true);
+		$body = Utils::getBodyFromJson();
 
-			if (!isset($creds['email']) || $creds['email'] === '') {
-				echo json_encode(Message::$emptyFields);
-				exit ;
-			}
-			if (!Validate::isValidEmail($creds['email'])) {
-				echo json_encode(Message::$invalidEmail);
-			} else {
-				Account::changeEmail($creds['email'], $_SESSION['auth-data']['login']);
-			}
+		if (!isset($body['email']) || $body['email'] === '') {
+			echo json_encode(Message::$emptyFields);
+			exit ;
+		}
+		if (!Validate::isValidEmail($body['email'])) {
+			echo json_encode(Message::$invalidEmail);
+		} else {
+			Account::changeEmail($body['email'], $_SESSION['auth-data']['login']);
 		}
 	}
 	
 	public static function changeLogin() {
-		$body = file_get_contents('php://input');
-		
-		if ($body) {
-			$creds = json_decode($body, true);
+		$body = Utils::getBodyFromJson();
 
-			if (!isset($creds['login']) || $creds['login'] === '') {
-				echo json_encode(Message::$emptyFields);
-				exit ;
-			}
-			if (!Validate::isValidLogin($creds['login'])) {
-				echo json_encode(Message::$invalidLogin);
-			} else {
-				Account::changeLogin($creds['login'], $_SESSION['auth-data']['login']);
-			}
+		if (!isset($body['login']) || $body['login'] === '') {
+			echo json_encode(Message::$emptyFields);
+			exit ;
+		}
+		if (!Validate::isValidLogin($body['login'])) {
+			echo json_encode(Message::$invalidLogin);
+		} else {
+			Account::changeLogin($body['login'], $_SESSION['auth-data']['login']);
 		}
 	}
 
@@ -118,52 +103,40 @@ class AuthController {
 	}
 	
 	public static function changePassword() {
-		$body = file_get_contents('php://input');
-		
-		if ($body) {
-			$creds = json_decode($body, true);
+		$body = json_decode($body, true);
 
-			if (!isset($creds['password']) || $creds['password'] === '') {
-				echo json_encode(Message::$emptyFields);
-				exit ;
-			}
-			if (!Validate::isValidPassword($creds['password'])) {
-				echo json_encode(Message::$invalidPassword);
-			} else {
-				Account::changePassword(hash('whirlpool', $creds['password']), $_SESSION['auth-data']['login']);
-			}
+		if (!isset($body['password']) || $body['password'] === '') {
+			echo json_encode(Message::$emptyFields);
+			exit ;
+		}
+		if (!Validate::isValidPassword($body['password'])) {
+			echo json_encode(Message::$invalidPassword);
+		} else {
+			Account::changePassword(hash('whirlpool', $body['password']), $_SESSION['auth-data']['login']);
 		}
 	}
 	
 	public static function sendForgotPasswordEmail() {
-		$body = file_get_contents('php://input');
-		
-		if ($body) {
-			$creds = json_decode($body, true);
+		$body = Utils::getBodyFromJson();
 
-			if (!isset($creds['email']) || $creds['email'] === '') {
-				echo json_encode(Message::$emptyFields);
-				exit ;
-			}
-			Account::sendForgotPasswordEmail($creds['email']);
+		if (!isset($body['email']) || $body['email'] === '') {
+			echo json_encode(Message::$emptyFields);
+			exit ;
 		}
+		Account::sendForgotPasswordEmail($body['email']);
 	}
 
 	public static function resetPassword() {
-		$body = file_get_contents('php://input');
-		
-		if ($body) {
-			$creds = json_decode($body, true);
+		$body = Utils::getBodyFromJson();
 
-			if (!isset($creds['password']) || $creds['password'] === '') {
-				echo json_encode(Message::$emptyPassword);
-				exit ;
-			}
-			if (!Validate::isValidPassword($creds['password'])) {
-				echo json_encode(Message::$invalidPassword);
-			} else {
-				Account::resetPassword(hash('whirlpool', $creds['password']));
-			}
+		if (!isset($body['password']) || $body['password'] === '') {
+			echo json_encode(Message::$emptyPassword);
+			exit ;
+		}
+		if (!Validate::isValidPassword($body['password'])) {
+			echo json_encode(Message::$invalidPassword);
+		} else {
+			Account::resetPassword(hash('whirlpool', $body['password']));
 		}
 	}
 	
