@@ -14,8 +14,8 @@ const resetPasswordHandler = () => {
 				'password': password
 			})
 		})
-		.then(response => response.json())
-		.then(data => renderMessageContainer(messageContainer, data));
+		.then(response => response.json(), printError)
+		.then(data => renderMessageContainer(messageContainer, data), printError);
 	}
 }
 

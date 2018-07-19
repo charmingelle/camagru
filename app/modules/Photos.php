@@ -4,12 +4,8 @@ require_once(getRoot() . 'app/core/DBConnect.php');
 
 class Photos {
 	public static function getPhotos($lastId) {
-		// if ($lastId === 0) {
-			// return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE LIMIT 5')->fetchAll();
-		// } else {
-			return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE AND id <= :lastId ORDER BY ID DESC LIMIT 5',
-										['lastId' => $lastId])->fetchAll();
-		// }
+		return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE AND id <= :lastId ORDER BY ID DESC LIMIT 5',
+									['lastId' => $lastId])->fetchAll();
 	}
 
 	private static function getUrl() {

@@ -1,4 +1,4 @@
-import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom } from '/js/utils.js';
+import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom, printError } from '/js/utils.js';
 
 class Home {
 	constructor() {
@@ -36,7 +36,7 @@ class Home {
 			credentials: 'include',
 			body: photoId
 		})
-		.then(response => response.json())
+		.then(response => response.json(), printError)
 		.then((comments) => {
 			if (comments) {
 				const commentDivs = comments.map(comment => {
@@ -54,12 +54,12 @@ class Home {
 				});
 				return commentDivs;
 			}
-		})
+		}, printError)
 		.then(commentDivs => {
 			if (commentDivs) {
 				commentsContainer.append(...commentDivs);
 			}
-		});
+		}, printError);
 	}
 
 	setSignedInAddComment(addComment, commentsContainer, photoId, commentAmountDiv) {
@@ -83,10 +83,10 @@ class Home {
 						credentials: 'include',
 						body: photoId
 					})
-					.then(response => response.json())
+					.then(response => response.json(), printError)
 					.then(commentAmount => {
 						commentAmountDiv.innerHTML = commentAmount;
-					});
+					}, printError);
 					addComment.value = '';
 					removeAllChildren(commentsContainer);
 					this.fillCommentsContainer(commentsContainer, photoId);
@@ -120,10 +120,10 @@ class Home {
 				credentials: 'include',
 				body: photoId
 			})
-			.then(response => response.json())
+			.then(response => response.json(), printError)
 			.then(data => {
 				like.innerHTML = data;
-			})
+			}, printError)
 		);
 	}
 	
@@ -179,14 +179,14 @@ class Home {
 					'password': password
 				})
 			})
-			.then(response => response.json())
+			.then(response => response.json(), printError)
 			.then(data => {
 				if (data !== 'OK') {
 					renderMessageContainer(this.messageContainer, data);
 				} else {
 					this.renderSignedInOrAnonymousPage(true);
 				}
-			});
+			}, printError);
 		}
 	}
 
@@ -224,8 +224,8 @@ class Home {
 					'password': password
 				})
 			})
-			.then(response => response.json())
-			.then(data => renderMessageContainer(this.messageContainer, data));
+			.then(response => response.json(), printError)
+			.then(data => renderMessageContainer(this.messageContainer, data), printError);
 		}
 	}
 
@@ -264,8 +264,8 @@ class Home {
 					'email': email
 				})
 			})
-			.then(response => response.json())
-			.then(data => renderMessageContainer(this.messageContainer, data));
+			.then(response => response.json(), printError)
+			.then(data => renderMessageContainer(this.messageContainer, data), printError);
 		}
 	}
 	
@@ -348,12 +348,12 @@ class Home {
 				'lastId': this.lastPhotoId
 			})
 		})
-		.then(response => response.json(), error => console.error(error))
+		.then(response => response.json(), printError)
 		.then(data => {
 			this.lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
 			this.appendImg(data);
 			this.isLoading = false;
-		}, error => console.error(error));
+		}, printError);
 	}
 	
 	getLastPhotoId() {
@@ -362,11 +362,11 @@ class Home {
 			method: 'POST',
 			credentials: 'include'
 		})
-		.then(response => response.json(), error => console.error(error))
+		.then(response => response.json(), printError)
 		.then(data => {
 			this.lastPhotoId = parseInt(data);
 			this.renderGallery();
-		}, error => console.error(error));
+		}, printError);
 	}
 
 	loadNewPhotos() {
@@ -395,8 +395,8 @@ class Home {
 			method: 'POST',
 			credentials: 'include'
 		})
-		.then(response => response.json())
-		.then(this.renderSignedInOrAnonymousPage);
+		.then(response => response.json(), printError)
+		.then(this.renderSignedInOrAnonymousPage, printError);
 	}
 }
 

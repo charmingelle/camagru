@@ -1,4 +1,4 @@
-import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer } from '/js/utils.js';
+import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer, printError } from '/js/utils.js';
 
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
@@ -64,7 +64,7 @@ class Account {
 				credentials: 'include',
 				body: id
 			})
-			.then(() => this.photosContainer.removeChild(imageContainer));
+			.then(() => this.photosContainer.removeChild(imageContainer), printError);
 		}
 	}
 
@@ -83,7 +83,7 @@ class Account {
 			.then(() => {
 				action === 'hide' ? action = 'publish' : action = 'hide';
 				button.innerHTML = `${action[0].toUpperCase()}${action.slice(1)}`;
-			});
+			}, printError);
 		}
 	}
 	
@@ -93,7 +93,7 @@ class Account {
 			credentials: 'include',
 			body: id
 		})
-		.then(response => response.json())
+		.then(response => response.json(), printError)
 		.then(privateStatus => {
 			if (privateStatus == true) {
 				button.innerHTML = 'Publish';
@@ -101,7 +101,7 @@ class Account {
 				button.innerHTML = 'Hide';
 			}
 			button.addEventListener('click', this.publish.bind(this, button, id, privateStatus));
-		})
+		}, printError)
 	}
 	
 	
@@ -134,9 +134,8 @@ class Account {
 			method: 'POST',
 			credentials: 'include'
 		})
-		.then(response => response.json())
-		.then(this.renderPhoto)
-		.catch(error => console.log(error.message));
+		.then(response => response.json(), printError)
+		.then(this.renderPhoto, printError);
 	}
 
 	renderCamera() {
@@ -180,7 +179,7 @@ class Account {
 			credentials: 'include',
 			body: canvas.toDataURL()
 		})
-		.then(this.renderPhotos);
+		.then(this.renderPhotos, printError);
 	}
 	
 	stretchLeft(element) {
@@ -513,9 +512,8 @@ class Account {
 			method: 'POST',
 			credentials: 'include'
 		})
-		.then(response => response.json())
-		.then(this.renderSticker)
-		.catch(error => console.log(error.message));
+		.then(response => response.json(), printError)
+		.then(this.renderSticker, printError);
 		document.getElementById('stickers-forward').addEventListener('click', this.stickersForwardHander);
 		document.getElementById('stickers-back').addEventListener('click', this.stickerBackHandler);
 	}
@@ -587,8 +585,8 @@ class Account {
 					'email': this.email.value
 				})
 			})
-			.then(response => response.json())
-			.then(data => renderMessageContainer(this.messageContainer, data));
+			.then(response => response.json(), printError)
+			.then(data => renderMessageContainer(this.messageContainer, data), printError);
 		}
 	}
 
@@ -601,8 +599,8 @@ class Account {
 					'login': this.login.value
 				})
 			})
-			.then(response => response.json())
-			.then(data => renderMessageContainer(this.messageContainer, data));
+			.then(response => response.json(), printError)
+			.then(data => renderMessageContainer(this.messageContainer, data), printError);
 		}
 	}
 
@@ -615,8 +613,8 @@ class Account {
 					'password': this.password.value
 				})
 			})
-			.then(response => response.json())
-			.then(data => renderMessageContainer(this.messageContainer, data));
+			.then(response => response.json(), printError)
+			.then(data => renderMessageContainer(this.messageContainer, data), printError);
 		}
 	}
 
@@ -625,8 +623,8 @@ class Account {
 			method: 'POST',
 			credentials: 'include'
 		})
-		.then(response => response.json())
-		.then(login => {this.hello.innerHTML = `Hello, ${login}`});
+		.then(response => response.json(), printError)
+		.then(login => {this.hello.innerHTML = `Hello, ${login}`}, printError);
 	}
 
 	changeNotification() {
@@ -643,7 +641,7 @@ class Account {
 				this.notification.innerHTML === 'Disable Email Notifications' ?
 					this.notification.innerHTML = 'Enable Email Notifications' :
 					this.notification.innerHTML = 'Disable Email Notifications';
-			});
+			}, printError);
 		}
 	}
 	
@@ -654,7 +652,7 @@ class Account {
 			method: 'POST',
 			credentials: 'include'
 		})
-		.then(response => response.json())
+		.then(response => response.json(), printError)
 		.then(data => {
 			// Amazing moment
 			if (data == true) {
@@ -663,7 +661,7 @@ class Account {
 				this.notification.innerHTML = 'Enable Email Notifications';
 			}
 			notification.addEventListener('click', this.changeNotification);
-		});
+		}, printError);
 	}
 
 	render() {
