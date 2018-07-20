@@ -12,12 +12,19 @@ class Photos {
 		return 'photo/' . substr(hash("whirlpool", uniqid() . time()), 0, 16) . '.png';
 	}
 
-	public static function savePhoto($source) {
+	public static function savePhoto($layers) {
 		$url = self::getUrl();
-
-		file_put_contents(getRoot() . 'public/' . $url, base64_decode(explode(';base64,', $source)[1]));
+		$photo = imagecreatefromstring(base64_decode(explode(';base64,', $layers[0]['source'])[1]));
+		
+		array_shift($layers);
+		foreach ($layers as $layer) {
+			$sticker = imagecreatefromstring(base64_decode(explode(';base64,', $layer['source'])[1]));
+			
+			imagecopy($photo, $sticker, $layer['left'], $layer['top'], 0, 0, $layer['width'], $layer['height']);
+		}
+		imagejpeg($photo, getRoot() . 'public/' . $url, 100);
 		DBConnect::sendQuery('INSERT INTO `photo`(`url`, `likes`, `comments`, `login`) VALUES (:url, 0, 0, :login)',
-								['url' => $url, 'login' => $_SESSION['auth-data']['login']]);
+							['url' => $url, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
 	public static function getUserPictures() {

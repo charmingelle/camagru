@@ -17,8 +17,8 @@ class DataController {
 		echo json_encode(Stickers::getStickers());
 	}
 
-	public static function savePicture() {
-		Photos::savePhoto(Utils::getBodyFromJson()['source']);
+	public static function savePhoto() {
+		Photos::savePhoto(Utils::getBodyFromJson()['layers']);
 	}
 
 	public static function getUserPictures() {

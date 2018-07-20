@@ -166,18 +166,38 @@ class Account {
 
 	savePhoto() {
 		let canvas = document.createElement('canvas');
-
+		let layers =  Array.from(this.container.children);
+		
 		canvas.width = parseInt(getComputedStyle(this.container).width);
 		canvas.height = parseInt(getComputedStyle(this.container).height);
-		for (let layer of this.container.children) {
+		
+		let layersData = layers.map((layer) => {
 			let style = getComputedStyle(layer);
+			let left = parseInt(style.left);
+			let top = parseInt(style.top);
+			let width = parseInt(style.width);
+			let height = parseInt(style.height);
+			let tempCanvas = document.createElement('canvas');
 
-			canvas.getContext('2d').drawImage(layer, parseInt(style.left), parseInt(style.top), parseInt(style.width), parseInt(style.height));
-		}
-		fetch('/savePicture', {
+			canvas.getContext('2d').drawImage(layer, left, top, width, height);
+			tempCanvas.width = width;
+			tempCanvas.height = height;
+			tempCanvas.getContext('2d').drawImage(layer, 0, 0, width, height);
+			return {
+				'source': tempCanvas.toDataURL(),
+				'left': left,
+				'top': top,
+				'width': width,
+				'height': height
+			};
+		});
+		fetch('/savePhoto', {
 			method: 'POST',
 			credentials: 'include',
-			body: JSON.stringify({'source': canvas.toDataURL()})
+			body: JSON.stringify({
+				'source': canvas.toDataURL(),
+				'layers': layersData
+			})
 		})
 		.then(this.renderPhotos, printError);
 	}

@@ -48,7 +48,7 @@ Route::post(['uri' => '/getLogin', 'controller' => 'DataController@getLogin', 'c
 
 Route::post(['uri' => '/stickers', 'controller' => 'DataController@getStickers', 'condition' => 'signed in']);
 
-Route::post(['uri' => '/savePicture', 'controller' => 'DataController@savePicture', 'condition' => 'signed in']);
+Route::post(['uri' => '/savePhoto', 'controller' => 'DataController@savePhoto', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/userPictures', 'controller' => 'DataController@getUserPictures', 'condition' => 'signed in']);
 
