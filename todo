@@ -32,6 +32,7 @@ TODO
 + add gallery pagination
 + add error callback to all fetches
 + make sure that body of all fetches is a JSON stringified object
++ add creating image on server side
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -52,7 +53,6 @@ TODO
 - think if you should return DB errors
 - remove fetchAll from DB requests where it isn't needed
 - empty $_SESSION data in one function
-- add creating image on server side
 - add sharing image on social networks
 - remove ` from all DB requests where not needed
 - check why sendQuery doesn't work with limit param in external variable
