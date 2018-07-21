@@ -44,10 +44,8 @@ class Photos {
 	}
 	
 	public static function getPhotoPrivate($id) {
-		$private = DBConnect::sendQuery('SELECT `private` FROM `photo` WHERE `id` = :id',
-										['id' => $id])->fetchAll();
-		
-		return $private[0]['private'];
+		return DBConnect::sendQuery('SELECT `private` FROM `photo` WHERE `id` = :id',
+										['id' => $id])->fetchAll()[0]['private'];
 	}
 	
 	public static function publish($id) {
@@ -61,10 +59,8 @@ class Photos {
 	}
 
 	public static function getLikes($id) {
-		$likes = DBConnect::sendQuery('SELECT `likes` FROM `photo` WHERE `id` = :id',
-										['id' => $id])->fetchAll();
-		
-		return $likes[0]['likes'];
+		return DBConnect::sendQuery('SELECT `likes` FROM `photo` WHERE `id` = :id',
+										['id' => $id])->fetchAll()[0]['likes'];
 	}
 
 	public static function addComment($comment, $photoId) {
@@ -76,10 +72,8 @@ class Photos {
 		DBConnect::sendQuery('UPDATE `photo` SET `comments` = `comments` + 1 WHERE `id` = :id',
 							['id' => $id]);
 
-		$comments = DBConnect::sendQuery('SELECT `comments` FROM `photo` WHERE `id` = :id',
-									['id' => $id])->fetchAll();
-
-		return $comments[0]['comments'];
+		return DBConnect::sendQuery('SELECT `comments` FROM `photo` WHERE `id` = :id',
+									['id' => $id])->fetchAll()[0]['comments'];
 	}
 
 	public static function getComments($id) {
@@ -88,15 +82,11 @@ class Photos {
 	}
 	
 	public static function getAuthor($id) {
-		$author = DBConnect::sendQuery('SELECT Login FROM photo WHERE id = :id',
-										['id' => $id])->fetchAll();
-										
-		return $author[0]['login'];
+		return DBConnect::sendQuery('SELECT Login FROM photo WHERE id = :id',
+										['id' => $id])->fetchAll()[0]['login'];
 	}
 
 	public static function getLastPublicPhotoId() {
-		$id = DBConnect::sendQuery('SELECT id FROM photo WHERE private = FALSE ORDER BY id DESC LIMIT 1')->fetchAll();
-
-		return $id[0]['id'];
+		return DBConnect::sendQuery('SELECT id FROM photo WHERE private = FALSE ORDER BY id DESC LIMIT 1')->fetchAll()[0]['id'];
 	}
 }

@@ -26,7 +26,7 @@ class Account {
 			echo json_encode(Message::$busyLogin);
 		} else {
 			DBConnect::sendQuery('INSERT INTO account(email, login, password) VALUES (:email, :login, :password)',
-								['email' => $email, 'login' => $login, 'password' => $password])->fetchAll();
+								['email' => $email, 'login' => $login, 'password' => $password]);
 			
 			$hash = self::_renewHash($email);
 			$message = 'Thanks for signing up to Camagru website!
@@ -73,7 +73,7 @@ class Account {
 	
 	public static function changeEmail($email, $login) {
 		DBConnect::sendQuery('UPDATE account SET email = :email WHERE login = :login',
-											['email' => $email, 'login' => $login])->fetchAll();
+											['email' => $email, 'login' => $login]);
 		echo json_encode(Message::$emailChanged);
 	}
 	
@@ -82,7 +82,7 @@ class Account {
 			echo json_encode(Message::$busyLogin);
 		} else {
 			DBConnect::sendQuery('UPDATE account SET login = :new_login WHERE login = :login',
-												['new_login' => $new_login, 'login' => $login])->fetchAll();
+												['new_login' => $new_login, 'login' => $login]);
 			$_SESSION['auth-data']['login'] = $new_login;
 			echo json_encode(Message::$loginChanged);
 		}
@@ -90,14 +90,13 @@ class Account {
 	
 	public static function changePassword($password, $login) {
 		DBConnect::sendQuery('UPDATE account SET password = :password WHERE login = :login',
-											['password' => $password, 'login' => $login])->fetchAll();
+											['password' => $password, 'login' => $login]);
 		echo json_encode(Message::$passwordChanged);
 	}
 	
 	public static function sendForgotPasswordEmail($email) {
-		
 		$query_result = DBConnect::sendQuery('SELECT * FROM account WHERE email = :email', ['email' => $email])->fetchAll();
-		
+
 		if (empty($query_result)) {
 			echo json_encode(Message::$invalidEmail);
 		} else {
@@ -123,9 +122,7 @@ class Account {
 	}
 
 	public static function getNotification($login) {
-		$notification = DBConnect::sendQuery('SELECT notification FROM account WHERE login = :login', ['login' => $login])->fetchAll();
-
-		return $notification[0]['notification'];
+		return DBConnect::sendQuery('SELECT notification FROM account WHERE login = :login', ['login' => $login])->fetchAll()[0]['notification'];
 	}
 
 	public static function changeNotification() {
@@ -133,9 +130,7 @@ class Account {
 	}
 	
 	private static function _getEmail($login) {
-		$email = DBConnect::sendQuery('SELECT email FROM account WHERE login = :login', ['login' => $login])->fetchAll();
-
-		return $email[0]['email'];
+		return DBConnect::sendQuery('SELECT email FROM account WHERE login = :login', ['login' => $login])->fetchAll()[0]['email'];
 	}
 	
 	public static function notify($login, $comment, $author) {

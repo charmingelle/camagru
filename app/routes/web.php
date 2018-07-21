@@ -61,3 +61,5 @@ Route::post(['uri' => '/publish', 'controller' => 'DataController@publish', 'con
 Route::post(['uri' => '/getNotification', 'controller' => 'DataController@getNotification', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/changeNotification', 'controller' => 'DataController@changeNotification', 'condition' => 'signed in']);
+
+// Route::get(['uri' => '/smth', 'controller' => 'SiteMapController@show404']);

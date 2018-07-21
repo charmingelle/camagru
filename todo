@@ -33,11 +33,12 @@ TODO
 + add error callback to all fetches
 + make sure that body of all fetches is a JSON stringified object
 + add creating image on server side
++ find out what to do with image size
++ remove fetchAll from DB requests where it isn't needed
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
 - create account page layout
-- find out what to do with image size
 - check if more Route conditions should be added to web.php
 - commented 404 redirect from now; check what happens with it
 - replace names with "picture" with "photo"
@@ -50,8 +51,7 @@ TODO
 - fix logout issue
 
 - think about covering fetch in some shorter function
-- think if you should return DB errors
-- remove fetchAll from DB requests where it isn't needed
+- think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
 - add sharing image on social networks
 - remove ` from all DB requests where not needed
