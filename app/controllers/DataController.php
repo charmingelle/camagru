@@ -21,12 +21,12 @@ class DataController {
 		Photos::savePhoto(Utils::getBodyFromJson()['layers']);
 	}
 
-	public static function getUserPictures() {
-		echo json_encode(Photos::getUserPictures());
+	public static function getUserPhoto() {
+		echo json_encode(Photos::getUserPhoto());
 	}
 
-	public static function deleteUserPicture() {
-		Photos::deleteUserPicture(Utils::getBodyFromJson()['id']);
+	public static function deleteUserPhoto() {
+		Photos::deleteUserPhoto(Utils::getBodyFromJson()['id']);
 	}
 	
 	public static function getPhotoPrivate() {

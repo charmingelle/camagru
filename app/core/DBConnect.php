@@ -12,6 +12,7 @@ class DBConnect {
 			}
 		}
 		try {
+			self::$_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$pdo_statement = self::$_pdo->prepare($query);
 			$pdo_statement->execute($params);
 		} catch (Exception $e) {

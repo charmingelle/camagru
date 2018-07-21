@@ -38,12 +38,11 @@ TODO
 + remove ` from all DB requests where not needed
 + add the ability to delete comments (not mandatory)
 + add redirect to 404 page
++ check why sendQuery doesn't work with limit param in external variable
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
 - create account page layout
-- check if more Route conditions should be added to web.php
-- replace names with "picture" with "photo"
 - check if I can make corner sticker resizing better
 - check if drag and drop works smoothly (not really now)
 - implement sticker uploading (not necessary)
@@ -55,4 +54,3 @@ TODO
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
 - add sharing image on social networks
-- check why sendQuery doesn't work with limit param in external variable

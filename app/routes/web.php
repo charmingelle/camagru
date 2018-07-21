@@ -46,9 +46,9 @@ Route::post(['uri' => '/stickers', 'controller' => 'DataController@getStickers',
 
 Route::post(['uri' => '/savePhoto', 'controller' => 'DataController@savePhoto', 'condition' => 'signed in']);
 
-Route::post(['uri' => '/userPictures', 'controller' => 'DataController@getUserPictures', 'condition' => 'signed in']);
+Route::post(['uri' => '/userPictures', 'controller' => 'DataController@getUserPhoto', 'condition' => 'signed in']);
 
-Route::post(['uri' => '/deleteUserPicture', 'controller' => 'DataController@deleteUserPicture', 'condition' => 'signed in']);
+Route::post(['uri' => '/deleteUserPhoto', 'controller' => 'DataController@deleteUserPhoto', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/getPhotoPrivate', 'controller' => 'DataController@getPhotoPrivate', 'condition' => 'signed in']);
 

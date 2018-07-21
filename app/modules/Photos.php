@@ -2,8 +2,10 @@
 
 class Photos {
 	public static function getPhotos($lastId) {
-		return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE AND id <= :lastId ORDER BY ID DESC LIMIT 5',
-									['lastId' => $lastId])->fetchAll();
+		$limit = 5;
+
+		return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE AND id <= :lastId ORDER BY ID DESC LIMIT :limit',
+									['lastId' => $lastId, 'limit' => $limit])->fetchAll();
 	}
 
 	private static function getUrl() {
@@ -25,12 +27,12 @@ class Photos {
 							['url' => $url, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
-	public static function getUserPictures() {
+	public static function getUserPhoto() {
 		return DBConnect::sendQuery('SELECT id, url FROM photo WHERE login = :login',
 			['login' => $_SESSION['auth-data']['login']])->fetchAll();
 	}
 
-	public static function deleteUserPicture($id) {
+	public static function deleteUserPhoto($id) {
 		$url = DBConnect::sendQuery('SELECT url FROM photo WHERE id = :id',
 							['id' => $id])->fetchAll();
 

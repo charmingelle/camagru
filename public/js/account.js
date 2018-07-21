@@ -59,7 +59,7 @@ class Account {
 
 	deletePhoto(id, imageContainer) {
 		if (confirm("Are you sure you would like to delete this photo?")) {
-			fetch('/deleteUserPicture', {
+			fetch('/deleteUserPhoto', {
 				method: 'POST',
 				credentials: 'include',
 				body: JSON.stringify({'id': id})
@@ -117,6 +117,7 @@ class Account {
 				
 				image.src = source['url'];
 				image.classList.add('user-photo');
+				image.alt = 'Photo';
 				deleteButton.innerHTML = 'Delete';
 				deleteButton.addEventListener('click', this.deletePhoto.bind(this, source['id'], imageContainer));
 				this.renderPublishButton(publishButton, source['id']);

@@ -1,7 +1,7 @@
 <?php
 
 class Route {
-	private static $found = FALSE;
+	private static $_found = FALSE;
 
 	private static function _getControllerName($controller_name_and_method) {
 		return explode('@', $controller_name_and_method)[0];
@@ -40,7 +40,7 @@ class Route {
 			return ;
 		}
 		if ($url === $params['uri']) {
-			self::$found = TRUE;
+			self::$_found = TRUE;
 			if (!isset($params['condition']) || self::_isTrueCondition($params['condition'])) {
 				return $controller_name::$controller_method();
 			} else {
@@ -71,7 +71,7 @@ class Route {
 	}
 
 	public static function notFound() {
-		if ($_SERVER['REQUEST_METHOD'] === 'GET' && self::$found === FALSE) {
+		if ($_SERVER['REQUEST_METHOD'] === 'GET' && self::$_found === FALSE) {
 			SiteMapController::show404();
 		}
 	}
