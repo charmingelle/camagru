@@ -75,11 +75,6 @@ class Photos {
 		return DBConnect::sendQuery('SELECT comments FROM photo WHERE id = :id',
 									['id' => $id])->fetchAll()[0]['comments'];
 	}
-
-	public static function getComments($id) {
-		return DBConnect::sendQuery('SELECT login, comment FROM comment WHERE photo_id = :photoId',
-									['photoId' => $id])->fetchAll();
-	}
 	
 	public static function getAuthor($id) {
 		return DBConnect::sendQuery('SELECT Login FROM photo WHERE id = :id',

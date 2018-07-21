@@ -36,6 +36,7 @@ TODO
 + find out what to do with image size
 + remove fetchAll from DB requests where it isn't needed
 + remove ` from all DB requests where not needed
++ add the ability to delete comments (not mandatory)
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -43,7 +44,6 @@ TODO
 - check if more Route conditions should be added to web.php
 - commented 404 redirect from now; check what happens with it
 - replace names with "picture" with "photo"
-- add the ability to delete comments (not mandatory)
 - check if I can make corner sticker resizing better
 - check if drag and drop works smoothly (not really now)
 - implement sticker uploading (not necessary)

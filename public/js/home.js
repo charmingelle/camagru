@@ -31,35 +31,61 @@ class Home {
 	}
 
 	fillCommentsContainer(commentsContainer, photoId) {
-		fetch('/getComments', {
+		let login;
+		
+		fetch('/getLogin', {
 			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({'id': photoId})
+			credentials: 'include'
 		})
 		.then(response => response.json(), printError)
-		.then((comments) => {
-			if (comments) {
-				const commentDivs = comments.map(comment => {
-					let commentContainer = document.createElement('div');
-					let loginDiv = document.createElement('div');
-					let commentDiv = document.createElement('div');
+		.then(data => {
+			login = data;
+		})
+		.then(() => {
+			fetch('/getComments', {
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({'id': photoId})
+			})
+			.then(response => response.json(), printError)
+			.then((comments) => {
+				if (comments) {
+					const commentDivs = comments.map(comment => {
+						let commentContainer = document.createElement('div');
+						let loginDiv = document.createElement('div');
+						let commentDiv = document.createElement('div');
+	
+						commentContainer.classList.add('comment-container');
+						loginDiv.innerHTML = `${comment['login']}:`;
+						loginDiv.classList.add('login-div');
+						commentDiv.innerHTML = comment['comment'];
+						commentDiv.classList.add('comment-div');
+						commentContainer.append(loginDiv, commentDiv);
+						if (comment['login'] === login) {
+							let deleteDiv = document.createElement('button');
 
-					commentContainer.classList.add('comment-container');
-					loginDiv.innerHTML = `${comment['login']}:`;
-					loginDiv.classList.add('login-div');
-					commentDiv.innerHTML = comment['comment'];
-					commentDiv.classList.add('comment-div');
-					commentContainer.append(loginDiv, commentDiv);
-					return commentContainer;
-				});
-				return commentDivs;
-			}
-		}, printError)
-		.then(commentDivs => {
-			if (commentDivs) {
-				commentsContainer.append(...commentDivs);
-			}
-		}, printError);
+							deleteDiv.innerHTML = 'Delete';
+							deleteDiv.addEventListener('click', () => {
+								fetch('/deleteComment', {
+									method: 'POST',
+									credentials: 'include',
+									body: JSON.stringify({'id': comment['id']})
+								})
+								.then(commentsContainer.removeChild(commentContainer));
+							});
+							commentContainer.append(deleteDiv);
+						}
+						return commentContainer;
+					});
+					return commentDivs;
+				}
+			}, printError)
+			.then(commentDivs => {
+				if (commentDivs) {
+					commentsContainer.append(...commentDivs);
+				}
+			}, printError);
+		});
 	}
 
 	setSignedInAddComment(addComment, commentsContainer, photoId, commentAmountDiv) {

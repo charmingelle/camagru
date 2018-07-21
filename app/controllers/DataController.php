@@ -3,6 +3,7 @@
 require_once(getRoot() . 'app/controllers/Utils.php');
 require_once(getRoot() . 'app/modules/Photos.php');
 require_once(getRoot() . 'app/modules/Stickers.php');
+require_once(getRoot() . 'app/modules/Comment.php');
 
 class DataController {
 	public static function getPhotos() {
@@ -10,7 +11,11 @@ class DataController {
 	}
 	
 	public static function getLogin() {
-		echo json_encode($_SESSION['auth-data']['login']);
+		if (isset($_SESSION['auth-data']['login'])) {
+			echo json_encode($_SESSION['auth-data']['login']);
+		} else {
+			echo json_encode(NULL);
+		}
 	}
 
 	public static function getStickers() {
@@ -60,7 +65,11 @@ class DataController {
 	}
 
 	public static function getComments() {
-		echo json_encode(Photos::getComments(Utils::getBodyFromJson()['id']));
+		echo json_encode(Comment::getComments(Utils::getBodyFromJson()['id']));
+	}
+
+	public static function deleteComment() {
+		Comment::deleteComment(Utils::getBodyFromJson()['id']);
 	}
 
 	public static function getNotification() {

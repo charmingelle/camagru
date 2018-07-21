@@ -42,9 +42,11 @@ Route::post(['uri' => '/getComments', 'controller' => 'DataController@getComment
 
 Route::post(['uri' => '/getLastPublicPhotoId', 'controller' => 'DataController@getLastPublicPhotoId']);
 
+Route::post(['uri' => '/deleteComment', 'controller' => 'DataController@deleteComment', 'condition' => 'signed in']);
+
 Route::get(['uri' => '/account', 'controller' => 'SiteMapController@showAccount', 'condition' => 'signed in']);
 
-Route::post(['uri' => '/getLogin', 'controller' => 'DataController@getLogin', 'condition' => 'signed in']);
+Route::post(['uri' => '/getLogin', 'controller' => 'DataController@getLogin']);
 
 Route::post(['uri' => '/stickers', 'controller' => 'DataController@getStickers', 'condition' => 'signed in']);
 
