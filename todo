@@ -35,6 +35,7 @@ TODO
 + add creating image on server side
 + find out what to do with image size
 + remove fetchAll from DB requests where it isn't needed
++ remove ` from all DB requests where not needed
 
 - find out what to do for verification email to be send from local server
 - check if I can use isset to find out if the user is logged in
@@ -54,5 +55,4 @@ TODO
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
 - add sharing image on social networks
-- remove ` from all DB requests where not needed
 - check why sendQuery doesn't work with limit param in external variable
