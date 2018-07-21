@@ -171,20 +171,20 @@ class Account {
 		canvas.width = parseInt(getComputedStyle(this.container).width);
 		canvas.height = parseInt(getComputedStyle(this.container).height);
 		
-		let layersData = layers.map((layer) => {
+		let layersData = layers.map((layer, id) => {
 			let style = getComputedStyle(layer);
 			let left = parseInt(style.left);
 			let top = parseInt(style.top);
 			let width = parseInt(style.width);
 			let height = parseInt(style.height);
-			let tempCanvas = document.createElement('canvas');
+			let source = layer.src;
 
 			canvas.getContext('2d').drawImage(layer, left, top, width, height);
-			tempCanvas.width = width;
-			tempCanvas.height = height;
-			tempCanvas.getContext('2d').drawImage(layer, 0, 0, width, height);
+			if (id === 0) {
+				source = canvas.toDataURL();
+			}
 			return {
-				'source': tempCanvas.toDataURL(),
+				'source': source,
 				'left': left,
 				'top': top,
 				'width': width,
@@ -195,7 +195,6 @@ class Account {
 			method: 'POST',
 			credentials: 'include',
 			body: JSON.stringify({
-				'source': canvas.toDataURL(),
 				'layers': layersData
 			})
 		})
