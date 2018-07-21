@@ -1,11 +1,5 @@
 <?php
 
-require_once(getRoot() . 'app/controllers/Utils.php');
-require_once(getRoot() . 'app/core/DBConnect.php');
-require_once(getRoot() . 'app/modules/Account.php');
-require_once(getRoot() . 'app/modules/Page.php');
-require_once(getRoot() . 'app/modules/Validate.php');
-
 class AuthController {
 	public static function sendVerification() {
 		$body = Utils::getBodyFromJson();

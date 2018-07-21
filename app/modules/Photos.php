@@ -1,7 +1,5 @@
 <?php
 
-require_once(getRoot() . 'app/core/DBConnect.php');
-
 class Photos {
 	public static function getPhotos($lastId) {
 		return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE AND id <= :lastId ORDER BY ID DESC LIMIT 5',

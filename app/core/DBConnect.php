@@ -1,7 +1,5 @@
 <?php
 
-require_once(getRoot() . 'app/configs/db.php');
-
 class DBConnect {
 	static private $_pdo = NULL;
 

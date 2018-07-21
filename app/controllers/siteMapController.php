@@ -1,7 +1,5 @@
 <?php
 
-require_once(getRoot() . 'app/modules/Page.php');
-
 class SiteMapController {	
 	public static function showHome() {
 		Page::show('views/home.html');

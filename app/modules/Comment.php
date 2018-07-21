@@ -1,7 +1,5 @@
 <?php
 
-require_once(getRoot() . 'app/core/DBConnect.php');
-
 class Comment {
 	public static function getComments($id) {
 		return DBConnect::sendQuery('SELECT id, login, comment FROM comment WHERE photo_id = :photoId',

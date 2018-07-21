@@ -1,10 +1,5 @@
 <?php
 
-require_once(getRoot() . 'app/controllers/Utils.php');
-require_once(getRoot() . 'app/modules/Photos.php');
-require_once(getRoot() . 'app/modules/Stickers.php');
-require_once(getRoot() . 'app/modules/Comment.php');
-
 class DataController {
 	public static function getPhotos() {
 		echo json_encode(Photos::getPhotos(Utils::getBodyFromJson()['lastId']));

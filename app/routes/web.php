@@ -1,11 +1,5 @@
 <?php
 
-require_once(getRoot() . 'app/controllers/AuthController.php');
-require_once(getRoot() . 'app/controllers/DataController.php');
-require_once(getRoot() . 'app/controllers/SiteMapController.php');
-require_once(getRoot() . 'app/core/Route.php');
-require_once(getRoot() . 'app/core/Message.php');
-
 Route::get(['uri' => '/', 'controller' => 'SiteMapController@showHome']);
 
 Route::get(['uri' => '/signup', 'controller' => 'AuthController@signup']);
