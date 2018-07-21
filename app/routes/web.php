@@ -64,4 +64,4 @@ Route::post(['uri' => '/getNotification', 'controller' => 'DataController@getNot
 
 Route::post(['uri' => '/changeNotification', 'controller' => 'DataController@changeNotification', 'condition' => 'signed in']);
 
-// Route::get(['uri' => '/smth', 'controller' => 'SiteMapController@show404']);
+Route::notFound();
