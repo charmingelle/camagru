@@ -40,7 +40,7 @@ TODO
 + add redirect to 404 page
 + check why sendQuery doesn't work with limit param in external variable
 
-- find out what to do for verification email to be send from local server
+- find out what to do for verification email to be sent from local server
 - check if I can use isset to find out if the user is logged in
 - create account page layout
 - check if I can make corner sticker resizing better
@@ -49,8 +49,9 @@ TODO
 - make sure that you verify all data received from client (before sending and when server receives it)
 - should I incrypt the password before sending it?
 - fix logout issue
-
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
 - add sharing image on social networks
+- getUserMedia is insecure
+[Deprecation] getUserMedia() no longer works on insecure origins. To use this feature, you should consider switching your application to a secure origin, such as HTTPS. See https://goo.gl/rStTGz for more details.

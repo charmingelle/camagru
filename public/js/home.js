@@ -240,7 +240,7 @@ class Home {
 	}
 
 	signupFormHandler(email, login, password) {
-		if (email !== '' && login !== '' && password != '') {
+		if (email !== '' && login !== '' && password !== '') {
 			fetch('/signup', {
 				method: 'POST',
 				credentials: 'include',
@@ -386,6 +386,7 @@ class Home {
 		})
 		.then(response => response.json(), printError)
 		.then(data => {
+			// console.log(data);
 			this.lastPhotoId = parseInt(data);
 			this.renderGallery();
 		}, printError);

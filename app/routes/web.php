@@ -18,7 +18,7 @@ Route::post(['uri' => '/changePassword', 'controller' => 'AuthController@changeP
 
 Route::post(['uri' => '/forgotPassword', 'controller' => 'AuthController@sendForgotPasswordEmail']);
 
-Route::post(['uri' => '/resetPassword', 'controller' => 'AuthController@resetPassword', 'condition' => 'emailed']);
+Route::post(['uri' => '/resetPassword', 'controller' => 'AuthController@resetPassword']);
 
 Route::post(['uri' => '/photos', 'controller' => 'DataController@getPhotos']);
 

@@ -22,12 +22,13 @@ class Route {
 				return true;
 			}
 			return false;
-		} else if ($condition === 'emailed') {
-			if (!isset($_SESSION['auth-data']['email']) || $_SESSION['auth-data']['email'] === '') {
-				return true;
-			}
-			return false;
 		}
+		// else if ($condition === 'emailed') {
+		// 	if (!isset($_SESSION['auth-data']['email']) || $_SESSION['auth-data']['email'] === '') {
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }
 		return false;
 	}
 

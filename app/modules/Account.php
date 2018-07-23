@@ -18,7 +18,7 @@ class Account {
 	}
 
 	public static function cleanHash($email) {
-		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE email = :email', ['hash' => "", 'email' => $email]);
+		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE email = :email', ['hash' => NULL, 'email' => $email]);
 	}
 
 	public static function sendSignupEmail($email, $login, $password) {
@@ -26,17 +26,26 @@ class Account {
 			echo json_encode(Message::$busyLogin);
 		} else {
 			DBConnect::sendQuery('INSERT INTO account(email, login, password) VALUES (:email, :login, :password)',
-								['email' => $email, 'login' => $login, 'password' => $password]);
-			
+			['email' => $email, 'login' => $login, 'password' => $password]);
 			$hash = self::_renewHash($email);
-			$message = 'Thanks for signing up to Camagru website!
-			
-			Please click this link to activate your account:
-			http://localhost:7777/signup?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash).'
-			
-			';
-			
-			mail($email, 'Confirm your signing up to Camagru website', $message, 'From:noreply@camagru.com\r\n');
+			$link = 'http://localhost:7777/signup?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash);
+			$message = 'Thanks for signing up to Camagru website! Please click this <a href=' . $link . '>link</a> to activate your account:';
+			$encoding = "utf-8";
+			$mail_subject = 'Confirm your signing up to Camagru website';
+			$subject_preferences = array(
+				"input-charset" => $encoding,
+				"output-charset" => $encoding,
+				"line-length" => 76,
+				"line-break-chars" => "\r\n"
+			);
+			$header = "Content-type: text/html; charset=" . $encoding . " \r\n";
+			$header .= "From: grevenko@student.unit.ua \r\n";
+			$header .= "MIME-Version: 1.0 \r\n";
+			$header .= "Content-Transfer-Encoding: 8bit \r\n";
+			$header .= "Date: " . date("r (T)") . " \r\n";
+			$header .= iconv_mime_encode("Subject", $mail_subject, $subject_preferences);
+
+			mail($email, $mail_subject, $message, $header);
 			echo json_encode(Message::$verificationEmail);
 		}
 	}
@@ -101,12 +110,24 @@ class Account {
 			echo json_encode(Message::$invalidEmail);
 		} else {
 			$hash = self::_renewHash($email);
-			$message = 'Please click this link to reset your Camagru account password:
-			http://localhost:7777/changePassword?email=' . urlencode($email) . '&hash=' . urlencode($hash).'
-			
-			';
-			
-			mail($email, 'Reset your Camagru website password', $message, 'From:noreply@camagru.com\r\n');
+			$link = 'http://localhost:7777/changePassword?email=' . urlencode($email) . '&hash=' . urlencode($hash);
+			$message = 'Thanks for signing up to Camagru website! Please click this <a href=' . $link . '>link</a> to activate your account:';
+			$encoding = "utf-8";
+			$mail_subject = 'Reset your Camagru website password';
+			$subject_preferences = array(
+				"input-charset" => $encoding,
+				"output-charset" => $encoding,
+				"line-length" => 76,
+				"line-break-chars" => "\r\n"
+			);
+			$header = "Content-type: text/html; charset=" . $encoding . " \r\n";
+			$header .= "From: grevenko@student.unit.ua \r\n";
+			$header .= "MIME-Version: 1.0 \r\n";
+			$header .= "Content-Transfer-Encoding: 8bit \r\n";
+			$header .= "Date: " . date("r (T)") . " \r\n";
+			$header .= iconv_mime_encode("Subject", $mail_subject, $subject_preferences);
+
+			mail($email, $mail_subject, $message, $header);
 			echo json_encode(Message::$resetPasswordEmailSent);
 		}
 	}

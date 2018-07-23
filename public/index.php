@@ -21,4 +21,3 @@
 	require_once(getRoot() . 'app/modules/Stickers.php');
 	require_once(getRoot() . 'app/modules/Validate.php');
 	require_once(getRoot() . 'app/routes/web.php');
-?>
