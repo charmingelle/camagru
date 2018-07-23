@@ -114,12 +114,14 @@ class Account {
 				let image = document.createElement('img');
 				let deleteButton = document.createElement('button');
 				let publishButton = document.createElement('button');
+				let twitterDiv = document.createElement('div');
 				
 				image.src = source['url'];
 				image.classList.add('user-photo');
 				image.alt = 'Photo';
 				deleteButton.innerHTML = 'Delete';
 				deleteButton.addEventListener('click', this.deletePhoto.bind(this, source['id'], imageContainer));
+				twitterDiv.innerHTML = '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
 				this.renderPublishButton(publishButton, source['id']);
 				imageContainer.append(image, deleteButton, publishButton);
 				return imageContainer;

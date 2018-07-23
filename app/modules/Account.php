@@ -46,7 +46,7 @@ class Account {
 			$header .= iconv_mime_encode("Subject", $mail_subject, $subject_preferences);
 
 			mail($email, $mail_subject, $message, $header);
-			echo json_encode(Message::$verificationEmail);
+			echo json_encode(['status' => TRUE, 'message' => Message::$verificationEmail]);
 		}
 	}
 	

@@ -195,14 +195,14 @@ class Home {
 		}
 	}
 	
-	signinFormHandler(login, password) {
-		if (login !== '' && password != '') {
+	signinFormHandler(loginInput, passwordInput) {
+		if (loginInput.value !== '' && passwordInput.value != '') {
 			fetch('/signin', {
 				method: 'POST',
 				credentials: 'include',
 				body: JSON.stringify({
-					'login': login,
-					'password': password
+					'login': loginInput.value,
+					'password': passwordInput.value
 				})
 			})
 			.then(response => response.json(), printError)
@@ -232,26 +232,33 @@ class Home {
 		submitButton.addEventListener('click', () => {
 			this.signinFormHandler(loginInput.value, passwordInput.value);
 		});
-		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput.value, passwordInput.value));
-		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput.value, passwordInput.value));
+		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput, passwordInput));
+		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput, passwordInput));
 		form.append(loginInput, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
 
-	signupFormHandler(email, login, password) {
-		if (email !== '' && login !== '' && password !== '') {
+	signupFormHandler(emailInput, loginInput, passwordInput) {
+		if (emailInput.value !== '' && loginInput.value !== '' && passwordInput.value !== '') {
 			fetch('/signup', {
 				method: 'POST',
 				credentials: 'include',
 				body: JSON.stringify({
-					'email': email,
-					'login': login,
-					'password': password
+					'email': emailInput.value,
+					'login': loginInput.value,
+					'password': passwordInput.value
 				})
 			})
 			.then(response => response.json(), printError)
-			.then(data => renderMessageContainer(this.messageContainer, data), printError);
+			.then(data => {
+				renderMessageContainer(this.messageContainer, data['message']);
+				if (data['status'] === true) {
+					emailInput.value = '';
+					loginInput.value = '';
+					passwordInput.value = '';
+				}
+			}, printError);
 		}
 	}
 
@@ -272,24 +279,27 @@ class Home {
 		passwordInput.type = 'password';
 		passwordInput.value = '';
 		submitButton.innerHTML = 'Sign up';
-		submitButton.addEventListener('click', () => this.signupFormHandler(emailInput.value, loginInput.value, passwordInput.value));
-		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
-		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
-		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput.value, loginInput.value, passwordInput.value));
+		submitButton.addEventListener('click', () => this.signupFormHandler(emailInput, loginInput, passwordInput));
+		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
+		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
+		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
 		form.append(emailInput, loginInput, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);
 	}
 
-	resetPasswordFormHandler(email) {
-		if (email !== '') {
+	resetPasswordFormHandler(emailInput) {
+		if (emailInput.value !== '') {
 			fetch('/forgotPassword', {
 				method: 'POST',
 				credentials: 'include',
-				body: JSON.stringify({'email': email})
+				body: JSON.stringify({'email': emailInput.value})
 			})
 			.then(response => response.json(), printError)
-			.then(data => renderMessageContainer(this.messageContainer, data), printError);
+			.then(data => {
+				renderMessageContainer(this.messageContainer, data);
+				emailInput.value = '';
+			}, printError);
 		}
 	}
 	
@@ -302,8 +312,8 @@ class Home {
 		emailInput.type = 'text';
 		emailInput.value = '';
 		submitButton.innerHTML = 'Get reset password link';
-		submitButton.addEventListener('click', () => this.resetPasswordFormHandler(emailInput.value));
-		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.resetPasswordFormHandler, emailInput.value));
+		submitButton.addEventListener('click', () => this.resetPasswordFormHandler(emailInput));
+		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.resetPasswordFormHandler, emailInput));
 		form.append(emailInput, submitButton);
 		removeAllChildren(this.formContainer);
 		this.formContainer.append(form);

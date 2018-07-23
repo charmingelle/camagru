@@ -52,6 +52,6 @@ TODO
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
-- add sharing image on social networks
 - getUserMedia is insecure
+- add sharing image on social networks
 [Deprecation] getUserMedia() no longer works on insecure origins. To use this feature, you should consider switching your application to a secure origin, such as HTTPS. See https://goo.gl/rStTGz for more details.

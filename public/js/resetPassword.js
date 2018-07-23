@@ -13,9 +13,7 @@ const resetPasswordHandler = () => {
 			body: JSON.stringify({'password': password})
 		})
 		.then(response => response.json(), printError)
-		.then(data => {
-			renderMessageContainer(messageContainer, data);
-		}, printError);
+		.then(data => renderMessageContainer(messageContainer, data), printError);
 	}
 }
 

@@ -7,19 +7,19 @@ class AuthController {
 		if (!isset($body['email']) || $body['email'] === ''
 			|| !isset($body['login']) || $body['login'] === ''
 			|| !isset($body['password']) || $body['password'] === '') {
-			echo json_encode(Message::$emptyFields);
+			echo json_encode(['status' => FALSE, 'message' => Message::$emptyFields]);
 			exit ;
 		}
 		if (!Validate::isValidEmail($body['email'])) {
-			echo json_encode(Message::$invalidEmail);
+			echo json_encode(['status' => FALSE, 'message' => Message::$invalidEmail]);
 			exit ;
 		}
 		if (!Validate::isValidLogin($body['login'])) {
-			echo json_encode(Message::$invalidLogin);
+			echo json_encode(['status' => FALSE, 'message' => Message::$invalidLogin]);
 			exit ;
 		}
 		if (!Validate::isValidPassword($body['password'])) {
-			echo json_encode(Message::$invalidPassword);
+			echo json_encode(['status' => FALSE, 'message' => Message::$invalidPassword]);
 			exit ;
 		}
 		Account::sendSignupEmail($body['email'], $body['login'], hash('whirlpool', $body['password']));
