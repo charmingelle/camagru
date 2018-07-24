@@ -70,3 +70,36 @@ export const isScrolledToBottom = () => {
 export const printError = (error) => {
 	console.error(error);
 }
+
+const cancelHandler = (overlay, modalWindow) => {
+	document.body.removeChild(overlay);
+	document.body.removeChild(modalWindow);
+	document.body.classList.remove('no-scroll');
+}
+
+const okHandler = (overlay, modalWindow, okCallback) => {
+	document.body.removeChild(overlay);	
+	document.body.removeChild(modalWindow);
+	document.body.classList.remove('no-scroll');
+	okCallback();
+}
+
+export const customConfirm = (question, okCallback) => {
+	let overlay = document.createElement('div');
+	let modalWindow = document.createElement('div');
+	let questionContainer = document.createElement('p');
+	let cancelButton = document.createElement("button");
+	let okButton = document.createElement('button');
+
+	document.body.classList.add('no-scroll');
+	overlay.id = 'overlay';
+	modalWindow.classList.add('custom-confirm');
+	questionContainer.innerHTML = question;
+	cancelButton.innerHTML = 'Cancel';
+	cancelButton.addEventListener('click', () => cancelHandler(overlay, modalWindow));
+	okButton.innerHTML = 'OK';
+	okButton.addEventListener('click', () => okHandler(overlay, modalWindow, okCallback));
+	modalWindow.append(questionContainer, cancelButton, okButton);
+	document.body.append(overlay);
+	document.body.append(modalWindow);
+}

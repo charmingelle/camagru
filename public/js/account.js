@@ -1,4 +1,4 @@
-import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer, printError } from '/js/utils.js';
+import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer, printError, customConfirm } from '/js/utils.js';
 
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
@@ -46,6 +46,7 @@ class Account {
 		this.stickersForwardHander = this.stickersForwardHander.bind(this);
 		this.stickerBackHandler = this.stickerBackHandler.bind(this);
 		this.changeNotification = this.changeNotification.bind(this);
+		this.okCallbacForkDeletePhoto = this.okCallbacForkDeletePhoto.bind(this);
 	}
 	
 	getCoords(elem) {
@@ -57,15 +58,29 @@ class Account {
 		};
 	}
 
+	okCallbacForkDeletePhoto(id, imageContainer) {
+		fetch('/deleteUserPhoto', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'id': id})
+		})
+		.then(() => this.photosContainer.removeChild(imageContainer), printError);
+	}
+
 	deletePhoto(id, imageContainer) {
-		if (confirm("Are you sure you would like to delete this photo?")) {
-			fetch('/deleteUserPhoto', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'id': id})
-			})
-			.then(() => this.photosContainer.removeChild(imageContainer), printError);
-		}
+		customConfirm("Are you sure you would like to delete this photo?", this.okCallbacForkDeletePhoto.bind(this, id, imageContainer));
+	}
+
+	okCallbackForPublish(button, id, privateStatus, action) {
+		fetch('/publish', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'id': id})
+		})
+		.then(() => {
+			action === 'hide' ? action = 'publish' : action = 'hide';
+			button.innerHTML = `${action[0].toUpperCase()}${action.slice(1)}`;
+		}, printError);
 	}
 
 	publish(button, id, privateStatus) {
@@ -74,17 +89,7 @@ class Account {
 		if (privateStatus == true) {
 			action = 'publish';
 		}
-		if (confirm(`Are you sure you would like to ${action} this photo?`)) {
-			fetch('/publish', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'id': id})
-			})
-			.then(() => {
-				action === 'hide' ? action = 'publish' : action = 'hide';
-				button.innerHTML = `${action[0].toUpperCase()}${action.slice(1)}`;
-			}, printError);
-		}
+		customConfirm(`Are you sure you would like to ${action} this photo?`, this.okCallbackForPublish.bind(this, button, id, privateStatus, action));
 	}
 	
 	renderPublishButton(button, id) {
@@ -643,22 +648,24 @@ class Account {
 		.then(login => {this.hello.innerHTML = `Hello, ${login}`}, printError);
 	}
 
+	okCallbackForChangeNotification(action) {
+		fetch('/changeNotification', {
+			method: 'POST',
+			credentials: 'include'
+		})
+		.then(() => {
+			renderMessageContainer(this.messageContainer, `Email notifications have been ${action}d for your account`);
+			this.notification.innerHTML === 'Disable Email Notifications' ?
+				this.notification.innerHTML = 'Enable Email Notifications' :
+				this.notification.innerHTML = 'Disable Email Notifications';
+		}, printError);
+	}
+
 	changeNotification() {
 		let action = this.notification.innerHTML.split(' ')[0];
 
 		action = `${action[0].toLowerCase()}${action.slice(1)}`;
-		if (confirm(`Are you sure you would like to ${action} email notifications?`)) {
-			fetch('/changeNotification', {
-				method: 'POST',
-				credentials: 'include'
-			})
-			.then(() => {
-				renderMessageContainer(this.messageContainer, `Email notifications have been ${action}d for your account`);
-				this.notification.innerHTML === 'Disable Email Notifications' ?
-					this.notification.innerHTML = 'Enable Email Notifications' :
-					this.notification.innerHTML = 'Disable Email Notifications';
-			}, printError);
-		}
+		customConfirm(`Are you sure you would like to ${action} email notifications?`, this.okCallbackForChangeNotification.bind(this, action));
 	}
 	
 	renderNotification() {
