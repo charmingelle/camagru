@@ -85,21 +85,26 @@ const okHandler = (overlay, modalWindow, okCallback) => {
 }
 
 export const customConfirm = (question, okCallback) => {
-	let overlay = document.createElement('div');
-	let modalWindow = document.createElement('div');
-	let questionContainer = document.createElement('p');
-	let cancelButton = document.createElement("button");
-	let okButton = document.createElement('button');
-
-	document.body.classList.add('no-scroll');
-	overlay.id = 'overlay';
-	modalWindow.classList.add('custom-confirm');
-	questionContainer.innerHTML = question;
-	cancelButton.innerHTML = 'Cancel';
-	cancelButton.addEventListener('click', () => cancelHandler(overlay, modalWindow));
-	okButton.innerHTML = 'OK';
-	okButton.addEventListener('click', () => okHandler(overlay, modalWindow, okCallback));
-	modalWindow.append(questionContainer, cancelButton, okButton);
-	document.body.append(overlay);
-	document.body.append(modalWindow);
+	console.log("in custom confirm function");
+	if (!document.getElementById('custom-confirm')) {
+		console.log("if is passed");
+		let overlay = document.createElement('div');
+		let modalWindow = document.createElement('div');
+		let questionContainer = document.createElement('p');
+		let cancelButton = document.createElement("button");
+		let okButton = document.createElement('button');
+		let okButtonWindow = document.createElement('input');
+		
+		document.body.classList.add('no-scroll');
+		overlay.id = 'overlay';
+		modalWindow.id = 'custom-confirm';
+		questionContainer.innerHTML = question;
+		cancelButton.innerHTML = 'Cancel';
+		cancelButton.addEventListener('click', cancelHandler.bind(this, overlay, modalWindow));
+		okButton.innerHTML = 'OK';
+		okButton.addEventListener('click', okHandler.bind(this, overlay, modalWindow, okCallback));
+		modalWindow.append(questionContainer, cancelButton, okButton);
+		document.body.append(overlay);
+		document.body.append(modalWindow);
+	}
 }

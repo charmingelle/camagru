@@ -54,4 +54,4 @@ TODO
 - empty $_SESSION data in one function
 - getUserMedia is insecure
 - add sharing image on social networks
-[Deprecation] getUserMedia() no longer works on insecure origins. To use this feature, you should consider switching your application to a secure origin, such as HTTPS. See https://goo.gl/rStTGz for more details.
+- add decreasing comment count when comment is deleted

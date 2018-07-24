@@ -1,4 +1,4 @@
-import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom, printError } from '/js/utils.js';
+import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom, printError, customConfirm } from '/js/utils.js';
 
 class Home {
 	constructor() {
@@ -28,6 +28,17 @@ class Home {
 		this.signinFormHandler = this.signinFormHandler.bind(this);
 		this.resetPasswordFormHandler = this.resetPasswordFormHandler.bind(this);
 		this.loadNewPhotos = this.loadNewPhotos.bind(this);
+		this.okCallbacForDeleteComment = this.okCallbacForDeleteComment.bind(this);
+	}
+
+	okCallbacForDeleteComment(id, commentsContainer, commentContainer) {
+		console.log('in okCallbacForkDeleteComment');
+		fetch('/deleteComment', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'id': id})
+		})
+		.then(commentsContainer.removeChild(commentContainer));
 	}
 
 	fillCommentsContainer(commentsContainer, photoId) {
@@ -65,14 +76,8 @@ class Home {
 							let deleteDiv = document.createElement('button');
 
 							deleteDiv.innerHTML = 'Delete';
-							deleteDiv.addEventListener('click', () => {
-								fetch('/deleteComment', {
-									method: 'POST',
-									credentials: 'include',
-									body: JSON.stringify({'id': comment['id']})
-								})
-								.then(commentsContainer.removeChild(commentContainer));
-							});
+							console.log("before ading event listener");
+							deleteDiv.addEventListener('click', customConfirm("Are you sure you would like to delete this photo?", this.okCallbacForDeleteComment.bind(this, comment['id'], commentsContainer, commentContainer)));
 							commentContainer.append(deleteDiv);
 						}
 						return commentContainer;

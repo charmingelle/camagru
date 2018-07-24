@@ -97,7 +97,7 @@ class AuthController {
 	}
 	
 	public static function changePassword() {
-		$body = json_decode($body, true);
+		$body = Utils::getBodyFromJson();
 
 		if (!isset($body['password']) || $body['password'] === '') {
 			echo json_encode(Message::$emptyFields);

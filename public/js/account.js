@@ -24,6 +24,7 @@ class Account {
 		this.captureButton = document.getElementById('capture-button');
 		this.scale = vmin(50);
 		this.messageContainer = document.getElementById('message-container');		this.email = document.getElementById('email');
+		this.email = document.getElementById('email');
 		this.login = document.getElementById('login');
 		this.password = document.getElementById('password');
 		this.notification = document.getElementById('notification');
@@ -46,7 +47,9 @@ class Account {
 		this.stickersForwardHander = this.stickersForwardHander.bind(this);
 		this.stickerBackHandler = this.stickerBackHandler.bind(this);
 		this.changeNotification = this.changeNotification.bind(this);
-		this.okCallbacForkDeletePhoto = this.okCallbacForkDeletePhoto.bind(this);
+		this.okCallbackForChangeEmailHandler = this.okCallbackForChangeEmailHandler.bind(this);
+		this.okCallbackForChangeLoginHandler = this.okCallbackForChangeLoginHandler.bind(this);
+		this.okCallbackForChangePasswordHandler = this.okCallbackForChangePasswordHandler.bind(this);
 	}
 	
 	getCoords(elem) {
@@ -84,6 +87,7 @@ class Account {
 	}
 
 	publish(button, id, privateStatus) {
+		// console.log('publish is called');
 		let action = 'hide';
 
 		if (privateStatus == true) {
@@ -108,7 +112,6 @@ class Account {
 			button.addEventListener('click', this.publish.bind(this, button, id, privateStatus));
 		}, printError)
 	}
-	
 	
 	renderPhoto(sources) {
 		if (sources) {
@@ -603,39 +606,51 @@ class Account {
 		this.buttonBlock.insertBefore(button, this.buttonBlock.firstChild);
 	}
 
+	okCallbackForChangeEmailHandler() {
+		fetch('/changeEmail', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'email': this.email.value})
+		})
+		.then(response => response.json(), printError)
+		.then(data => renderMessageContainer(this.messageContainer, data), printError);
+	}
+
 	changeEmailHandler() {
 		if (this.email.value !== '') {
-			fetch('/changeEmail', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'email': this.email.value})
-			})
-			.then(response => response.json(), printError)
-			.then(data => renderMessageContainer(this.messageContainer, data), printError);
+			customConfirm('Are you sure you would like to change your email address?', this.okCallbackForChangeEmailHandler);
 		}
+	}
+
+	okCallbackForChangeLoginHandler() {
+		fetch('/changeLogin', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'login': this.login.value})
+		})
+		.then(response => response.json(), printError)
+		.then(data => renderMessageContainer(this.messageContainer, data), printError);
 	}
 
 	changeLoginHandler() {
 		if (this.login.value !== '') {
-			fetch('/changeLogin', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'login': this.login.value})
-			})
-			.then(response => response.json(), printError)
-			.then(data => renderMessageContainer(this.messageContainer, data), printError);
+			customConfirm('Are you sure you would like to change your login?', this.okCallbackForChangeLoginHandler);
 		}
+	}
+
+	okCallbackForChangePasswordHandler() {
+		fetch('/changePassword', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'password': this.password.value})
+		})
+		.then(response => response.json(), printError)
+		.then(data => renderMessageContainer(this.messageContainer, data), printError);
 	}
 
 	changePasswordHandler() {
 		if (this.password.value !== '') {
-			fetch('/changePassword', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'password': this.password.value})
-			})
-			.then(response => response.json(), printError)
-			.then(data => renderMessageContainer(this.messageContainer, data), printError);
+			customConfirm('Are you sure you would like to change your password?', this.okCallbackForChangePasswordHandler);
 		}
 	}
 

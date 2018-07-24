@@ -59,3 +59,5 @@ Route::post(['uri' => '/getNotification', 'controller' => 'DataController@getNot
 Route::post(['uri' => '/changeNotification', 'controller' => 'DataController@changeNotification', 'condition' => 'signed in']);
 
 Route::notFound();
+
+// error_log("message");
