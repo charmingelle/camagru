@@ -58,7 +58,8 @@ class Home {
 		if (comment['login'] === login) {
 			let deleteDiv = document.createElement('button');
 
-			deleteDiv.innerHTML = 'Delete';
+			deleteDiv.innerHTML = 'DELETE';
+			deleteDiv.classList.add('delete-comment-button');
 			deleteDiv.addEventListener('click', this.deleteComment.bind(this, comment['id'], commentsContainer, commentContainer));
 			commentContainer.append(deleteDiv);
 		}
@@ -183,18 +184,21 @@ class Home {
 				image.src = source['url'];
 				image.classList.add('photo');
 				likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
+				likeIcon.classList.add('like-symbol');
 				if (this.isSignedIn) {
 					likeIcon.addEventListener('click', this.likeIconClickHandler.bind(this, like, source['id']));
 				}
 				like.innerHTML = source['likes'];
 				like.classList.add('like');
 				commentIcon.innerHTML = '<i class="fa fa-comment"></i>';
+				commentIcon.classList.add('comment-symbol');
 				comment.innerHTML = source['comments'];
 				comment.classList.add('comment');
 				likeComment.classList.add('like-comment');
 				commentsContainer.classList.add('comments');
 				this.fillCommentsContainer(commentsContainer, source['id']);
 				addComment.type = 'text';
+				addComment.classList.add('add-comment-input');
 				this.setAddComment(addComment, commentsContainer, source['id'], comment);
 		
 				likeComment.append(likeIcon, like, commentIcon, comment);
@@ -227,7 +231,6 @@ class Home {
 	}
 
 	showSigninForm() {
-		let form = document.createElement('div');
 		let loginInput = document.createElement('input');
 		let passwordInput = document.createElement('input');
 		let submitButton = document.createElement('button');
@@ -238,15 +241,14 @@ class Home {
 		passwordInput.placeholder = 'Password';
 		passwordInput.type = 'password';
 		passwordInput.value = '';
-		submitButton.innerHTML = 'Sign in';
+		submitButton.innerHTML = 'SIGN IN';
 		submitButton.addEventListener('click', () => {
 			this.signinFormHandler(loginInput.value, passwordInput.value);
 		});
 		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput, passwordInput));
 		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput, passwordInput));
-		form.append(loginInput, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
-		this.formContainer.append(form);
+		this.formContainer.append(loginInput, passwordInput, submitButton);
 	}
 
 	signupFormHandler(emailInput, loginInput, passwordInput) {
@@ -273,7 +275,6 @@ class Home {
 	}
 
 	showSignupForm() {
-		let form = document.createElement('div');
 		let emailInput = document.createElement('input');
 		let loginInput = document.createElement('input');
 		let passwordInput = document.createElement('input');
@@ -288,14 +289,13 @@ class Home {
 		passwordInput.placeholder = 'Password';
 		passwordInput.type = 'password';
 		passwordInput.value = '';
-		submitButton.innerHTML = 'Sign up';
+		submitButton.innerHTML = 'SIGN UP';
 		submitButton.addEventListener('click', () => this.signupFormHandler(emailInput, loginInput, passwordInput));
 		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
 		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
 		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
-		form.append(emailInput, loginInput, passwordInput, submitButton);
 		removeAllChildren(this.formContainer);
-		this.formContainer.append(form);
+		this.formContainer.append(emailInput, loginInput, passwordInput, submitButton);
 	}
 
 	resetPasswordFormHandler(emailInput) {
@@ -314,7 +314,6 @@ class Home {
 	}
 	
 	showResetPasswordForm() {
-		let form = document.createElement('div');
 		let emailInput = document.createElement('input');
 		let submitButton = document.createElement('button');
 
@@ -324,9 +323,8 @@ class Home {
 		submitButton.innerHTML = 'Get reset password link';
 		submitButton.addEventListener('click', () => this.resetPasswordFormHandler(emailInput));
 		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.resetPasswordFormHandler, emailInput));
-		form.append(emailInput, submitButton);
 		removeAllChildren(this.formContainer);
-		this.formContainer.append(form);
+		this.formContainer.append(emailInput, submitButton);
 	}
 	
 	renderFormContainer(formName) {
@@ -350,10 +348,10 @@ class Home {
 		
 		myAccountButton.id = 'my-account-button';
 		myAccountButton.href = '/account';
-		myAccountButton.innerHTML = 'My account';
+		myAccountButton.innerHTML = 'MY ACOUNT';
 		signoutButton.id = 'signout-button';
 		signoutButton.href = '/signout';
-		signoutButton.innerHTML = 'Sign out';
+		signoutButton.innerHTML = 'SIGN OUT';
 		this.headerButtonsDiv.append(myAccountButton, signoutButton);
 	}
 	
@@ -363,13 +361,13 @@ class Home {
 		let resetPasswordButton = document.createElement('button');
 		
 		signinButton.id = 'signin-button';
-		signinButton.innerHTML = 'Sign in';
+		signinButton.innerHTML = 'SIGN IN';
 		signinButton.addEventListener('click', this.renderFormContainer.bind(this, 'signin-form'));
 		signupButton.id = 'signup-button';
-		signupButton.innerHTML = 'Sign up';
+		signupButton.innerHTML = 'SIGN UP';
 		signupButton.addEventListener('click', this.renderFormContainer.bind(this, 'signup-form'));
 		resetPasswordButton.id = 'reset-password-button';
-		resetPasswordButton.innerHTML = 'Forgot password?';
+		resetPasswordButton.innerHTML = 'FORGOT PASSWORD?';
 		resetPasswordButton.addEventListener('click', this.renderFormContainer.bind(this, 'reset-password-form'));
 		this.headerButtonsDiv.append(signinButton, signupButton, resetPasswordButton);
 	}
@@ -406,7 +404,6 @@ class Home {
 		})
 		.then(response => response.json(), printError)
 		.then(data => {
-			// console.log(data);
 			this.lastPhotoId = parseInt(data);
 			this.renderGallery();
 		}, printError);
@@ -431,6 +428,7 @@ class Home {
 		this.renderFormContainer();
 		this.getLastPhotoId();
 		window.addEventListener('scroll', this.loadNewPhotos);
+		this.gallery.addEventListener('click', () => this.formContainer.classList.add('invisible'));
 	}
 
 	render() {

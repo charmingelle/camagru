@@ -55,3 +55,4 @@ TODO
 - getUserMedia is insecure
 - add sharing image on social networks
 - add decreasing comment count when comment is deleted
+- create CSS color variables

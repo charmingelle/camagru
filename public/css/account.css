@@ -1,29 +1,14 @@
-body {
-	font-family: Georgia;
-}
-
-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-}
-
-header a {
-	margin: 1vmin;
-	text-decoration: none;
-}
-
-/* #content {
-	display: flex;
-	flex-direction: row;
+#content {
+	margin-top: 5vmin;
 	padding: 1vmin;
-} */
+}
 
 #photo-buttons {
 	display: flex;
 	justify-content: center;
 	margin: 1vmin;
 	align-items: center;
+	background-color: var(--dark-color)
 }
 
 #photo-section {
@@ -127,7 +112,7 @@ header a {
 	z-index: 3;
 	padding: 3vmin;
 	color: white;
-	background-color: rgb(19, 35, 47);
+	background-color: var(--dark-color)
 	border-radius: 4px;
 	box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
 	opacity: 1;

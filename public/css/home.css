@@ -1,20 +1,13 @@
-body {
-	font-family: Georgia;
+#header-buttons-div button {
+	margin: 0.5vmin;
 }
 
-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
+main {
+	margin-top: 5vmin;
 }
 
-header a {
+#websit-title {
 	margin: 1vmin;
-	text-decoration: none;
-}
-
-header a:visited {
-	text-decoration: none;
 }
 
 #message-container {
@@ -23,9 +16,20 @@ header a:visited {
 }
 
 #form-container {
-	display: flex;
-	justify-content: flex-end;
-	margin: 1vmin;
+	position: fixed;
+	top: 5vmin;
+	right: 0;
+	padding: 1vmin;
+	background-color: var(--dark-color);
+	border: 1px solid white;
+}
+
+#form-container input {
+	margin-right: 1vmin;
+}
+
+#form-container button {
+	margin-right: 1vmin;
 }
 
 #gallery {
@@ -36,7 +40,15 @@ header a:visited {
 
 .photo-container {
 	width: 50%;
-	margin: 1vmin;
+	margin: 3vmin;
+	padding: 4vmin;
+	background-color: var(--dark-transparent-color);
+	border-radius: 4px;
+	box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+}
+
+.photo-container:hover {
+	background-color: rgb(18, 35, 47);
 }
 
 .photo {
@@ -50,17 +62,42 @@ header a:visited {
 	padding: 1vmin;
 }
 
+.like-symbol {
+	color: orange;
+}
+
 .like {
 	margin-right: 2vmin;
+	color: orange;
 }
 
 .comment-container {
 	display: flex;
 }
 
+.comment-symbol {
+	color: #1ab188;
+}
+
+.comment {
+	color: #1ab188;
+}
+
+.delete-comment-button {
+	margin-left: 1vmin;
+	padding: 0;
+	padding-left: 0.5vmin;
+	padding-right: 0.5vmin;
+}
+
 .login-div {
 	font-weight: bold;
 	margin-right: 1vmin;
+	color: #a0bbb0;
+}
+
+.add-comment-input {
+	margin-top: 1vmin;
 }
 
 #uploaded-image {
