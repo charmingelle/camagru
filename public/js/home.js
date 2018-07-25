@@ -28,17 +28,41 @@ class Home {
 		this.signinFormHandler = this.signinFormHandler.bind(this);
 		this.resetPasswordFormHandler = this.resetPasswordFormHandler.bind(this);
 		this.loadNewPhotos = this.loadNewPhotos.bind(this);
-		this.okCallbacForDeleteComment = this.okCallbacForDeleteComment.bind(this);
 	}
 
 	okCallbacForDeleteComment(id, commentsContainer, commentContainer) {
-		console.log('in okCallbacForkDeleteComment');
+		console.log("in okCallbacForDeleteComment");
 		fetch('/deleteComment', {
 			method: 'POST',
 			credentials: 'include',
 			body: JSON.stringify({'id': id})
 		})
 		.then(commentsContainer.removeChild(commentContainer));
+	}
+
+	deleteComment(id, commentsContainer, commentContainer) {
+		customConfirm("Are you sure you would like to delete this photo?", this.okCallbacForDeleteComment.bind(this, id, commentsContainer, commentContainer));
+	}
+
+	createCommentContainer(comment, login, commentsContainer) {
+		let commentContainer = document.createElement('div');
+		let loginDiv = document.createElement('div');
+		let commentDiv = document.createElement('div');
+
+		commentContainer.classList.add('comment-container');
+		loginDiv.innerHTML = `${comment['login']}:`;
+		loginDiv.classList.add('login-div');
+		commentDiv.innerHTML = comment['comment'];
+		commentDiv.classList.add('comment-div');
+		commentContainer.append(loginDiv, commentDiv);
+		if (comment['login'] === login) {
+			let deleteDiv = document.createElement('button');
+
+			deleteDiv.innerHTML = 'Delete';
+			deleteDiv.addEventListener('click', this.deleteComment.bind(this, comment['id'], commentsContainer, commentContainer));
+			commentContainer.append(deleteDiv);
+		}
+		return commentContainer;
 	}
 
 	fillCommentsContainer(commentsContainer, photoId) {
@@ -61,27 +85,8 @@ class Home {
 			.then(response => response.json(), printError)
 			.then((comments) => {
 				if (comments) {
-					const commentDivs = comments.map(comment => {
-						let commentContainer = document.createElement('div');
-						let loginDiv = document.createElement('div');
-						let commentDiv = document.createElement('div');
-	
-						commentContainer.classList.add('comment-container');
-						loginDiv.innerHTML = `${comment['login']}:`;
-						loginDiv.classList.add('login-div');
-						commentDiv.innerHTML = comment['comment'];
-						commentDiv.classList.add('comment-div');
-						commentContainer.append(loginDiv, commentDiv);
-						if (comment['login'] === login) {
-							let deleteDiv = document.createElement('button');
+					const commentDivs = comments.map(comment => this.createCommentContainer(comment, login, commentsContainer));
 
-							deleteDiv.innerHTML = 'Delete';
-							console.log("before ading event listener");
-							deleteDiv.addEventListener('click', customConfirm("Are you sure you would like to delete this photo?", this.okCallbacForDeleteComment.bind(this, comment['id'], commentsContainer, commentContainer)));
-							commentContainer.append(deleteDiv);
-						}
-						return commentContainer;
-					});
 					return commentDivs;
 				}
 			}, printError)

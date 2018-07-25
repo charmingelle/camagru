@@ -75,6 +75,7 @@ class Account {
 	}
 
 	okCallbackForPublish(button, id, privateStatus, action) {
+		console.log('in okCallbackForPublish');
 		fetch('/publish', {
 			method: 'POST',
 			credentials: 'include',
@@ -87,7 +88,7 @@ class Account {
 	}
 
 	publish(button, id, privateStatus) {
-		// console.log('publish is called');
+		console.log('in publish');
 		let action = 'hide';
 
 		if (privateStatus == true) {

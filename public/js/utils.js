@@ -81,13 +81,14 @@ const okHandler = (overlay, modalWindow, okCallback) => {
 	document.body.removeChild(overlay);	
 	document.body.removeChild(modalWindow);
 	document.body.classList.remove('no-scroll');
+
+	console.log(`okCallback.arguments = ${okCallback.arguments}`);
 	okCallback();
 }
 
 export const customConfirm = (question, okCallback) => {
-	console.log("in custom confirm function");
+	console.log('in customer confirm');
 	if (!document.getElementById('custom-confirm')) {
-		console.log("if is passed");
 		let overlay = document.createElement('div');
 		let modalWindow = document.createElement('div');
 		let questionContainer = document.createElement('p');
