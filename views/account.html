@@ -9,25 +9,25 @@
 	<body>
 		<header>
 			<div id='hello'></div>
+			<div id='photo-buttons'>
+				<input type="file" id='upload' accept='.jpg, .jpeg, .png'>
+				<button id='capture-button' disabled>TAKE A PICTURE</button>
+				<button id='clear-button'>CLEAR</button>
+			</div>
 			<div>
-				<a id='home-button' href='/'>Home</a>
-				<a id='signout-button' href='/signout'>Sign out</a>
+				<a id='home-button' href='/'>HOME</a>
+				<a id='signout-button' href='/signout'>SIGN OUT</a>
 			</div>
 		</header>
 		<div id='content'>
 			<main>
-				<div id='photo-buttons'>
-					<input type="file" id='upload' accept='.jpg, .jpeg, .png'>
-					<button id='capture-button' disabled>Take a Picture</button>
-					<button id='clear-button'>Clear</button>
-				</div>
 				<div id='photo-section'>
 					<div id='container'></div>
 				</div>
 				<div id='stickers-container'>
-					<button id='stickers-back'><</button>
+					<button id='stickers-back'>&#8678;</button>
 					<div id='stickers'></div>
-					<button id='stickers-forward'>></button>
+					<button id='stickers-forward'>&#8680;</button>
 				</div>
 			</main>
 			<section id='change-section'>
@@ -35,15 +35,15 @@
 				<div id='change-container'>
 					<div>
 						<input id='email' placeholder='Email' type='text' value=''>
-						<button id='change-email-button'>Change</button>
+						<button id='change-email-button'>CHANGE</button>
 					</div>
 					<div>
 						<input id='login' placeholder='Login' type='text' value=''>
-						<button id='change-login-button'>Change</button>
+						<button id='change-login-button'>CHANGE</button>
 					</div>
 					<div>
 						<input id='password' placeholder='Password' type='password' value=''>
-						<button id='change-password-button'>Change</button>
+						<button id='change-password-button'>CHANGE</button>
 					</div>
 					<button id='notification'></button>
 				</div>

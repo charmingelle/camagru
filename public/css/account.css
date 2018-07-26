@@ -1,14 +1,11 @@
 #content {
 	margin-top: 5vmin;
+	margin-bottom: 5vmin;
 	padding: 1vmin;
 }
 
-#photo-buttons {
-	display: flex;
-	justify-content: center;
-	margin: 1vmin;
-	align-items: center;
-	background-color: var(--dark-color)
+#photo-buttons input {
+	background-color: var(--dark-color);
 }
 
 #photo-section {
@@ -23,7 +20,6 @@
 	width: 80vmin;
 	height: 60vmin;
 	margin: 1vmin;
-	border: 1px solid black;
 }
 
 #video {
@@ -56,15 +52,15 @@
 
 #stickers-container {
 	display: flex;
+	justify-content: center;
 	align-items: center;
 }
 
 #stickers-container button {
-	width: 5%;
+	font-size: 3em;
 }
 
 #stickers {
-	width: 90%;
 	height: 25vmin;
 	display: flex;
 	flex-direction: row;
@@ -78,6 +74,10 @@
 	cursor: pointer;
 }
 
+#change-section button {
+	padding: 0.5vmin;
+}
+
 #user-photos {
 	display: flex;
 	flex-direction: column;
@@ -87,41 +87,4 @@
 .user-photo {
 	width: 100%;
 	margin-top: 1%;
-}
-
-.invisible {
-	display:none
-}
-
-#overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #c1bdba;
-	z-index: 2;
-	opacity: 0.6;
-}
-
-#custom-confirm {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	z-index: 3;
-	padding: 3vmin;
-	color: white;
-	background-color: var(--dark-color)
-	border-radius: 4px;
-	box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
-	opacity: 1;
-}
-
-#custom-confirm button {
-	width: 50%;
-}
-
-.no-scroll {
-	overflow: hidden;
 }

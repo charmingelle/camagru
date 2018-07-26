@@ -1,12 +1,23 @@
+:root {
+	--button-color: rgb(138, 52, 123);
+	--dark-color: rgb(217, 128, 172);
+	--main-background-color: rgb(251, 205, 205);
+	--button-transparent-color: rgba(138, 52, 123, 0.9);
+	--login-color: rgb(224, 224, 232);
+	--like-color: rgb(233, 175, 190);
+	--comment-color: rgb(245, 253, 255);
+}
+
 #header-buttons-div button {
 	margin: 0.5vmin;
 }
 
 main {
 	margin-top: 5vmin;
+	margin-bottom: 5vmin;
 }
 
-#websit-title {
+#website-title {
 	margin: 1vmin;
 }
 
@@ -42,13 +53,16 @@ main {
 	width: 50%;
 	margin: 3vmin;
 	padding: 4vmin;
-	background-color: var(--dark-transparent-color);
+	background-color: var(--button-color);
 	border-radius: 4px;
 	box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+	-webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    -webkit-appearance: none;
 }
 
 .photo-container:hover {
-	background-color: rgb(18, 35, 47);
+	background-color: var(--button-transparent-color);
 }
 
 .photo {
@@ -63,12 +77,18 @@ main {
 }
 
 .like-symbol {
-	color: orange;
+	color: var(--like-color);
+}
+
+.like-symbol:hover {
+	position: relative;
+	top: 1px;
+	left: 1px;
 }
 
 .like {
 	margin-right: 2vmin;
-	color: orange;
+	color: var(--like-color);;
 }
 
 .comment-container {
@@ -76,11 +96,11 @@ main {
 }
 
 .comment-symbol {
-	color: #1ab188;
+	color: var(--comment-color);
 }
 
 .comment {
-	color: #1ab188;
+	color: var(--comment-color);
 }
 
 .delete-comment-button {
@@ -93,7 +113,7 @@ main {
 .login-div {
 	font-weight: bold;
 	margin-right: 1vmin;
-	color: #a0bbb0;
+	color: var(--login-color);
 }
 
 .add-comment-input {
@@ -104,8 +124,4 @@ main {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-}
-
-.invisible {
-	display:none
 }

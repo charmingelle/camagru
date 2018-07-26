@@ -58,7 +58,8 @@ class Home {
 		if (comment['login'] === login) {
 			let deleteDiv = document.createElement('button');
 
-			deleteDiv.innerHTML = 'DELETE';
+			deleteDiv.innerHTML = '&#10005;';
+			deleteDiv.title = 'Delete';
 			deleteDiv.classList.add('delete-comment-button');
 			deleteDiv.addEventListener('click', this.deleteComment.bind(this, comment['id'], commentsContainer, commentContainer));
 			commentContainer.append(deleteDiv);
