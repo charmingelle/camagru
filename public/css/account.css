@@ -1,11 +1,10 @@
 #content {
-	margin-top: 5vmin;
-	margin-bottom: 5vmin;
-	padding: 1vmin;
+	margin-top: 4vh;
+	margin-bottom: 3vh;
 }
 
 #photo-buttons input {
-	background-color: var(--dark-color);
+	background-color: var(--header-color);
 }
 
 #photo-section {
@@ -61,21 +60,32 @@
 }
 
 #stickers {
-	height: 25vmin;
+	height: 20vh;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	align-items: center;
 	margin: 1vmin;
 	overflow: hidden;
 }
 
 .sticker {
-	height: 25vmin;
+	height: 20vh;
 	cursor: pointer;
 }
 
+#change-section {
+	display: flex;
+	justify-content: center;
+}
+
 #change-section button {
+	margin: 5px;
 	padding: 0.5vmin;
+}
+
+#change-section input {
+	margin: 5px;
 }
 
 #user-photos {

@@ -671,16 +671,15 @@ class Account {
 		})
 		.then(() => {
 			renderMessageContainer(this.messageContainer, `Email notifications have been ${action}d for your account`);
-			this.notification.innerHTML === 'Disable Email Notifications' ?
-				this.notification.innerHTML = 'Enable Email Notifications' :
-				this.notification.innerHTML = 'Disable Email Notifications';
+			this.notification.innerHTML === 'DISABLE NOTIFICATIONS' ?
+				this.notification.innerHTML = 'ENABLE NOTIFICATIONS' :
+				this.notification.innerHTML = 'DISABLE NOTIFICATIONS';
 		}, printError);
 	}
 
 	changeNotification() {
 		let action = this.notification.innerHTML.split(' ')[0];
 
-		action = `${action[0].toLowerCase()}${action.slice(1)}`;
 		customConfirm(`Are you sure you would like to ${action} email notifications?`, this.okCallbackForChangeNotification.bind(this, action));
 	}
 	
@@ -695,9 +694,9 @@ class Account {
 		.then(data => {
 			// Amazing moment
 			if (data == true) {
-				this.notification.innerHTML = 'Disable Email Notifications';
+				this.notification.innerHTML = 'DISABLE EMAIL NOTIFICATIONS';
 			} else {
-				this.notification.innerHTML = 'Enable Email Notifications';
+				this.notification.innerHTML = 'ENABLE EMAIL NOTIFICATIONS';
 			}
 			notification.addEventListener('click', this.changeNotification);
 		}, printError);
