@@ -32,6 +32,8 @@ Route::post(['uri' => '/addComment', 'controller' => 'DataController@addComment'
 
 Route::post(['uri' => '/increaseCommentCount', 'controller' => 'DataController@increaseCommentCount', 'condition' => 'signed in']);
 
+Route::post(['uri' => '/decreaseCommentCount', 'controller' => 'DataController@decreaseCommentCount', 'condition' => 'signed in']);
+
 Route::post(['uri' => '/getComments', 'controller' => 'DataController@getComments']);
 
 Route::post(['uri' => '/getLastPublicPhotoId', 'controller' => 'DataController@getLastPublicPhotoId']);

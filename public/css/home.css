@@ -1,3 +1,15 @@
+:root {
+	--button-color: rgb(199, 105, 46);
+	--header-color: rgba(101, 82, 73, 0.8);
+	--message-container-color: rgb(101, 82, 73, 0.8);
+	--main-background-color: rgb(202, 165, 146);
+	--input-color: rgba(254, 146, 81, 0.5);
+	--login-color: rgb(224, 224, 232);
+	--like-color: rgb(255, 188, 145);
+	--comment-color: rgb(245, 253, 255);
+	--highlighted-comment-color: rgb(255, 98, 1);
+}
+
 #header-buttons-div button {
 	margin: 0.5vmin;
 }

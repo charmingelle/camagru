@@ -20,7 +20,7 @@ class Account {
 		this.stickersContainer = document.getElementById('stickers');
 		this.photosContainer = document.getElementById('user-photos');
 		this.buttonBlock = document.getElementById('photo-buttons');
-		this.upload = document.getElementById('upload');
+		this.upload = document.getElementById('file-upload');
 		this.captureButton = document.getElementById('capture-button');
 		this.scale = vmin(50);
 		this.messageContainer = document.getElementById('message-container');		this.email = document.getElementById('email');
@@ -75,7 +75,7 @@ class Account {
 	}
 
 	okCallbackForPublish(button, id, privateStatus, action) {
-		console.log('in okCallbackForPublish');
+		// console.log('in okCallbackForPublish');
 		fetch('/publish', {
 			method: 'POST',
 			credentials: 'include',
@@ -88,7 +88,7 @@ class Account {
 	}
 
 	publish(button, id, privateStatus) {
-		console.log('in publish');
+		// console.log('in publish');
 		let action = 'hide';
 
 		if (privateStatus == true) {

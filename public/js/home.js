@@ -1,121 +1,280 @@
 import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom, printError, customConfirm } from '/js/utils.js';
 
-class Home {
-	constructor() {
-		this.gallery = document.getElementById('gallery');
-		this.formContainer = document.getElementById('form-container');
-		this.headerButtonsDiv = document.getElementById('header-buttons-div');
-		this.messageContainer = document.getElementById('message-container');
-		this.lastPhotoId = 0;
-		this.isLoading = false;
+let isSignedIn = false;
+let gallery = document.getElementById('gallery');
+let formContainer = document.getElementById('form-container');
+let headerButtonsDiv = document.getElementById('header-buttons-div');
+let messageContainer = document.getElementById('message-container');
+let lastPhotoId = 0;
+let isLoading = false;
 
-		this.fillCommentsContainer = this.fillCommentsContainer.bind(this);
-		this.setSignedInAddComment = this.setSignedInAddComment.bind(this);
-		this.setNotSignedInAddComment = this.setNotSignedInAddComment.bind(this);
-		this.setAddComment = this.setAddComment.bind(this);
-		this.likeIconClickHandler = this.likeIconClickHandler.bind(this);
-		this.appendImg = this.appendImg.bind(this);
-		this.showSigninForm = this.showSigninForm.bind(this);
-		this.showSignupForm = this.showSignupForm.bind(this);
-		this.showResetPasswordForm = this.showResetPasswordForm.bind(this);
-		this.showSignedInHeader = this.showSignedInHeader.bind(this);
-		this.showNotSignedInHeader = this.showNotSignedInHeader.bind(this);
-		this.renderHeaderButtonsDiv = this.renderHeaderButtonsDiv.bind(this);
-		this.renderGallery = this.renderGallery.bind(this);
-		this.renderSignedInOrAnonymousPage = this.renderSignedInOrAnonymousPage.bind(this);
-
-		this.signupFormHandler = this.signupFormHandler.bind(this);
-		this.signinFormHandler = this.signinFormHandler.bind(this);
-		this.resetPasswordFormHandler = this.resetPasswordFormHandler.bind(this);
-		this.loadNewPhotos = this.loadNewPhotos.bind(this);
-	}
-
-	okCallbacForDeleteComment(id, commentsContainer, commentContainer) {
-		console.log("in okCallbacForDeleteComment");
-		fetch('/deleteComment', {
+const signinFormHandler = (loginInput, passwordInput) => {
+	if (loginInput.value !== '' && passwordInput.value != '') {
+		fetch('/signin', {
 			method: 'POST',
 			credentials: 'include',
-			body: JSON.stringify({'id': id})
-		})
-		.then(commentsContainer.removeChild(commentContainer));
-	}
-
-	deleteComment(id, commentsContainer, commentContainer) {
-		customConfirm("Are you sure you would like to delete this photo?", this.okCallbacForDeleteComment.bind(this, id, commentsContainer, commentContainer));
-	}
-
-	createCommentContainer(comment, login, commentsContainer) {
-		let commentContainer = document.createElement('div');
-		let loginDiv = document.createElement('div');
-		let commentDiv = document.createElement('div');
-
-		commentContainer.classList.add('comment-container');
-		loginDiv.innerHTML = `${comment['login']}:`;
-		loginDiv.classList.add('login-div');
-		commentDiv.innerHTML = comment['comment'];
-		commentDiv.classList.add('comment-div');
-		commentContainer.append(loginDiv, commentDiv);
-		if (comment['login'] === login) {
-			let deleteDiv = document.createElement('button');
-
-			deleteDiv.innerHTML = '&#10005;';
-			deleteDiv.title = 'Delete';
-			deleteDiv.classList.add('delete-comment-button');
-			deleteDiv.addEventListener('click', this.deleteComment.bind(this, comment['id'], commentsContainer, commentContainer));
-			commentContainer.append(deleteDiv);
-		}
-		return commentContainer;
-	}
-
-	fillCommentsContainer(commentsContainer, photoId) {
-		let login;
-		
-		fetch('/getLogin', {
-			method: 'POST',
-			credentials: 'include'
+			body: JSON.stringify({
+				'login': loginInput.value,
+				'password': passwordInput.value
+			})
 		})
 		.then(response => response.json(), printError)
 		.then(data => {
-			login = data;
-		})
-		.then(() => {
-			fetch('/getComments', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'id': photoId})
-			})
-			.then(response => response.json(), printError)
-			.then((comments) => {
-				if (comments) {
-					const commentDivs = comments.map(comment => this.createCommentContainer(comment, login, commentsContainer));
-
-					return commentDivs;
-				}
-			}, printError)
-			.then(commentDivs => {
-				if (commentDivs) {
-					commentsContainer.append(...commentDivs);
-				}
-			}, printError);
-		});
+			if (data !== 'OK') {
+				renderMessageContainer(messageContainer, data);
+			} else {
+				renderSignedInOrAnonymousPage(true);
+			}
+		}, printError);
 	}
+}
 
-	setSignedInAddComment(addComment, commentsContainer, photoId, commentAmountDiv) {
-		addComment.placeholder = 'Add a comment...';
-		addComment.maxLength = '8000';
-		addComment.addEventListener('keypress', (event) => {
-			let keycode = (event.keyCode ? event.keyCode : event.which);
-			
-			if (keycode === ENTER) {
-				if (addComment.value) {
-					fetch('/addComment', {
-						method: 'POST',
-						credentials: 'include',
-						body: JSON.stringify({
-							'comment': addComment.value,
-							'photo-id': photoId
-						})
-					});
+const renderSigninForm = () => {
+	let loginInput = document.createElement('input');
+	let passwordInput = document.createElement('input');
+	let submitButton = document.createElement('button');
+
+	loginInput.placeholder = 'Login';
+	loginInput.type = 'text';
+	loginInput.value = '';
+	passwordInput.placeholder = 'Password';
+	passwordInput.type = 'password';
+	passwordInput.value = '';
+	submitButton.innerHTML = 'SIGN IN';
+	submitButton.addEventListener('click', () => signinFormHandler(loginInput.value, passwordInput.value));
+	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
+	passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
+	removeAllChildren(formContainer);
+	formContainer.append(loginInput, passwordInput, submitButton);
+}
+
+const signupFormHandler = (emailInput, loginInput, passwordInput) => {
+	if (emailInput.value !== '' && loginInput.value !== '' && passwordInput.value !== '') {
+		fetch('/signup', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({
+				'email': emailInput.value,
+				'login': loginInput.value,
+				'password': passwordInput.value
+			})
+		})
+		.then(response => response.json(), printError)
+		.then(data => {
+			renderMessageContainer(messageContainer, data['message']);
+			if (data['status'] === true) {
+				emailInput.value = '';
+				loginInput.value = '';
+				passwordInput.value = '';
+			}
+		}, printError);
+	}
+}
+
+const renderSignupForm = () => {
+	let emailInput = document.createElement('input');
+	let loginInput = document.createElement('input');
+	let passwordInput = document.createElement('input');
+	let submitButton = document.createElement('button');
+
+	emailInput.placeholder = 'Email';
+	emailInput.type = 'text';
+	emailInput.value = '';
+	loginInput.placeholder = 'Login';
+	loginInput.type = 'text';
+	loginInput.value = '';
+	passwordInput.placeholder = 'Password';
+	passwordInput.type = 'password';
+	passwordInput.value = '';
+	submitButton.innerHTML = 'SIGN UP';
+	submitButton.addEventListener('click', () => signupFormHandler(emailInput, loginInput, passwordInput));
+	emailInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
+	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
+	passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
+	removeAllChildren(formContainer);
+	formContainer.append(emailInput, loginInput, passwordInput, submitButton);
+}
+
+const resetPasswordFormHandler = (emailInput) => {
+	if (emailInput.value !== '') {
+		fetch('/forgotPassword', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'email': emailInput.value})
+		})
+		.then(response => response.json(), printError)
+		.then(data => {
+			renderMessageContainer(messageContainer, data);
+			emailInput.value = '';
+		}, printError);
+	}
+}
+
+const renderResetPasswordForm = () => {
+	let emailInput = document.createElement('input');
+	let submitButton = document.createElement('button');
+
+	emailInput.placeholder = 'Email';
+	emailInput.type = 'text';
+	emailInput.value = '';
+	submitButton.innerHTML = 'GET RESET PASSWORD LINK';
+	submitButton.addEventListener('click', () => resetPasswordFormHandler(emailInput));
+	emailInput.addEventListener('keypress', (event) => enterPressHandler(event, resetPasswordFormHandler, emailInput));
+	removeAllChildren(formContainer);
+	formContainer.append(emailInput, submitButton);
+}
+
+const renderFormContainer = (formName) => {
+	removeAllChildren(formContainer);
+	if (!formName) {
+		formContainer.classList.add('invisible');
+	} else {
+		formContainer.classList.remove('invisible');
+		if (formName === 'signin-form')
+			renderSigninForm();
+		else if (formName === 'signup-form')
+			renderSignupForm();
+		else if (formName === 'reset-password-form')
+			renderResetPasswordForm();
+	}
+}
+
+const renderSignedInHeader = () => {
+	let myAccountButton = document.createElement('a');
+	let signoutButton = document.createElement('a');
+	
+	myAccountButton.id = 'my-account-button';
+	myAccountButton.href = '/account';
+	myAccountButton.innerHTML = 'MY ACOUNT';
+	signoutButton.id = 'signout-button';
+	signoutButton.href = '/signout';
+	signoutButton.innerHTML = 'SIGN OUT';
+	headerButtonsDiv.append(myAccountButton, signoutButton);
+}
+
+const renderNotSignedInHeader = () => {
+	let signinButton = document.createElement('button');
+	let signupButton = document.createElement('button');
+	let resetPasswordButton = document.createElement('button');
+	
+	signinButton.id = 'signin-button';
+	signinButton.innerHTML = 'SIGN IN';
+	signinButton.addEventListener('click', () => renderFormContainer('signin-form'));
+	signupButton.id = 'signup-button';
+	signupButton.innerHTML = 'SIGN UP';
+	signupButton.addEventListener('click', () => renderFormContainer('signup-form'));
+	resetPasswordButton.id = 'reset-password-button';
+	resetPasswordButton.innerHTML = 'FORGOT PASSWORD?';
+	resetPasswordButton.addEventListener('click', () => renderFormContainer('reset-password-form'));
+	headerButtonsDiv.append(signinButton, signupButton, resetPasswordButton);
+}
+
+const renderHeaderButtonsDiv = () => {
+	removeAllChildren(headerButtonsDiv);
+	if (isSignedIn) {
+		renderSignedInHeader();
+	} else {
+		renderNotSignedInHeader();
+	}
+}
+
+const okCallbacForDeleteComment = (id, photoId, commentsEl, commentEl, commentAmountEl) => {
+	fetch('/deleteComment', {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify({'id': id})
+	})
+	.then(commentsEl.removeChild(commentEl))
+	.then(() => {
+		fetch('/decreaseCommentCount', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'id': photoId})
+		})
+		.then(response => response.json(), printError)
+		.then(commentAmount => {
+			commentAmountEl.innerHTML = commentAmount;
+		}, printError);
+	})
+}
+
+const deleteComment = (id, photoId, commentsEl, commentEl, commentAmountEl) => {
+	customConfirm("Are you sure you would like to delete this photo?", okCallbacForDeleteComment.bind(this, id, photoId, commentsEl, commentEl, commentAmountEl));
+}
+
+const renderComment = (comment, login, commentsEl, commentAmountEl) => {
+	let commentEl = document.createElement('div');
+	let loginDiv = document.createElement('div');
+	let commentDiv = document.createElement('div');
+
+	commentEl.classList.add('comment-container');
+	loginDiv.innerHTML = `${comment['login']}:`;
+	loginDiv.classList.add('login-div');
+	commentDiv.innerHTML = comment['comment'];
+	commentDiv.classList.add('comment-div');
+	commentEl.append(loginDiv, commentDiv);
+	if (comment['login'] === login) {
+		let deleteDiv = document.createElement('button');
+
+		deleteDiv.innerHTML = '&#10005;';
+		deleteDiv.title = 'Delete';
+		deleteDiv.classList.add('delete-comment-button');
+		deleteDiv.addEventListener('click', deleteComment.bind(this, comment['id'], comment['photo_id'], commentsEl, commentEl, commentAmountEl));
+		commentEl.append(deleteDiv);
+	}
+	return commentEl;
+}
+
+const fillComments = (commentsEl, photoId, commentAmountEl) => {
+	let login;
+	
+	fetch('/getLogin', {
+		method: 'POST',
+		credentials: 'include'
+	})
+	.then(response => response.json(), printError)
+	.then(data => {
+		login = data;
+	})
+	.then(() => {
+		fetch('/getComments', {
+			method: 'POST',
+			credentials: 'include',
+			body: JSON.stringify({'id': photoId})
+		})
+		.then(response => response.json(), printError)
+		.then((comments) => {
+			if (comments) {
+				const commentDivs = comments.map(comment => renderComment(comment, login, commentsEl, commentAmountEl));
+
+				return commentDivs;
+			}
+		}, printError)
+		.then(commentDivs => {
+			if (commentDivs) {
+				commentsEl.append(...commentDivs);
+			}
+		}, printError);
+	});
+}
+
+const setSignedInAddComment = (addCommentEl, commentsEl, photoId, commentAmountEl) => {
+	addCommentEl.placeholder = 'Add a comment...';
+	addCommentEl.maxLength = '8000';
+	addCommentEl.addEventListener('keypress', (event) => {
+		let keycode = (event.keyCode ? event.keyCode : event.which);
+		
+		if (keycode === ENTER) {
+			if (addCommentEl.value) {
+				fetch('/addComment', {
+					method: 'POST',
+					credentials: 'include',
+					body: JSON.stringify({
+						'comment': addCommentEl.value,
+						'photo-id': photoId
+					})
+				})
+				.then(() => {
 					fetch('/increaseCommentCount', {
 						method: 'POST',
 						credentials: 'include',
@@ -123,325 +282,199 @@ class Home {
 					})
 					.then(response => response.json(), printError)
 					.then(commentAmount => {
-						commentAmountDiv.innerHTML = commentAmount;
-					}, printError);
-					addComment.value = '';
-					removeAllChildren(commentsContainer);
-					this.fillCommentsContainer(commentsContainer, photoId);
-				}
+						commentAmountEl.innerHTML = commentAmount;
+					}, printError)
+				});
+				addCommentEl.value = '';
+				removeAllChildren(commentsEl);
+				fillComments(commentsEl, photoId, commentAmountEl);
 			}
-		});
-	}
-	
-	setNotSignedInAddComment(addComment) {
-		addComment.placeholder = 'Sign in to add a comment';
-		addComment.disabled = 'disabled';
-	}
-	
-	setAddComment(addComment, commentsContainer, photoId, commentAmountDiv) {
-		if (this.isSignedIn) {
-			this.setSignedInAddComment(addComment, commentsContainer, photoId, commentAmountDiv);
-		} else {
-			this.setNotSignedInAddComment(addComment);
 		}
+	});
+}
+
+const setNotSignedInAddComment = (addCommentEl) => {
+	addCommentEl.placeholder = 'Sign in to add a comment';
+	addCommentEl.disabled = 'disabled';
+}
+
+const setAddCommentEl = (addCommentEl, commentsEl, photoId, commentAmountEl) => {
+	if (isSignedIn) {
+		setSignedInAddComment(addCommentEl, commentsEl, photoId, commentAmountEl);
+	} else {
+		setNotSignedInAddComment(addCommentEl);
 	}
-	
-	likeIconClickHandler(like, photoId) {
-		fetch('/like', {
+}
+
+const likeIconClickHandler = (like, photoId) => {
+	fetch('/like', {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify({'id': photoId})
+	})
+	.then(
+		fetch('/getLikes', {
 			method: 'POST',
 			credentials: 'include',
 			body: JSON.stringify({'id': photoId})
 		})
-		.then(
-			fetch('/getLikes', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'id': photoId})
-			})
-			.then(response => response.json(), printError)
-			.then(data => {
-				like.innerHTML = data;
-			}, printError)
-		);
-	}
-	
-	appendImg(sources) {
-		if (sources) {
-			const images = sources.map(source => {
-				let imageContainer = document.createElement('div');
-				let login = document.createElement('div');
-				let image = document.createElement('img');
-				let likeComment = document.createElement('div');
-				let likeIcon = document.createElement('div');
-				let like = document.createElement('div');
-				let commentIcon = document.createElement('div');
-				let comment = document.createElement('div');
-				let commentsContainer = document.createElement('div');
-				let addComment = document.createElement('input');
-				
-				imageContainer.classList.add('photo-container');
-				login.innerHTML = source['login'];
-				login.classList.add('login');
-				image.src = source['url'];
-				image.classList.add('photo');
-				likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
-				likeIcon.classList.add('like-symbol');
-				if (this.isSignedIn) {
-					likeIcon.addEventListener('click', this.likeIconClickHandler.bind(this, like, source['id']));
-				}
-				like.innerHTML = source['likes'];
-				like.classList.add('like');
-				commentIcon.innerHTML = '<i class="fa fa-comment"></i>';
-				commentIcon.classList.add('comment-symbol');
-				comment.innerHTML = source['comments'];
-				comment.classList.add('comment');
-				likeComment.classList.add('like-comment');
-				commentsContainer.classList.add('comments');
-				this.fillCommentsContainer(commentsContainer, source['id']);
-				addComment.type = 'text';
-				addComment.classList.add('add-comment-input');
-				this.setAddComment(addComment, commentsContainer, source['id'], comment);
-		
-				likeComment.append(likeIcon, like, commentIcon, comment);
-				imageContainer.append(login, image, likeComment, commentsContainer, addComment);
-				return imageContainer;
-			});
-			this.gallery.append(...images);
-		}
-	}
-	
-	signinFormHandler(loginInput, passwordInput) {
-		if (loginInput.value !== '' && passwordInput.value != '') {
-			fetch('/signin', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({
-					'login': loginInput.value,
-					'password': passwordInput.value
-				})
-			})
-			.then(response => response.json(), printError)
-			.then(data => {
-				if (data !== 'OK') {
-					renderMessageContainer(this.messageContainer, data);
-				} else {
-					this.renderSignedInOrAnonymousPage(true);
-				}
-			}, printError);
-		}
-	}
+		.then(response => response.json(), printError)
+		.then(data => {
+			like.innerHTML = data;
+		}, printError)
+	);
+}
 
-	showSigninForm() {
-		let loginInput = document.createElement('input');
-		let passwordInput = document.createElement('input');
-		let submitButton = document.createElement('button');
+const renderLoginEl = (source) => {
+	let loginEl = document.createElement('div');
 
-		loginInput.placeholder = 'Login';
-		loginInput.type = 'text';
-		loginInput.value = '';
-		passwordInput.placeholder = 'Password';
-		passwordInput.type = 'password';
-		passwordInput.value = '';
-		submitButton.innerHTML = 'SIGN IN';
-		submitButton.addEventListener('click', () => {
-			this.signinFormHandler(loginInput.value, passwordInput.value);
+	loginEl.innerHTML = source['login'];
+	loginEl.classList.add('login');
+	return loginEl;
+}
+
+const renderImageEl = (source) => {
+	let imageEl = document.createElement('img');
+
+	imageEl.src = source['url'];
+	imageEl.classList.add('photo');
+	return imageEl;
+}
+
+const renderLikeEl = (source) => {
+	let likeEl = document.createElement('div');
+	
+	likeEl.innerHTML = source['likes'];
+	likeEl.classList.add('like');
+	return likeEl;
+}
+
+const renderLikeIcon = (source, likeEl) => {
+	let likeIcon = document.createElement('div');
+	
+	likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
+	likeIcon.classList.add('like-symbol');
+	if (isSignedIn) {
+		likeIcon.addEventListener('click', () => likeIconClickHandler(likeEl, source['id']));
+	}
+	return likeIcon;
+}
+
+const renderCommentAmountEl = (source) => {
+	let commentAmountEl = document.createElement('div');
+
+	commentAmountEl.innerHTML = source['comments'];
+	commentAmountEl.classList.add('comment');
+	return commentAmountEl;
+}
+
+const renderCommentAmountIcon = () => {
+	let commentAmountIcon = document.createElement('div');
+	
+	commentAmountIcon.innerHTML = '<i class="fa fa-comment"></i>';
+	commentAmountIcon.classList.add('comment-symbol');
+	return commentAmountIcon;
+}
+
+const renderCommentsEl = (source) => {
+	let commentsEl = document.createElement('div');
+	
+	commentsEl.classList.add('comments');
+	fillComments(commentsEl, source['id']);
+	return commentsEl;
+}
+
+const renderAddCommentEl = (commentsEl, source, commentAmountEl) => {
+	let addCommentEl = document.createElement('input');
+
+	addCommentEl.type = 'text';
+	addCommentEl.classList.add('add-comment-input');
+	setAddCommentEl(addCommentEl, commentsEl, source['id'], commentAmountEl);
+	return addCommentEl;
+}
+
+const renderPhoto = (sources) => {
+	if (sources) {
+		const images = sources.map(source => {
+			let containerEl = document.createElement('div');
+			let loginEl = renderLoginEl(source);
+			let imageEl = renderImageEl(source);
+			let likeCommentEl = document.createElement('div');
+			let likeEl = renderLikeEl(source);
+			let likeIcon = renderLikeIcon(source, likeEl);
+			let commentAmountEl = renderCommentAmountEl(source);
+			let commentAmountIcon = renderCommentAmountIcon();
+			let commentsEl = renderCommentsEl(source);
+			let addCommentEl = renderAddCommentEl(commentsEl, source, commentAmountEl);
+			
+			containerEl.classList.add('photo-container');
+			likeCommentEl.classList.add('like-comment');
+
+			likeCommentEl.append(likeIcon, likeEl, commentAmountIcon, commentAmountEl);
+			containerEl.append(loginEl, imageEl, likeCommentEl, commentsEl, addCommentEl);			
+			return containerEl;
 		});
-		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput, passwordInput));
-		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signinFormHandler, loginInput, passwordInput));
-		removeAllChildren(this.formContainer);
-		this.formContainer.append(loginInput, passwordInput, submitButton);
-	}
-
-	signupFormHandler(emailInput, loginInput, passwordInput) {
-		if (emailInput.value !== '' && loginInput.value !== '' && passwordInput.value !== '') {
-			fetch('/signup', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({
-					'email': emailInput.value,
-					'login': loginInput.value,
-					'password': passwordInput.value
-				})
-			})
-			.then(response => response.json(), printError)
-			.then(data => {
-				renderMessageContainer(this.messageContainer, data['message']);
-				if (data['status'] === true) {
-					emailInput.value = '';
-					loginInput.value = '';
-					passwordInput.value = '';
-				}
-			}, printError);
-		}
-	}
-
-	showSignupForm() {
-		let emailInput = document.createElement('input');
-		let loginInput = document.createElement('input');
-		let passwordInput = document.createElement('input');
-		let submitButton = document.createElement('button');
-
-		emailInput.placeholder = 'Email';
-		emailInput.type = 'text';
-		emailInput.value = '';
-		loginInput.placeholder = 'Login';
-		loginInput.type = 'text';
-		loginInput.value = '';
-		passwordInput.placeholder = 'Password';
-		passwordInput.type = 'password';
-		passwordInput.value = '';
-		submitButton.innerHTML = 'SIGN UP';
-		submitButton.addEventListener('click', () => this.signupFormHandler(emailInput, loginInput, passwordInput));
-		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
-		loginInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
-		passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, this.signupFormHandler, emailInput, loginInput, passwordInput));
-		removeAllChildren(this.formContainer);
-		this.formContainer.append(emailInput, loginInput, passwordInput, submitButton);
-	}
-
-	resetPasswordFormHandler(emailInput) {
-		if (emailInput.value !== '') {
-			fetch('/forgotPassword', {
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({'email': emailInput.value})
-			})
-			.then(response => response.json(), printError)
-			.then(data => {
-				renderMessageContainer(this.messageContainer, data);
-				emailInput.value = '';
-			}, printError);
-		}
-	}
-	
-	showResetPasswordForm() {
-		let emailInput = document.createElement('input');
-		let submitButton = document.createElement('button');
-
-		emailInput.placeholder = 'Email';
-		emailInput.type = 'text';
-		emailInput.value = '';
-		submitButton.innerHTML = 'Get reset password link';
-		submitButton.addEventListener('click', () => this.resetPasswordFormHandler(emailInput));
-		emailInput.addEventListener('keypress', (event) => enterPressHandler(event, this.resetPasswordFormHandler, emailInput));
-		removeAllChildren(this.formContainer);
-		this.formContainer.append(emailInput, submitButton);
-	}
-	
-	renderFormContainer(formName) {
-		removeAllChildren(this.formContainer);
-		if (!formName) {
-			this.formContainer.classList.add('invisible');
-		} else {
-			this.formContainer.classList.remove('invisible');
-			if (formName === 'signin-form')
-				this.showSigninForm();
-			else if (formName === 'signup-form')
-				this.showSignupForm();
-			else if (formName === 'reset-password-form')
-				this.showResetPasswordForm();
-		}
-	}
-	
-	showSignedInHeader() {
-		let myAccountButton = document.createElement('a');
-		let signoutButton = document.createElement('a');
-		
-		myAccountButton.id = 'my-account-button';
-		myAccountButton.href = '/account';
-		myAccountButton.innerHTML = 'MY ACOUNT';
-		signoutButton.id = 'signout-button';
-		signoutButton.href = '/signout';
-		signoutButton.innerHTML = 'SIGN OUT';
-		this.headerButtonsDiv.append(myAccountButton, signoutButton);
-	}
-	
-	showNotSignedInHeader() {
-		let signinButton = document.createElement('button');
-		let signupButton = document.createElement('button');
-		let resetPasswordButton = document.createElement('button');
-		
-		signinButton.id = 'signin-button';
-		signinButton.innerHTML = 'SIGN IN';
-		signinButton.addEventListener('click', this.renderFormContainer.bind(this, 'signin-form'));
-		signupButton.id = 'signup-button';
-		signupButton.innerHTML = 'SIGN UP';
-		signupButton.addEventListener('click', this.renderFormContainer.bind(this, 'signup-form'));
-		resetPasswordButton.id = 'reset-password-button';
-		resetPasswordButton.innerHTML = 'FORGOT PASSWORD?';
-		resetPasswordButton.addEventListener('click', this.renderFormContainer.bind(this, 'reset-password-form'));
-		this.headerButtonsDiv.append(signinButton, signupButton, resetPasswordButton);
-	}
-	
-	renderHeaderButtonsDiv() {
-		removeAllChildren(this.headerButtonsDiv);
-		if (this.isSignedIn) {
-			this.showSignedInHeader();
-		} else {
-			this.showNotSignedInHeader();
-		}
-	}
-	
-	renderGallery() {
-		this.isLoading = true;
-		fetch('/photos', {
-			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({'lastId': this.lastPhotoId})
-		})
-		.then(response => response.json(), printError)
-		.then(data => {
-			this.lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
-			this.appendImg(data);
-			this.isLoading = false;
-		}, printError);
-	}
-	
-	getLastPhotoId() {
-		removeAllChildren(this.gallery);
-		fetch('/getLastPublicPhotoId', {
-			method: 'POST',
-			credentials: 'include'
-		})
-		.then(response => response.json(), printError)
-		.then(data => {
-			this.lastPhotoId = parseInt(data);
-			this.renderGallery();
-		}, printError);
-	}
-
-	loadNewPhotos() {
-		if (isScrolledToBottom()) {
-			if (this.lastPhotoId > 0) {
-				if (!this.isLoading) {
-					this.renderGallery();
-				}
-			} else {
-				window.removeEventListener('scroll', this.loadNewPhotos);
-			}
-		}
-	}
-
-	renderSignedInOrAnonymousPage(isSignedIn) {
-		this.isSignedIn = isSignedIn;
-		this.renderHeaderButtonsDiv();
-		renderMessageContainer(this.messageContainer);
-		this.renderFormContainer();
-		this.getLastPhotoId();
-		window.addEventListener('scroll', this.loadNewPhotos);
-		this.gallery.addEventListener('click', () => this.formContainer.classList.add('invisible'));
-	}
-
-	render() {
-		fetch('/isSignedIn', {
-			method: 'POST',
-			credentials: 'include'
-		})
-		.then(response => response.json(), printError)
-		.then(this.renderSignedInOrAnonymousPage, printError);
+		gallery.append(...images);
 	}
 }
 
-let home = new Home();
+const renderGallery = () => {
+	isLoading = true;
+	fetch('/photos', {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify({'lastId': lastPhotoId})
+	})
+	.then(response => response.json(), printError)
+	.then(data => {
+		lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
+		renderPhoto(data);
+		isLoading = false;
+	}, printError);
+}
 
-home.render();
+const getLastPhotoId = () => {
+	removeAllChildren(gallery);
+	fetch('/getLastPublicPhotoId', {
+		method: 'POST',
+		credentials: 'include'
+	})
+	.then(response => response.json(), printError)
+	.then(data => {
+		lastPhotoId = parseInt(data);
+		renderGallery();
+	}, printError);
+}
+
+const loadNewPhotos = () => {
+	if (isScrolledToBottom()) {
+		if (lastPhotoId > 0) {
+			if (!isLoading) {
+				renderGallery();
+			}
+		} else {
+			window.removeEventListener('scroll', loadNewPhotos);
+		}
+	}
+}
+
+const renderSignedInOrAnonymousPage = (signInStatus) => {
+	isSignedIn = signInStatus;
+	renderHeaderButtonsDiv();
+	renderMessageContainer(messageContainer);
+	renderFormContainer();
+	getLastPhotoId();
+	window.addEventListener('scroll', loadNewPhotos);
+	gallery.addEventListener('click', () => formContainer.classList.add('invisible'));
+}
+
+const render = () => {
+	fetch('/isSignedIn', {
+		method: 'POST',
+		credentials: 'include'
+	})
+	.then(response => response.json(), printError)
+	.then(renderSignedInOrAnonymousPage, printError);
+}
+
+render();

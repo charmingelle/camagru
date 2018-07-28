@@ -1,0 +1,457 @@
+:root {
+	--button-color: rgb(199, 105, 46);
+	--header-color: rgba(101, 82, 73, 0.8);
+	--message-container-color: rgb(101, 82, 73, 0.8);
+	--main-background-color: rgb(202, 165, 146);
+	--input-color: rgba(254, 146, 81, 0.5);
+	--login-color: rgb(224, 224, 232);
+	--like-color: rgb(255, 188, 145);
+	--comment-color: rgb(245, 253, 255);
+	--highlighted-comment-color: rgb(255, 98, 1);
+}
+
+body {
+	box-sizing: border-box;
+	margin: 0;
+	overflow-x: hidden;
+	font-size: 2vh;
+	font-family: Georgia;
+	color: white;
+	background-color: var(--main-background-color);
+	font-family: sans-serif;
+}
+
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	position: fixed;
+	width: 100%;
+	height: 4vh;
+	top: 0;
+	padding: 1vh;
+	z-index: 1;
+	background-color: var(--header-color);
+	color: white;
+}
+
+header a {
+	width: 4vh;
+	margin: 1.5vmin;
+	padding: 1vh;
+	border: 0;
+	border-radius: 1px;
+	font-family: Georgia;
+	font-size: 2vh;
+	color: #ffffff;
+	font: 400 11px system-ui;
+	text-decoration: none;
+	background-color: var(--button-color);
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
+}
+
+header a:visited {
+	text-decoration: none;
+	color: white;
+}
+
+header a:hover {
+	position: relative;
+	top: 1px;
+	left: 1px;
+	background-color: var(--photo-hover-color);
+	cursor: pointer;
+}
+
+input {
+	padding: 0.5vmin;
+	font-size: 2vh;
+	color: white;
+	background-color: var(--input-color);
+	border: 0;
+}
+
+input:focus {
+	outline: var(--button-color);
+}
+
+::placeholder {
+	color: rgb(255, 255, 255, 0.8);
+	opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color: rgb(255, 255, 255, 0.8);
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+	color: rgb(255, 255, 255, 0.8);
+}
+
+button {
+	height: 4vh;
+	padding: 1vh;
+	border: 0;
+	border-radius: 1px;
+	font-size: 2vh;
+	color: #ffffff;
+	background-color: var(--button-color);
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
+}
+
+button:hover {
+	position: relative;
+	top: 1px;
+	left: 1px;
+	background-color: var(--photo-hover-color);
+	cursor: pointer;
+}
+
+button:focus {
+	outline: 0;
+}
+
+footer {
+	display: flex;
+	align-items: center;
+	position: fixed;
+	width: 100%;
+	height: 3vh;
+	bottom: 0;
+	z-index: 1;
+	padding-left: 1vh;
+	background-color: var(--header-color);
+	color: white;
+}
+
+#overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #c1bdba;
+	z-index: 2;
+	opacity: 0.6;
+}
+
+#custom-confirm {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 3;
+	padding: 3vmin;
+	color: white;
+	background-color: rgb(19, 35, 47);
+	border-radius: 4px;
+	box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+	opacity: 1;
+}
+
+#custom-confirm button {
+	width: 48%;
+	margin: 1%;
+}
+
+.no-scroll {
+	overflow: hidden;
+}
+
+.invisible {
+	display: none
+}
+
+:root {
+	--button-color: rgb(199, 105, 46);
+	--header-color: rgba(101, 82, 73, 0.8);
+	--message-container-color: rgb(101, 82, 73, 0.8);
+	--main-background-color: rgb(202, 165, 146);
+	--input-color: rgba(254, 146, 81, 0.5);
+	--login-color: rgb(224, 224, 232);
+	--like-color: rgb(255, 188, 145);
+	--comment-color: rgb(245, 253, 255);
+	--highlighted-comment-color: rgb(255, 98, 1);
+}
+
+#header-buttons-div button {
+	margin: 0.5vmin;
+}
+
+main {
+	margin-top: 6vh;
+	margin-bottom: 3vh;
+}
+
+#website-title {
+	font-size: 3vh;
+}
+
+#message-container {
+	position: fixed;
+	top: 12vh;
+	right: 0;
+	background-color: var(--header-color);
+	padding: 1vh;
+	text-align: right;
+}
+
+#form-container {
+	position: fixed;
+	top: 6vh;
+	right: 0;
+	height: 4vh;
+	padding: 1vh;
+	background-color: var(--header-color);
+}
+
+#form-container input {
+	margin-right: 1vmin;
+}
+
+#form-container button {
+	margin-right: 1vmin;
+}
+
+#gallery {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.photo-container {
+	width: 50%;
+	margin: 3vmin;
+	padding: 4vmin;
+	background-color: var(--header-color);
+	border-radius: 4px;
+	box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
+}
+
+.photo {
+	width: 100%;
+}
+
+.like-comment {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	padding: 1vmin;
+}
+
+.like-symbol {
+	color: var(--like-color);
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
+}
+
+.like-symbol:hover {
+	position: relative;
+	color: red;
+}
+
+.like {
+	margin-right: 2vmin;
+	color: var(--like-color);;
+}
+
+.comment-container {
+	display: flex;
+}
+
+.comment-symbol {
+	color: var(--comment-color);
+}
+
+.comment {
+	color: var(--comment-color);
+}
+
+.delete-comment-button {
+	margin-left: 1vh;
+	margin-top: -1vh;
+	padding: 0;
+	padding-left: 0.5vh;
+	padding-right: 0.5vh;
+}
+
+.login-div {
+	font-weight: bold;
+	margin-right: 1vmin;
+	color: var(--login-color);
+}
+
+.add-comment-input {
+	margin-top: 1vmin;
+}
+
+#uploaded-image {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+#hello {
+	font-size: 3vh;
+}
+
+#content {
+	margin-top: 6vh;
+	margin-bottom: 3vh;
+	padding: 1vh;
+}
+
+.custom-file-upload {
+	height: 4vh;
+	padding: 1vh;
+	border: 0;
+	border-radius: 1px;
+	font-size: 2vh;
+	color: #ffffff;
+	background-color: var(--button-color);
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;	height: 4vh;
+	padding: 1vh;
+	border: 0;
+	border-radius: 1px;
+	font-size: 2vh;
+	color: #ffffff;
+	background-color: var(--button-color);
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
+}
+
+.custom-file-upload:hover {
+	position: relative;
+	top: 1px;
+	left: 1px;
+	background-color: var(--photo-hover-color);
+	cursor: pointer;
+}
+
+#photo-buttons input {
+	background-color: var(--header-color);
+}
+
+#photo-section {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+#container {
+	position: relative;
+	overflow: hidden;
+	width: 80vmin;
+	height: 60vmin;
+	margin: 1vmin;
+}
+
+#video {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	text-align: center;
+}
+
+#video-error {
+	text-align: center;
+}
+
+#uploaded-image {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+#message-container {
+	margin: 1vmin;
+}
+
+#change-container {
+	display: flex;
+	justify-content: center;
+	background-color: var(--header-color);
+}
+
+#stickers-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#stickers-container button {
+	height: 6vh;
+	font-size: 4vh;
+	vertical-align: center;
+}
+
+#stickers {
+	height: 20vh;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin: 1vmin;
+	overflow: hidden;
+}
+
+#stickers img {
+	margin-left: 1vw;
+	margin-right: 1vw;
+}
+
+.sticker {
+	height: 20vh;
+	cursor: pointer;
+}
+
+#change-section {
+	display: flex;
+	justify-content: center;
+}
+
+#change-section button {
+	margin: 5px;
+	padding: 0.5vmin;
+}
+
+#change-section input {
+	margin: 5px;
+}
+
+#user-photos {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.user-photo {
+	width: 100%;
+	margin-top: 1%;
+}
+
+.publish-button {
+	width: 49%;
+	margin-right: 2%;
+}
+
+.delete-button {
+	width: 49%;
+}
+
+input[type="file"] {
+	display: none;
+}

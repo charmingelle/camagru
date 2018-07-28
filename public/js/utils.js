@@ -82,12 +82,10 @@ const okHandler = (overlay, modalWindow, okCallback) => {
 	document.body.removeChild(modalWindow);
 	document.body.classList.remove('no-scroll');
 
-	console.log(`okCallback.arguments = ${okCallback.arguments}`);
 	okCallback();
 }
 
 export const customConfirm = (question, okCallback) => {
-	console.log('in customer confirm');
 	if (!document.getElementById('custom-confirm')) {
 		let overlay = document.createElement('div');
 		let modalWindow = document.createElement('div');

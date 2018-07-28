@@ -2,7 +2,7 @@
 
 class Comment {
 	public static function getComments($id) {
-		return DBConnect::sendQuery('SELECT id, login, comment FROM comment WHERE photo_id = :photoId',
+		return DBConnect::sendQuery('SELECT id, comment, photo_id, login FROM comment WHERE photo_id = :photoId',
 									['photoId' => $id])->fetchAll();
 	}
 

@@ -68,12 +68,21 @@ class Photos {
 							['comment' => $comment, 'photoId' => $photoId, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
+	private static function _getCommentCount($id) {
+		return DBConnect::sendQuery('SELECT comments FROM photo WHERE id = :id',
+									['id' => $id])->fetchAll()[0]['comments'];
+	}
+
 	public static function increaseCommentCount($id) {
 		DBConnect::sendQuery('UPDATE photo SET comments = comments + 1 WHERE id = :id',
 							['id' => $id]);
+		return self::_getCommentCount($id);
+	}
 
-		return DBConnect::sendQuery('SELECT comments FROM photo WHERE id = :id',
-									['id' => $id])->fetchAll()[0]['comments'];
+	public static function decreaseCommentCount($id) {
+		DBConnect::sendQuery('UPDATE photo SET comments = comments - 1 WHERE id = :id',
+							['id' => $id]);
+		return self::_getCommentCount($id);
 	}
 	
 	public static function getAuthor($id) {

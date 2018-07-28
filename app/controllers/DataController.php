@@ -59,6 +59,10 @@ class DataController {
 		echo json_encode(Photos::increaseCommentCount(Utils::getBodyFromJson()['id']));
 	}
 
+	public static function decreaseCommentCount() {
+		echo json_encode(Photos::decreaseCommentCount(Utils::getBodyFromJson()['id']));
+	}
+
 	public static function getComments() {
 		echo json_encode(Comment::getComments(Utils::getBodyFromJson()['id']));
 	}
