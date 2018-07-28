@@ -39,20 +39,18 @@ TODO
 + add the ability to delete comments (not mandatory)
 + add redirect to 404 page
 + check why sendQuery doesn't work with limit param in external variable
++ find out what to do for verification email to be sent from local server
++ add decreasing comment count when comment is deleted
++ create CSS color variables
 
-- find out what to do for verification email to be sent from local server
 - check if I can use isset to find out if the user is logged in
 - create account page layout
 - check if I can make corner sticker resizing better
 - check if drag and drop works smoothly (not really now)
-- implement sticker uploading (not necessary)
 - make sure that you verify all data received from client (before sending and when server receives it)
 - should I incrypt the password before sending it?
 - fix logout issue
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
-- getUserMedia is insecure
 - add sharing image on social networks
-- add decreasing comment count when comment is deleted
-- create CSS color variables
