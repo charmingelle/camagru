@@ -41,6 +41,7 @@ const renderSigninForm = () => {
 	passwordInput.type = 'password';
 	passwordInput.value = '';
 	submitButton.innerHTML = 'SIGN IN';
+	submitButton.classList.add('green-button');
 	submitButton.addEventListener('click', () => signinFormHandler(loginInput.value, passwordInput.value));
 	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
 	passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
@@ -87,6 +88,7 @@ const renderSignupForm = () => {
 	passwordInput.type = 'password';
 	passwordInput.value = '';
 	submitButton.innerHTML = 'SIGN UP';
+	submitButton.classList.add('green-button');
 	submitButton.addEventListener('click', () => signupFormHandler(emailInput, loginInput, passwordInput));
 	emailInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
 	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
@@ -118,6 +120,7 @@ const renderResetPasswordForm = () => {
 	emailInput.type = 'text';
 	emailInput.value = '';
 	submitButton.innerHTML = 'GET RESET PASSWORD LINK';
+	submitButton.classList.add('green-button');
 	submitButton.addEventListener('click', () => resetPasswordFormHandler(emailInput));
 	emailInput.addEventListener('keypress', (event) => enterPressHandler(event, resetPasswordFormHandler, emailInput));
 	removeAllChildren(formContainer);
