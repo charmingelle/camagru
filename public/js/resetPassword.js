@@ -1,6 +1,6 @@
 import { enterPressHandler, renderMessageContainer, printError } from '/js/utils.js';
 
-let messageContainer = document.getElementById('message-container');
+let messageContainer = document.getElementById('reset-password-message-container');
 let passwordContainer = document.getElementById('reset-password-password');
 
 const resetPasswordHandler = () => {

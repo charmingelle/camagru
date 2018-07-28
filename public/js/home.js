@@ -4,7 +4,7 @@ let isSignedIn = false;
 let gallery = document.getElementById('gallery');
 let formContainer = document.getElementById('form-container');
 let headerButtonsDiv = document.getElementById('header-buttons-div');
-let messageContainer = document.getElementById('message-container');
+let messageContainer = document.getElementById('home-message-container');
 let lastPhotoId = 0;
 let isLoading = false;
 
