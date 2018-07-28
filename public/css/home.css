@@ -3,26 +3,30 @@
 }
 
 main {
-	margin-top: 5vmin;
-	margin-bottom: 5vmin;
+	margin-top: 6vh;
+	margin-bottom: 3vh;
 }
 
 #website-title {
-	margin: 1vmin;
+	font-size: 3vh;
 }
 
 #message-container {
-	margin: 1vmin;
+	position: fixed;
+	top: 12vh;
+	right: 0;
+	background-color: var(--header-color);
+	padding: 1vh;
 	text-align: right;
 }
 
 #form-container {
 	position: fixed;
-	top: 5vmin;
+	top: 6vh;
 	right: 0;
-	padding: 1vmin;
+	height: 4vh;
+	padding: 1vh;
 	background-color: var(--header-color);
-	border: 1px solid white;
 }
 
 #form-container input {
@@ -43,16 +47,12 @@ main {
 	width: 50%;
 	margin: 3vmin;
 	padding: 4vmin;
-	background-color: var(--button-color);
+	background-color: var(--header-color);
 	border-radius: 4px;
 	box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
 	-webkit-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-    -webkit-appearance: none;
-}
-
-.photo-container:hover {
-	background-color: var(--photo-hover-color);
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
 }
 
 .photo {
@@ -68,12 +68,14 @@ main {
 
 .like-symbol {
 	color: var(--like-color);
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
 }
 
 .like-symbol:hover {
 	position: relative;
-	top: 1px;
-	left: 1px;
+	color: red;
 }
 
 .like {
@@ -94,10 +96,11 @@ main {
 }
 
 .delete-comment-button {
-	margin-left: 1vmin;
+	margin-left: 1vh;
+	margin-top: -1vh;
 	padding: 0;
-	padding-left: 0.5vmin;
-	padding-right: 0.5vmin;
+	padding-left: 0.5vh;
+	padding-right: 0.5vh;
 }
 
 .login-div {

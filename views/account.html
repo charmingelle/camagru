@@ -10,7 +10,9 @@
 		<header>
 			<div id='hello'></div>
 			<div id='photo-buttons'>
-				<input type="file" id='upload' accept='.jpg, .jpeg, .png'>
+				<label for='file-upload' class='custom-file-upload'>UPLOAD A FILE</label>
+				<input id='file-upload' id='upload' accept='.jpg, .jpeg, .png' type='file'/>
+				<!-- <input type="file" id='upload' accept='.jpg, .jpeg, .png'> -->
 				<button id='capture-button' disabled>TAKE A PICTURE</button>
 				<button id='clear-button'>CLEAR</button>
 			</div>
