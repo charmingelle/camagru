@@ -102,6 +102,7 @@ const renderPhoto = (sources) => {
 			let publishButton = document.createElement('button');
 			let twitterDiv = document.createElement('div');
 			
+			imageContainer.classList.add('user-photo-container');
 			image.src = source['url'];
 			image.classList.add('user-photo');
 			image.alt = 'Photo';

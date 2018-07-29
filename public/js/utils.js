@@ -101,6 +101,7 @@ export const customConfirm = (question, okCallback) => {
 		cancelButton.innerHTML = 'Cancel';
 		cancelButton.addEventListener('click', cancelHandler.bind(this, overlay, modalWindow));
 		okButton.innerHTML = 'OK';
+		okButton.classList.add('ok-button');
 		okButton.addEventListener('click', okHandler.bind(this, overlay, modalWindow, okCallback));
 		modalWindow.append(questionContainer, cancelButton, okButton);
 		document.body.append(overlay);
