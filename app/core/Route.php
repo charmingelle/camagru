@@ -68,7 +68,7 @@ class Route {
 	}
 
 	public static function redirect($uri) {
-		header('Location: http://' . $_SERVER['HTTP_HOST'] . $uri);
+		header('Location: ' . $uri);
 	}
 
 	public static function notFound() {

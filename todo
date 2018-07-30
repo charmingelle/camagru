@@ -42,15 +42,15 @@ TODO
 + find out what to do for verification email to be sent from local server
 + add decreasing comment count when comment is deleted
 + create CSS color variables
++ check if I can use isset to find out if the user is logged in
++ make sure that you verify all data received from client (before sending and when server receives it)
++ should I encrypt the password before sending it?
++ fix logout issue
 
-- check if I can use isset to find out if the user is logged in
 - create account page layout
 - check if I can make corner sticker resizing better
 - check if drag and drop works smoothly (not really now)
-- make sure that you verify all data received from client (before sending and when server receives it)
-- should I incrypt the password before sending it?
-- fix logout issue
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
-- add sharing image on social networks
+- add the abiliy to write on photo

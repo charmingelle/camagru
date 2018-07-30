@@ -75,8 +75,6 @@ button:focus {
 input {
 	padding: 0.5vmin;
 	font-size: 2vh;
-	/* color: #afafaf; */
-	/* color: #b2b2b2; */
 	color: #717171;
 	border: 0;
 	border-radius: 4px;
@@ -102,7 +100,6 @@ input:focus {
 .green-button {
 	color: #5f9020;
 	border: 1px solid #5f9020;
-	/* border-radius: 6px; */
 }
 
 .green-button:hover {
@@ -151,7 +148,6 @@ footer {
 #custom-confirm button {
 	width: 48%;
 	margin: 1%;
-	/* border-radius: 6px; */
 }
 
 .ok-button {
@@ -185,7 +181,7 @@ footer {
 	top: 12vh;
 	right: 0;
 	color: #ffffff;
-	background-color: ##13232f;
+	background-color: #12242f;
 	padding: 1vh;
 	text-align: right;
 }
@@ -307,7 +303,7 @@ footer {
 }
 
 #content {
-	margin-top: 6vh;
+	margin-top: 8vh;
 	margin-bottom: 5vh;
 }
 
@@ -460,4 +456,19 @@ footer {
 
 input[type="file"] {
 	display: none;
+}
+
+#signature {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 1px solid black;
+}
+
+#sign-button:disabled {
+	color: #b2b2b2;
+}
+
+.can-draw {
+	color: #5f9020;
 }

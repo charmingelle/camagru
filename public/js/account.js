@@ -21,6 +21,7 @@ let buttonBlock = document.getElementById('photo-buttons');
 let upload = document.getElementById('file-upload');
 let captureButton = document.getElementById('capture-button');
 let clearButton = document.getElementById('clear-button');
+let signButton = document.getElementById('sign-button');
 let changeEmailButton = document.getElementById('change-email-button');
 let changeLoginButton = document.getElementById('change-login-button');
 let changePasswordButton = document.getElementById('change-password-button');
@@ -30,6 +31,10 @@ let email = document.getElementById('email');
 let login = document.getElementById('login');
 let password = document.getElementById('password');
 let notification = document.getElementById('notification');
+let drawing = true;
+let signature = document.createElement('canvas');
+let ctx = signature.getContext("2d");
+let color = '#000000';
 
 const getCoords = (elem) => {
 	let box = elem.getBoundingClientRect();
@@ -141,7 +146,8 @@ const renderCamera = () => {
 			video.autoplay = 'true';
 			video.srcObject = stream;
 			container.insertBefore(video, container.firstChild);
-			renderCaptureButton();
+			renderButton(captureButton);
+			renderButton(signButton);
 		})
 		.catch((error) => {
 			if (!document.getElementById('video-error')) {
@@ -150,7 +156,8 @@ const renderCamera = () => {
 				errorMessage.innerHTML = 'Your camera cannot be used. Please upload a photo.';
 				errorMessage.id = 'video-error';
 				container.insertBefore(errorMessage, container.firstChild);
-				renderCaptureButton();
+				renderButton(captureButton);
+				renderButton(signButton);
 			}
 		});
 	}
@@ -164,6 +171,7 @@ const savePhoto = () => {
 	canvas.height = parseInt(getComputedStyle(container).height);
 	
 	let layersData = layers.map((layer, id) => {
+		console.log(layer);
 		let style = getComputedStyle(layer);
 		let left = parseInt(style.left);
 		let top = parseInt(style.top);
@@ -172,8 +180,12 @@ const savePhoto = () => {
 		let source = layer.src;
 
 		canvas.getContext('2d').drawImage(layer, left, top, width, height);
-		if (id === 0) {
+		if (layer.id === 'video') {
 			source = canvas.toDataURL();
+		} else if (layer.id === 'signature') {
+			// console.log('signature found');
+			source = signature.toDataURL();
+			console.log(source);
 		}
 		return {
 			'source': source,
@@ -443,11 +455,11 @@ const canSavePhoto = () => {
 	return container.children.length > 1 && !document.getElementById('video-error');
 }
 
-const renderCaptureButton = () => {
+const renderButton = (button) => {
 	if (canSavePhoto()) {
-		captureButton.disabled = ''
+		button.disabled = ''
 	} else {
-		captureButton.disabled = 'disabled';
+		button.disabled = 'disabled';
 	}
 }
 
@@ -489,7 +501,8 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 				} else {
 					document.body.removeChild(toMove);
 				}
-				renderCaptureButton();
+				renderButton(captureButton);
+				renderButton(signButton);
 			}
 		}
 	}
@@ -540,7 +553,8 @@ const clearPhoto = () => {
 	stickedStickers.forEach((elem) => {
 		container.removeChild(elem);
 	});
-	renderCaptureButton();
+	renderButton(captureButton);
+	renderButton(signButton);
 }
 
 const uploadPhoto = () => {
@@ -563,7 +577,8 @@ const uploadPhoto = () => {
 	uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
 	container.insertBefore(uploadedImage, container.firstChild);
 	renderBackToCameraButton();
-	renderCaptureButton();
+	renderButton(captureButton);
+	renderButton(signButton);
 }
 
 const backToCameraHandler = () => {
@@ -682,6 +697,34 @@ const renderNotification = () => {
 	}, printError);
 }
 
+const renderCanvas = () => {
+	if (drawing) {
+		signButton.classList.toggle('can-draw');
+		if (document.getElementById('signature') === null) {
+			container.append(signature);
+		}
+		document.getElementById('palette').addEventListener('input', (event) => {
+			color = event.target.value;
+		});
+		signature.onmousedown = () => {
+			signature.onmousemove = (event) => {
+				let shift = vmin(0.5);
+
+				ctx.fillRect(event.offsetX - shift, event.offsetY - shift, 2 * shift, 2 * shift);
+				ctx.fillStyle = color;
+				ctx.fill();
+			}
+			signature.onmouseup = (event) => {
+				signature.onmousemove = null;
+			}
+		}
+	} else {
+		signButton.classList.toggle('can-draw');	
+		signature.onmousedown = null;
+	}
+	drawing === true ? drawing = false : drawing = true;
+}
+
 const render = () => {
 	renderHello();
 	renderCamera();
@@ -691,6 +734,7 @@ const render = () => {
 	captureButton.addEventListener('click', savePhoto);
 	renderMessageContainer(messageContainer);
 	clearButton.addEventListener('click', clearPhoto);
+	signButton.addEventListener('click', renderCanvas);
 	email.addEventListener('keypress', (event) => enterPressHandler(event, changeEmailHandler));
 	changeEmailButton.addEventListener('click', changeEmailHandler);
 	login.addEventListener('keypress', (event) => enterPressHandler(event, changeLoginHandler));
@@ -698,6 +742,9 @@ const render = () => {
 	password.addEventListener('keypress', (event) => enterPressHandler(event, changePasswordHandler));
 	changePasswordButton.addEventListener('click', changePasswordHandler);
 	renderNotification();
+	signature.id = 'signature';
+	signature.width = vmin(80);
+	signature.height = vmin(60);
 }
 
 render();
