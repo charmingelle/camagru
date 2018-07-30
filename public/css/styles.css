@@ -458,7 +458,7 @@ input[type="file"] {
 	display: none;
 }
 
-#signature {
+.signature {
 	position: absolute;
 	top: 0;
 	left: 0;

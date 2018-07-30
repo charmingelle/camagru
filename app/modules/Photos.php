@@ -13,13 +13,28 @@ class Photos {
 	}
 
 	public static function savePhoto($layers) {
+		// $url = self::getUrl();
+		// $photo = imagecreatefromstring(base64_decode(explode(';base64,', $layers[0]['source'])[1]));
+
+		// array_shift($layers);
+		// foreach ($layers as $layer) {
+		// 	// if ($layer['type'] == 'file') {
+		// 		$sticker = imagecreatefromstring(file_get_contents(getRoot() . 'public/' . parse_url($layer['source'])['path']));
+		// 	// } else if ($layer['type'] == 'string') {
+		// 		// $sticker = imagecreatefromstring(base64_decode(explode(';base64,', $layer['source'])[1]));
+		// 	// }
+
+		// 	imagecopyresampled($photo, $sticker, $layer['left'], $layer['top'], 0, 0, $layer['width'], $layer['height'], imagesx($sticker), imagesy($sticker));
+		// }
+		// imagejpeg($photo, getRoot() . 'public/' . $url, 100);
+		// DBConnect::sendQuery('INSERT INTO photo(url, likes, comments, login) VALUES (:url, 0, 0, :login)',
+		// 					['url' => $url, 'login' => $_SESSION['auth-data']['login']]);
+
 		$url = self::getUrl();
 		$photo = imagecreatefromstring(base64_decode(explode(';base64,', $layers[0]['source'])[1]));
-
 		array_shift($layers);
 		foreach ($layers as $layer) {
 			$sticker = imagecreatefromstring(file_get_contents(getRoot() . 'public/' . parse_url($layer['source'])['path']));
-
 			imagecopyresampled($photo, $sticker, $layer['left'], $layer['top'], 0, 0, $layer['width'], $layer['height'], imagesx($sticker), imagesy($sticker));
 		}
 		imagejpeg($photo, getRoot() . 'public/' . $url, 100);

@@ -32,8 +32,8 @@ let login = document.getElementById('login');
 let password = document.getElementById('password');
 let notification = document.getElementById('notification');
 let drawing = true;
-let signature = document.createElement('canvas');
-let ctx = signature.getContext("2d");
+// let signature = document.createElement('canvas');
+// let ctx = signature.getContext("2d");
 let color = '#000000';
 
 const getCoords = (elem) => {
@@ -163,6 +163,52 @@ const renderCamera = () => {
 	}
 }
 
+// const savePhoto = () => {
+// 	let canvas = document.createElement('canvas');
+// 	let layers =  Array.from(container.children);
+	
+// 	canvas.width = parseInt(getComputedStyle(container).width);
+// 	canvas.height = parseInt(getComputedStyle(container).height);
+	
+// 	let layersData = layers.map((layer, id) => {
+// 		let style = getComputedStyle(layer);
+// 		let left = parseInt(style.left);
+// 		let top = parseInt(style.top);
+// 		let width = parseInt(style.width);
+// 		let height = parseInt(style.height);
+// 		let source = layer.src;
+// 		let type = 'file';
+
+// 		canvas.getContext('2d').drawImage(layer, left, top, width, height);
+// 		if (layer.id === 'video') {
+// 			source = canvas.toDataURL();
+// 			type = 'string';
+// 		} else if (layer.classList.contains('signature')) {
+// 			source = layer.toDataURL();
+// 			type = 'string';
+// 		}
+// 		console.log(`source = ${source}, type = ${type}, left = ${left}, top = ${top}, width = ${width}, height = ${height}`);
+// 		return {
+// 			'source': source,
+// 			'type': type,
+// 			'left': left,
+// 			'top': top,
+// 			'width': width,
+// 			'height': height
+// 		};
+// 	});
+// 	fetch('/savePhoto', {
+// 		method: 'POST',
+// 		credentials: 'include',
+// 		body: JSON.stringify({
+// 			'layers': layersData
+// 		})
+// 	})
+// 	// .then(response => response.json())
+// 	// .then(data => console.log(data));
+// 	.then(renderPhotos, printError);
+// }
+
 const savePhoto = () => {
 	let canvas = document.createElement('canvas');
 	let layers =  Array.from(container.children);
@@ -182,11 +228,11 @@ const savePhoto = () => {
 		canvas.getContext('2d').drawImage(layer, left, top, width, height);
 		if (layer.id === 'video') {
 			source = canvas.toDataURL();
-		} else if (layer.id === 'signature') {
-			// console.log('signature found');
-			source = signature.toDataURL();
-			console.log(source);
 		}
+		// else if (layer.id === 'signature') {
+		// 	source = signature.toDataURL();
+		// }
+		console.log(source);
 		return {
 			'source': source,
 			'left': left,
@@ -698,11 +744,17 @@ const renderNotification = () => {
 }
 
 const renderCanvas = () => {
+	let signature;
+
 	if (drawing) {
+		signature = document.createElement('canvas');
+		let ctx = signature.getContext("2d");
+		
+		signature.classList.add('signature');
+		signature.width = vmin(80);
+		signature.height = vmin(60);
 		signButton.classList.toggle('can-draw');
-		if (document.getElementById('signature') === null) {
-			container.append(signature);
-		}
+		container.append(signature);
 		document.getElementById('palette').addEventListener('input', (event) => {
 			color = event.target.value;
 		});
@@ -719,8 +771,10 @@ const renderCanvas = () => {
 			}
 		}
 	} else {
-		signButton.classList.toggle('can-draw');	
-		signature.onmousedown = null;
+		signButton.classList.toggle('can-draw');
+		Array.from(document.getElementsByClassName('signature')).forEach((elem) => {
+			elem.onmousedown = null;
+		});
 	}
 	drawing === true ? drawing = false : drawing = true;
 }
@@ -742,9 +796,6 @@ const render = () => {
 	password.addEventListener('keypress', (event) => enterPressHandler(event, changePasswordHandler));
 	changePasswordButton.addEventListener('click', changePasswordHandler);
 	renderNotification();
-	signature.id = 'signature';
-	signature.width = vmin(80);
-	signature.height = vmin(60);
 }
 
 render();
