@@ -7,7 +7,7 @@ class Comment {
 	}
 
 	public static function deleteComment($id) {
-		DBConnect::sendQuery('DELETE FROM comment WHERE id = :id',
-							['id' => $id]);
+		DBConnect::sendQuery('DELETE FROM comment WHERE id = :id AND login = :login',
+							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 }

@@ -46,6 +46,10 @@ TODO
 + make sure that you verify all data received from client (before sending and when server receives it)
 + should I encrypt the password before sending it?
 + fix logout issue
++ add the abiliy to write on photo
++ make sure that the user can delete his own comments,
+    hide, publish and delete his own photos
+    change his own email, login, password, notification status
 
 - create account page layout
 - check if I can make corner sticker resizing better
@@ -53,4 +57,3 @@ TODO
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
-- add the abiliy to write on photo

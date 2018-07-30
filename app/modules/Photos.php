@@ -37,8 +37,8 @@ class Photos {
 	}
 
 	public static function deleteUserPhoto($id) {
-		$url = DBConnect::sendQuery('SELECT url FROM photo WHERE id = :id',
-							['id' => $id])->fetchAll();
+		$url = DBConnect::sendQuery('SELECT url FROM photo WHERE id = :id AND login = :login',
+							['id' => $id, 'login' => $_SESSION['auth-data']['login']])->fetchAll();
 
 		if (!empty($url)) {
 			DBConnect::sendQuery('DELETE FROM photo WHERE id = :id',
@@ -53,8 +53,8 @@ class Photos {
 	}
 	
 	public static function publish($id) {
-		DBConnect::sendQuery('UPDATE photo SET private = NOT private WHERE id = :id',
-							['id' => $id]);
+		DBConnect::sendQuery('UPDATE photo SET private = NOT private WHERE id = :id AND login = :login',
+							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
 	public static function likePicture($id) {
