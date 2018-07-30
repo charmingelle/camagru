@@ -22,6 +22,9 @@ let upload = document.getElementById('file-upload');
 let captureButton = document.getElementById('capture-button');
 let clearButton = document.getElementById('clear-button');
 let signButton = document.getElementById('sign-button');
+let palette = document.getElementById('palette');
+let drawing = true;
+let color = '#000000';
 let changeEmailButton = document.getElementById('change-email-button');
 let changeLoginButton = document.getElementById('change-login-button');
 let changePasswordButton = document.getElementById('change-password-button');
@@ -31,10 +34,6 @@ let email = document.getElementById('email');
 let login = document.getElementById('login');
 let password = document.getElementById('password');
 let notification = document.getElementById('notification');
-let drawing = true;
-// let signature = document.createElement('canvas');
-// let ctx = signature.getContext("2d");
-let color = '#000000';
 
 const getCoords = (elem) => {
 	let box = elem.getBoundingClientRect();
@@ -163,52 +162,6 @@ const renderCamera = () => {
 	}
 }
 
-// const savePhoto = () => {
-// 	let canvas = document.createElement('canvas');
-// 	let layers =  Array.from(container.children);
-	
-// 	canvas.width = parseInt(getComputedStyle(container).width);
-// 	canvas.height = parseInt(getComputedStyle(container).height);
-	
-// 	let layersData = layers.map((layer, id) => {
-// 		let style = getComputedStyle(layer);
-// 		let left = parseInt(style.left);
-// 		let top = parseInt(style.top);
-// 		let width = parseInt(style.width);
-// 		let height = parseInt(style.height);
-// 		let source = layer.src;
-// 		let type = 'file';
-
-// 		canvas.getContext('2d').drawImage(layer, left, top, width, height);
-// 		if (layer.id === 'video') {
-// 			source = canvas.toDataURL();
-// 			type = 'string';
-// 		} else if (layer.classList.contains('signature')) {
-// 			source = layer.toDataURL();
-// 			type = 'string';
-// 		}
-// 		console.log(`source = ${source}, type = ${type}, left = ${left}, top = ${top}, width = ${width}, height = ${height}`);
-// 		return {
-// 			'source': source,
-// 			'type': type,
-// 			'left': left,
-// 			'top': top,
-// 			'width': width,
-// 			'height': height
-// 		};
-// 	});
-// 	fetch('/savePhoto', {
-// 		method: 'POST',
-// 		credentials: 'include',
-// 		body: JSON.stringify({
-// 			'layers': layersData
-// 		})
-// 	})
-// 	// .then(response => response.json())
-// 	// .then(data => console.log(data));
-// 	.then(renderPhotos, printError);
-// }
-
 const savePhoto = () => {
 	let canvas = document.createElement('canvas');
 	let layers =  Array.from(container.children);
@@ -217,24 +170,25 @@ const savePhoto = () => {
 	canvas.height = parseInt(getComputedStyle(container).height);
 	
 	let layersData = layers.map((layer, id) => {
-		console.log(layer);
 		let style = getComputedStyle(layer);
 		let left = parseInt(style.left);
 		let top = parseInt(style.top);
 		let width = parseInt(style.width);
 		let height = parseInt(style.height);
 		let source = layer.src;
+		let type = 'file';
 
 		canvas.getContext('2d').drawImage(layer, left, top, width, height);
-		if (layer.id === 'video') {
+		if (id === 0) {
 			source = canvas.toDataURL();
+			type = 'string';
+		} else if (layer.classList.contains('signature')) {
+			source = layer.toDataURL();
+			type = 'string';
 		}
-		// else if (layer.id === 'signature') {
-		// 	source = signature.toDataURL();
-		// }
-		console.log(source);
 		return {
 			'source': source,
+			'type': type,
 			'left': left,
 			'top': top,
 			'width': width,
@@ -744,24 +698,18 @@ const renderNotification = () => {
 }
 
 const renderCanvas = () => {
-	let signature;
-
 	if (drawing) {
-		signature = document.createElement('canvas');
+		let signature = document.createElement('canvas');
 		let ctx = signature.getContext("2d");
 		
-		signature.classList.add('signature');
 		signature.width = vmin(80);
 		signature.height = vmin(60);
+		signature.classList.add('signature');
 		signButton.classList.toggle('can-draw');
-		container.append(signature);
-		document.getElementById('palette').addEventListener('input', (event) => {
-			color = event.target.value;
-		});
 		signature.onmousedown = () => {
 			signature.onmousemove = (event) => {
 				let shift = vmin(0.5);
-
+				
 				ctx.fillRect(event.offsetX - shift, event.offsetY - shift, 2 * shift, 2 * shift);
 				ctx.fillStyle = color;
 				ctx.fill();
@@ -770,6 +718,7 @@ const renderCanvas = () => {
 				signature.onmousemove = null;
 			}
 		}
+		container.append(signature);
 	} else {
 		signButton.classList.toggle('can-draw');
 		Array.from(document.getElementsByClassName('signature')).forEach((elem) => {
@@ -789,6 +738,7 @@ const render = () => {
 	renderMessageContainer(messageContainer);
 	clearButton.addEventListener('click', clearPhoto);
 	signButton.addEventListener('click', renderCanvas);
+	palette.addEventListener('input', event => color = event.target.value);
 	email.addEventListener('keypress', (event) => enterPressHandler(event, changeEmailHandler));
 	changeEmailButton.addEventListener('click', changeEmailHandler);
 	login.addEventListener('keypress', (event) => enterPressHandler(event, changeLoginHandler));
