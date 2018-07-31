@@ -116,7 +116,7 @@ const renderPhoto = (sources) => {
 			twitterDiv.innerHTML = '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
 			renderPublishButton(publishButton, source['id']);
 			publishButton.classList.add('publish-button');
-			imageContainer.append(image, publishButton, deleteButton);
+			imageContainer.append(image, deleteButton, publishButton);
 			return imageContainer;
 		});
 	
@@ -709,10 +709,22 @@ const renderCanvas = () => {
 		signature.onmousedown = () => {
 			signature.onmousemove = (event) => {
 				let shift = vmin(0.5);
-				
-				ctx.fillRect(event.offsetX - shift, event.offsetY - shift, 2 * shift, 2 * shift);
+
+				// var centerX = canvas.width / 2;
+				// var centerY = canvas.height / 2;
+				// var radius = 70;
+		  
+				ctx.beginPath();
+				ctx.arc(event.offsetX - shift, event.offsetY - shift, 2 * shift, 0, 2 * Math.PI, false);
 				ctx.fillStyle = color;
 				ctx.fill();
+				// ctx.lineWidth = 5;
+				// ctx.strokeStyle = '#003300';
+				// ctx.stroke();
+				
+				// ctx.fillCircle(event.offsetX - shift, event.offsetY - shift, 2 * shift, 2 * shift);
+				// ctx.fillStyle = color;
+				// ctx.fill();
 			}
 			signature.onmouseup = (event) => {
 				signature.onmousemove = null;

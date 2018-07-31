@@ -8,6 +8,12 @@ let messageContainer = document.getElementById('home-message-container');
 let lastPhotoId = 0;
 let isLoading = false;
 
+document.body.addEventListener('click', () => {
+	if (messageContainer.innerHTML !== '') {
+		messageContainer.classList.add('invisible');
+	}
+});
+
 const signinFormHandler = (loginInput, passwordInput) => {
 	if (loginInput.value !== '' && passwordInput.value != '') {
 		fetch('/signin', {
