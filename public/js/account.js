@@ -580,6 +580,7 @@ const uploadPhoto = () => {
 	uploadedImage.id = 'uploaded-image';
 	uploadedImage.classList.add('sticker-base');
 	uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
+	uploadedImage.classList.add('img-fluid');
 	container.insertBefore(uploadedImage, container.firstChild);
 	renderBackToCameraButton();
 	renderButton(captureButton);
