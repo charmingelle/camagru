@@ -46,8 +46,7 @@ const renderSigninForm = () => {
 	passwordInput.placeholder = 'Password';
 	passwordInput.type = 'password';
 	passwordInput.value = '';
-	submitButton.innerHTML = 'SIGN IN';
-	submitButton.classList.add('green-button');
+	submitButton.innerHTML = 'Sign in';
 	submitButton.addEventListener('click', () => signinFormHandler(loginInput.value, passwordInput.value));
 	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
 	passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
@@ -93,8 +92,7 @@ const renderSignupForm = () => {
 	passwordInput.placeholder = 'Password';
 	passwordInput.type = 'password';
 	passwordInput.value = '';
-	submitButton.innerHTML = 'SIGN UP';
-	submitButton.classList.add('green-button');
+	submitButton.innerHTML = 'Sign up';
 	submitButton.addEventListener('click', () => signupFormHandler(emailInput, loginInput, passwordInput));
 	emailInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
 	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
@@ -125,8 +123,7 @@ const renderResetPasswordForm = () => {
 	emailInput.placeholder = 'Email';
 	emailInput.type = 'text';
 	emailInput.value = '';
-	submitButton.innerHTML = 'GET RESET PASSWORD LINK';
-	submitButton.classList.add('green-button');
+	submitButton.innerHTML = 'Get reset password link';
 	submitButton.addEventListener('click', () => resetPasswordFormHandler(emailInput));
 	emailInput.addEventListener('keypress', (event) => enterPressHandler(event, resetPasswordFormHandler, emailInput));
 	removeAllChildren(formContainer);
@@ -154,10 +151,10 @@ const renderSignedInHeader = () => {
 	
 	myAccountButton.id = 'my-account-button';
 	myAccountButton.href = '/account';
-	myAccountButton.innerHTML = 'MY ACOUNT';
+	myAccountButton.innerHTML = 'My account';
 	signoutButton.id = 'signout-button';
 	signoutButton.href = '/signout';
-	signoutButton.innerHTML = 'SIGN OUT';
+	signoutButton.innerHTML = 'Sign out';
 	headerButtonsDiv.append(myAccountButton, signoutButton);
 }
 
@@ -167,13 +164,13 @@ const renderNotSignedInHeader = () => {
 	let resetPasswordButton = document.createElement('button');
 	
 	signinButton.id = 'signin-button';
-	signinButton.innerHTML = 'SIGN IN';
+	signinButton.innerHTML = 'Sign in';
 	signinButton.addEventListener('click', () => renderFormContainer('signin-form'));
 	signupButton.id = 'signup-button';
-	signupButton.innerHTML = 'SIGN UP';
+	signupButton.innerHTML = 'Sign up';
 	signupButton.addEventListener('click', () => renderFormContainer('signup-form'));
 	resetPasswordButton.id = 'reset-password-button';
-	resetPasswordButton.innerHTML = 'FORGOT PASSWORD?';
+	resetPasswordButton.innerHTML = 'Forgot password?';
 	resetPasswordButton.addEventListener('click', () => renderFormContainer('reset-password-form'));
 	headerButtonsDiv.append(signinButton, signupButton, resetPasswordButton);
 }
@@ -361,7 +358,7 @@ const renderLikeEl = (source) => {
 const renderLikeIcon = (source, likeEl) => {
 	let likeIcon = document.createElement('div');
 	
-	likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
+	likeIcon.innerHTML = '<i class="far fa-heart"></i>';
 	likeIcon.classList.add('like-symbol');
 	if (isSignedIn) {
 		likeIcon.addEventListener('click', () => likeIconClickHandler(likeEl, source['id']));
@@ -380,7 +377,7 @@ const renderCommentAmountEl = (source) => {
 const renderCommentAmountIcon = () => {
 	let commentAmountIcon = document.createElement('div');
 	
-	commentAmountIcon.innerHTML = '<i class="fa fa-comment"></i>';
+	commentAmountIcon.innerHTML = '<i class="far fa-comment"></i>';
 	commentAmountIcon.classList.add('comment-symbol');
 	return commentAmountIcon;
 }

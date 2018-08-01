@@ -10,16 +10,16 @@
 		<header>
 			<div id='hello'></div>
 			<div id='photo-buttons'>
-				<label for='file-upload' class='custom-file-upload'>UPLOAD A FILE</label>
+				<label for='file-upload' class='custom-file-upload'>Upload a file</label>
 				<input id='file-upload' id='upload' accept='.jpg, .jpeg, .png' type='file'/>
-				<button id='capture-button' disabled>TAKE A PICTURE</button>
-				<button id='clear-button'>CLEAR</button>
+				<button id='capture-button' disabled>Take a picture</button>
+				<button id='clear-button'>Clear</button>
 				<button id='sign-button' disabled><i class="fas fa-pencil-alt"></i></button>
 				<input id='palette' type='color'>
 			</div>
 			<div>
-				<a id='home-button' href='/'>HOME</a>
-				<a id='signout-button' href='/signout'>SIGN OUT</a>
+				<a id='home-button' href='/'>Home</a>
+				<a id='signout-button' href='/signout'>Sign out</a>
 			</div>
 		</header>
 		<div id='content'>
@@ -28,9 +28,11 @@
 					<div id='container'></div>
 				</div>
 				<div id='stickers-container'>
-					<button id='stickers-back'>&#8678;</button>
+					<div id='stickers-carousel-buttons'>
+						<button id='stickers-back'><i class="fas fa-angle-left"></i></button>
+						<button id='stickers-forward'><i class="fas fa-angle-right"></i></button>
+					</div>
 					<div id='stickers'></div>
-					<button id='stickers-forward'>&#8680;</button>
 				</div>
 			</main>
 			<section id='change-section'>
@@ -38,22 +40,23 @@
 				<div id='change-container'>
 					<div>
 						<input id='email' placeholder='Email' type='text' value=''>
-						<button id='change-email-button'>CHANGE</button>
+						<button id='change-email-button'>Change</button>
 					</div>
 					<div>
 						<input id='login' placeholder='Login' type='text' value=''>
-						<button id='change-login-button'>CHANGE</button>
+						<button id='change-login-button'>Change</button>
 					</div>
 					<div>
 						<input id='password' placeholder='Password' type='password' value=''>
-						<button id='change-password-button'>CHANGE</button>
+						<button id='change-password-button'>Change</button>
 					</div>
-					<button id='notification'></button>
+					<div>
+						<button id='notification'></button>
+					</div>
 				</div>
 			</section>
 			<div id='user-photos'></div>
 		</div>
-		<footer>@ grevenko 2018</footer>
 	</body>
 	<script src='js/account.js' type='module'></script>
 	<script src='/js/utils.js' type='module'></script>

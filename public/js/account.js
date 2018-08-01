@@ -511,13 +511,16 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 const renderSticker = (sources) => {
 	if (sources) {
 		const images = sources.map(source => {
+			let imageDiv = document.createElement('div');
 			let image = document.createElement('img');
 			let drag = false;
 			
+			imageDiv.classList.add('image-div');
 			image.src = source['url'];
 			image.classList.add('sticker');
 			dragAndDropInsideContainer(image, true);
-			return image;
+			imageDiv.append(image);
+			return imageDiv;
 		});
 		stickersContainer.append(...images);
 	}
@@ -666,9 +669,9 @@ const okCallbackForChangeNotification = (action) => {
 	})
 	.then(() => {
 		renderMessageContainer(messageContainer, `Email notifications have been ${action}d for your account`);
-		notification.innerHTML === 'DISABLE NOTIFICATIONS' ?
-			notification.innerHTML = 'ENABLE NOTIFICATIONS' :
-			notification.innerHTML = 'DISABLE NOTIFICATIONS';
+		notification.innerHTML === 'Disable notifications' ?
+			notification.innerHTML = 'Enable notifications' :
+			notification.innerHTML = 'Disable notifications';
 	}, printError);
 }
 
@@ -689,9 +692,9 @@ const renderNotification = () => {
 	.then(data => {
 		// Amazing moment
 		if (data == true) {
-			notification.innerHTML = 'DISABLE EMAIL NOTIFICATIONS';
+			notification.innerHTML = 'Disable notifications';
 		} else {
-			notification.innerHTML = 'ENABLE EMAIL NOTIFICATIONS';
+			notification.innerHTML = 'Enable notifications';
 		}
 		notification.addEventListener('click', changeNotification);
 	}, printError);

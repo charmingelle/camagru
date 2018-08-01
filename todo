@@ -57,3 +57,10 @@ TODO
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
+- add the ability to remove like
+- check what to do with message container position
+- check why comment input doesn't have border
+- probably remove drawing on canvas
+- add scrolling on sticker size
+- make sure that layout is responsive
+- add site logo
