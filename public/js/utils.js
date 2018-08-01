@@ -22,24 +22,36 @@ export const removeAllChildren = (elem) => {
 	}
 }
 
+export const isLeftButton = (event) => {
+	event = event || window.event;
+	if ("buttons" in event) {
+		return event.buttons == 1;
+	}
+	let button = event.which || event.button;
+
+	return button == 1;
+}
+
 export const dragAndDrop = (element, mouseDownHandler, mouseMoveHandler, mouseUpHandler) => {
 	let drag = false;
 	
 	element.onmousedown = (downEvent) => {
-		drag = true;
-		element.ondragstart = () => {
-			return false;
-		};
-		mouseDownHandler(downEvent);
-		document.onmousemove = (moveEvent) => {
-			if (drag) {
-				mouseMoveHandler(moveEvent);
+		if (isLeftButton(downEvent)) {
+			drag = true;
+			element.ondragstart = () => {
+				return false;
+			};
+			mouseDownHandler(downEvent);
+			document.onmousemove = (moveEvent) => {
+				if (drag) {
+					mouseMoveHandler(moveEvent);
+				}
 			}
-		}
-		document.onmouseup = (upEvent) => {
-			if (drag) {
-				drag = false;
-				mouseUpHandler(upEvent);
+			document.onmouseup = (upEvent) => {
+				if (drag) {
+					drag = false;
+					mouseUpHandler(upEvent);
+				}
 			}
 		}
 	}

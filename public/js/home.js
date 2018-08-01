@@ -8,12 +8,6 @@ let messageContainer = document.getElementById('home-message-container');
 let lastPhotoId = 0;
 let isLoading = false;
 
-document.body.addEventListener('click', () => {
-	if (messageContainer.innerHTML !== '') {
-		messageContainer.classList.add('invisible');
-	}
-});
-
 const signinFormHandler = (loginInput, passwordInput) => {
 	if (loginInput.value !== '' && passwordInput.value != '') {
 		fetch('/signin', {
@@ -51,7 +45,7 @@ const renderSigninForm = () => {
 	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
 	passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
 	removeAllChildren(formContainer);
-	formContainer.append(loginInput, passwordInput, submitButton);
+	formContainer.append(loginInput, passwordInput, submitButton, messageContainer);
 }
 
 const signupFormHandler = (emailInput, loginInput, passwordInput) => {
@@ -98,7 +92,7 @@ const renderSignupForm = () => {
 	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
 	passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, signupFormHandler, emailInput, loginInput, passwordInput));
 	removeAllChildren(formContainer);
-	formContainer.append(emailInput, loginInput, passwordInput, submitButton);
+	formContainer.append(emailInput, loginInput, passwordInput, submitButton, messageContainer);
 }
 
 const resetPasswordFormHandler = (emailInput) => {
@@ -127,11 +121,12 @@ const renderResetPasswordForm = () => {
 	submitButton.addEventListener('click', () => resetPasswordFormHandler(emailInput));
 	emailInput.addEventListener('keypress', (event) => enterPressHandler(event, resetPasswordFormHandler, emailInput));
 	removeAllChildren(formContainer);
-	formContainer.append(emailInput, submitButton);
+	formContainer.append(emailInput, submitButton, messageContainer);
 }
 
 const renderFormContainer = (formName) => {
 	removeAllChildren(formContainer);
+	removeAllChildren(messageContainer);
 	if (!formName) {
 		formContainer.classList.add('invisible');
 	} else {

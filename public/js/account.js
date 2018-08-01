@@ -1,4 +1,4 @@
-import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer, printError, customConfirm } from '/js/utils.js';
+import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer, printError, customConfirm, isLeftButton } from '/js/utils.js';
 
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
@@ -467,42 +467,44 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 	let drag = false;
 	
 	element.onmousedown = (downEvent) => {
-		let coords = getCoords(element);
-		let shiftX = downEvent.clientX - coords.left;
-		let shiftY = downEvent.clientY - coords.top;
-		let toMove = element;
-		if (shouldCopy) {
-			toMove = element.cloneNode(true);
-		}
-		drag = true;
-		toMove.ondragstart = () => {
-			return false;
-		};
-		document.body.appendChild(toMove);
-		toMove.style.position = 'absolute';
-		toMove.style.left = downEvent.clientX - shiftX + 'px';
-		toMove.style.top = downEvent.clientY - shiftY + 'px';
-		document.onmousemove = (moveEvent) => {
-			if (drag) {
-				toMove.style.left = moveEvent.clientX - shiftX + 'px';
-				toMove.style.top = moveEvent.clientY - shiftY + 'px';
+		if (isLeftButton(downEvent)) {
+			let coords = getCoords(element);
+			let shiftX = downEvent.clientX - coords.left;
+			let shiftY = downEvent.clientY - coords.top;
+			let toMove = element;
+			if (shouldCopy) {
+				toMove = element.cloneNode(true);
 			}
-		}
-		document.onmouseup = (upEvent) => {
-			if (drag) {
-				drag = false;
-				if (isElementInsideContainer(toMove)) {
-					container.append(toMove);
-					toMove.style.left = upEvent.clientX - containerRect.left - shiftX + 'px';
-					toMove.style.top = upEvent.clientY - containerRect.top - shiftY + 'px';
-					if (shouldCopy) {
-						toMove.onmousemove = moveOrChangeStickerSize;
-					}
-				} else {
-					document.body.removeChild(toMove);
+			drag = true;
+			toMove.ondragstart = () => {
+				return false;
+			};
+			document.body.appendChild(toMove);
+			toMove.style.position = 'absolute';
+			toMove.style.left = downEvent.clientX - shiftX + 'px';
+			toMove.style.top = downEvent.clientY - shiftY + 'px';
+			document.onmousemove = (moveEvent) => {
+				if (drag) {
+					toMove.style.left = moveEvent.clientX - shiftX + 'px';
+					toMove.style.top = moveEvent.clientY - shiftY + 'px';
 				}
-				renderButton(captureButton);
-				renderButton(signButton);
+			}
+			document.onmouseup = (upEvent) => {
+				if (drag) {
+					drag = false;
+					if (isElementInsideContainer(toMove)) {
+						container.append(toMove);
+						toMove.style.left = upEvent.clientX - containerRect.left - shiftX + 'px';
+						toMove.style.top = upEvent.clientY - containerRect.top - shiftY + 'px';
+						if (shouldCopy) {
+							toMove.onmousemove = moveOrChangeStickerSize;
+						}
+					} else {
+						document.body.removeChild(toMove);
+					}
+					renderButton(captureButton);
+					renderButton(signButton);
+				}
 			}
 		}
 	}
@@ -527,11 +529,11 @@ const renderSticker = (sources) => {
 }
 
 const stickersForwardHander = () => {
-	stickersContainer.scrollLeft += vmin(25);
+	stickersContainer.scrollLeft += 300;
 }
 
 const stickerBackHandler = () => {
-	stickersContainer.scrollLeft -= vmin(25);
+	stickersContainer.scrollLeft -= 300;
 }
 
 const renderStickers = () => {

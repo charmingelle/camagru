@@ -48,8 +48,10 @@ TODO
 + fix logout issue
 + add the abiliy to write on photo
 + make sure that the user can delete his own comments,
-    hide, publish and delete his own photos
-    change his own email, login, password, notification status
+	hide, publish and delete his own photos
+	change his own email, login, password, notification status
++ check what to do with message container position
++ add scrolling on sticker size
 
 - create account page layout
 - check if I can make corner sticker resizing better
@@ -58,9 +60,8 @@ TODO
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
 - add the ability to remove like
-- check what to do with message container position
 - check why comment input doesn't have border
 - probably remove drawing on canvas
-- add scrolling on sticker size
 - make sure that layout is responsive
 - add site logo
+- find out why though min width is there, elements go crazy

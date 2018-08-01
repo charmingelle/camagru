@@ -1,7 +1,6 @@
 body {
 	box-sizing: border-box;
-	min-width: 320px;
-	min-height: 320px;
+	min-width: 800px;
 	margin: 0;
 	font-family: open sans;
 	background-color: #fafafa;
@@ -15,6 +14,7 @@ header {
 	position: fixed;
 	top: 0;
 	z-index: 1;
+	min-width: 800px;
 	width: 100%;
 	height: 77px;
 	padding-left: 5px;
@@ -300,15 +300,30 @@ input:focus {
 	height: 100%;
 }
 
+#change-section {
+	min-width: 800px;
+}
+
 #change-container {
 	display: flex;
 	justify-content: center;
 	border: 1px solid #dbdbdb;
 }
 
+#change-section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#change-section input {
+	margin: 5px;
+}
+
 #stickers-container {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	background-color: #ffffff;
 }
 
@@ -320,41 +335,37 @@ input:focus {
 #stickers-container button {
 	margin: 1%;
 	padding: 1%;
+	width: 50px;
+	height: 50px;
 }
 
 #stickers {
-	height: 20vmin;
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
 	align-items: center;
-	margin: 1%;
-	overflow: hidden;
+	width: 800px;
+	overflow-x: auto;
+	overflow-y: hidden;
 }
 
 .image-div {
+	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 20vmin;
-	height: 20vmin;
-	margin-left: 15px;
-	margin-right: 15px;
+	margin-right: 100px;
+	max-width: 200px;
+	max-height: 200px;
+}
+
+.image-div:last-child {
+	margin-right: 0;
 }
 
 .sticker {
-	width: 20vmin;
+	max-width: 200px;
+	max-height: 200px;
 	cursor: pointer;
-}
-
-#change-section {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-
-#change-section input {
-	margin: 5px;
 }
 
 #user-photos {
