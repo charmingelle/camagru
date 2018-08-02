@@ -14,17 +14,12 @@ const DELETE = 'Delete';
 
 let hello = document.getElementById('hello');
 let container = document.getElementById('container');
-let containerRect = container.getBoundingClientRect();
 let stickersContainer = document.getElementById('stickers');
 let photosContainer = document.getElementById('user-photos');
 let buttonBlock = document.getElementById('photo-buttons');
 let upload = document.getElementById('file-upload');
 let captureButton = document.getElementById('capture-button');
 let clearButton = document.getElementById('clear-button');
-let signButton = document.getElementById('sign-button');
-let palette = document.getElementById('palette');
-let drawing = true;
-let color = '#000000';
 let changeEmailButton = document.getElementById('change-email-button');
 let changeLoginButton = document.getElementById('change-login-button');
 let changePasswordButton = document.getElementById('change-password-button');
@@ -103,7 +98,6 @@ const renderPhoto = (sources) => {
 			let image = document.createElement('img');
 			let deleteButton = document.createElement('button');
 			let publishButton = document.createElement('button');
-			let twitterDiv = document.createElement('div');
 			
 			imageContainer.classList.add('user-photo-container');
 			image.src = source['url'];
@@ -112,7 +106,6 @@ const renderPhoto = (sources) => {
 			deleteButton.innerHTML = 'Delete';
 			deleteButton.classList.add('delete-button');
 			deleteButton.addEventListener('click', deletePhoto.bind(this, source['id'], imageContainer));
-			twitterDiv.innerHTML = '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
 			renderPublishButton(publishButton, source['id']);
 			publishButton.classList.add('publish-button');
 			imageContainer.append(image, deleteButton, publishButton);
@@ -145,7 +138,6 @@ const renderCamera = () => {
 			video.srcObject = stream;
 			container.insertBefore(video, container.firstChild);
 			renderButton(captureButton);
-			renderButton(signButton);
 		})
 		.catch((error) => {
 			if (!document.getElementById('video-error')) {
@@ -155,7 +147,6 @@ const renderCamera = () => {
 				errorMessage.id = 'video-error';
 				container.insertBefore(errorMessage, container.firstChild);
 				renderButton(captureButton);
-				renderButton(signButton);
 			}
 		});
 	}
@@ -181,9 +172,6 @@ const savePhoto = () => {
 		if (id === 0) {
 			source = canvas.toDataURL();
 			type = 'string';
-		} else if (layer.classList.contains('signature')) {
-			source = layer.toDataURL();
-			type = 'string';
 		}
 		return {
 			'source': source,
@@ -208,7 +196,7 @@ const stretchLeft = (element) => {
 	dragAndDrop(element,
 		() => {},
 		(moveEvent) => {
-			let diff = parseInt(element.style.left) - moveEvent.clientX + containerRect.left;
+			let diff = parseInt(element.style.left) - moveEvent.clientX + container.getBoundingClientRect().left;
 			let prevLeft = element.getBoundingClientRect().left;
 			let currRight = prevLeft + element.getBoundingClientRect().width;
 			let currLeft = prevLeft - diff;
@@ -238,7 +226,7 @@ const stretchUp = (element) => {
 	dragAndDrop(element,
 		() => {},
 		(moveEvent) => {
-			let diff = parseInt(element.style.top) - moveEvent.clientY + containerRect.top;
+			let diff = parseInt(element.style.top) - moveEvent.clientY + container.getBoundingClientRect().top;
 			let prevTop = element.getBoundingClientRect().top;
 			let currBottom = prevTop + element.getBoundingClientRect().height;
 			let currTop = prevTop - diff;
@@ -269,8 +257,8 @@ const stretchLeftUp = (element) => {
 	dragAndDrop(element,
 		() => {},
 		(moveEvent) => {
-			let diff = (parseInt(element.style.left) - moveEvent.clientX + containerRect.left
-						+ parseInt(element.style.top) - moveEvent.clientY + containerRect.top) / 2;
+			let diff = (parseInt(element.style.left) - moveEvent.clientX + container.getBoundingClientRect().left
+						+ parseInt(element.style.top) - moveEvent.clientY + container.getBoundingClientRect().top) / 2;
 			let prevLeft = element.getBoundingClientRect().left;
 			let prevTop = element.getBoundingClientRect().top;
 			let prevWidth = element.getBoundingClientRect().width;
@@ -300,7 +288,7 @@ const stretchRightUp = (element) => {
 		() => {},
 		(moveEvent) => {
 			let diff = (moveEvent.clientX - element.getBoundingClientRect().right
-						+ parseInt(element.style.top) - moveEvent.clientY + containerRect.top) / 2;
+						+ parseInt(element.style.top) - moveEvent.clientY + container.getBoundingClientRect().top) / 2;
 			let prevTop = element.getBoundingClientRect().top;
 			let currBottom = prevTop + element.getBoundingClientRect().height;
 			let currTop = prevTop - diff;
@@ -324,7 +312,7 @@ const stretchLeftDown = (element) => {
 		() => {},
 		(moveEvent) => {
 			let diff = (moveEvent.clientY - element.getBoundingClientRect().bottom
-						+ parseInt(element.style.left) - moveEvent.clientX + containerRect.left) / 2;
+						+ parseInt(element.style.left) - moveEvent.clientX + container.getBoundingClientRect().left) / 2;
 			let prevLeft = element.getBoundingClientRect().left;
 			let currRight = prevLeft + element.getBoundingClientRect().width;
 			let currLeft = prevLeft - diff;
@@ -358,6 +346,11 @@ const stretchRightDown = (element) => {
 		() => {});
 }
 
+const isPointInsideRect = (x, y, rect) => {
+	return x >= rect.left && x <= rect.right
+	&& y >= rect.top && y <= rect.bottom;
+}
+
 const moveOrChangeStickerSize = (mouseMoveEvent) => {
 	let stickerCoords = mouseMoveEvent.target.getBoundingClientRect();
 	let shift = vmin(1);
@@ -370,7 +363,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.top - shift,
 		'bottom': stickerCoords.top + shift
 	})) {
-		mouseMoveEvent.target.style.cursor = 'nw-resize';
+		mouseMoveEvent.target.style.cursor = 'nwse-resize';
 		stretchLeftUp(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.right - shift,
@@ -378,7 +371,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.top - shift,
 		'bottom': stickerCoords.top + shift
 	})) {
-		mouseMoveEvent.target.style.cursor = 'sw-resize';
+		mouseMoveEvent.target.style.cursor = 'nesw-resize';
 		stretchRightUp(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.left,
@@ -386,7 +379,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.bottom - shift,
 		'bottom': stickerCoords.bottom
 	})) {
-		mouseMoveEvent.target.style.cursor = 'sw-resize';
+		mouseMoveEvent.target.style.cursor = 'nesw-resize';
 		stretchLeftDown(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.right - shift,
@@ -394,7 +387,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.bottom - shift,
 		'bottom': stickerCoords.bottom + shift
 	})) {
-		mouseMoveEvent.target.style.cursor = 'nw-resize';
+		mouseMoveEvent.target.style.cursor = 'nwse-resize';
 		stretchRightDown(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.left,
@@ -402,7 +395,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.top - shift,
 		'bottom': stickerCoords.top + shift
 	})) {
-		mouseMoveEvent.target.style.cursor = 's-resize';
+		mouseMoveEvent.target.style.cursor = 'ns-resize';
 		stretchUp(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.left,
@@ -410,7 +403,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.bottom - shift,
 		'bottom': stickerCoords.bottom + shift
 	})) {
-		mouseMoveEvent.target.style.cursor = 's-resize';
+		mouseMoveEvent.target.style.cursor = 'ns-resize';
 		stretchDown(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.left - shift,
@@ -418,7 +411,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.top,
 		'bottom': stickerCoords.bottom
 	})) {
-		mouseMoveEvent.target.style.cursor = 'w-resize';
+		mouseMoveEvent.target.style.cursor = 'ew-resize';
 		stretchLeft(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.right - shift,
@@ -426,25 +419,20 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'top': stickerCoords.top,
 		'bottom': stickerCoords.bottom
 	})) {
-		mouseMoveEvent.target.style.cursor = 'w-resize';
+		mouseMoveEvent.target.style.cursor = 'ew-resize';
 		stretchRight(mouseMoveEvent.target);
 	} else {
 		dragAndDropInsideContainer(mouseMoveEvent.target, false);
 	}
 }
 
-const isPointInsideRect = (x, y, rect) => {
-	return x >= rect.left && x <= rect.right
-	&& y >= rect.top && y <= rect.bottom;
-}
-
 const isElementInsideContainer = (element) => {
 	let elementCoords = element.getBoundingClientRect();
-	
-	if (isPointInsideRect(elementCoords.left, elementCoords.top, containerRect)
-		|| isPointInsideRect(elementCoords.right, elementCoords.top, containerRect)
-		|| isPointInsideRect(elementCoords.left, elementCoords.bottom, containerRect)
-		|| isPointInsideRect(elementCoords.right, elementCoords.bottom, containerRect)) {
+
+	if (isPointInsideRect(elementCoords.left, elementCoords.top, container.getBoundingClientRect())
+		|| isPointInsideRect(elementCoords.right, elementCoords.top, container.getBoundingClientRect())
+		|| isPointInsideRect(elementCoords.left, elementCoords.bottom, container.getBoundingClientRect())
+		|| isPointInsideRect(elementCoords.right, elementCoords.bottom, container.getBoundingClientRect())) {
 		return true;
 	}
 	return false;
@@ -463,6 +451,8 @@ const renderButton = (button) => {
 }
 
 const dragAndDropInsideContainer = (element, shouldCopy) => {
+	// container.getBoundingClientRect() = container.getBoundingClientRect();
+	// console.log(container.getBoundingClientRect());
 	let drag = false;
 	
 	element.onmousedown = (downEvent) => {
@@ -493,8 +483,8 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 					drag = false;
 					if (isElementInsideContainer(toMove)) {
 						container.append(toMove);
-						toMove.style.left = upEvent.clientX - containerRect.left - shiftX + 'px';
-						toMove.style.top = upEvent.clientY - containerRect.top - shiftY + 'px';
+						toMove.style.left = upEvent.clientX - container.getBoundingClientRect().left - shiftX + 'px';
+						toMove.style.top = upEvent.clientY - container.getBoundingClientRect().top - shiftY + 'px';
 						if (shouldCopy) {
 							toMove.onmousemove = moveOrChangeStickerSize;
 						}
@@ -502,7 +492,6 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 						document.body.removeChild(toMove);
 					}
 					renderButton(captureButton);
-					renderButton(signButton);
 				}
 			}
 		}
@@ -558,7 +547,6 @@ const clearPhoto = () => {
 		container.removeChild(elem);
 	});
 	renderButton(captureButton);
-	renderButton(signButton);
 }
 
 const uploadPhoto = () => {
@@ -577,15 +565,13 @@ const uploadPhoto = () => {
 	}
 	uploadedImage = document.createElement('img');
 	uploadedImage.id = 'uploaded-image';
-	// uploadedImage.classList.add('sticker-base');
 	uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
-	// uploadedImage.classList.add('img-fluid');
 	container.insertBefore(uploadedImage, container.firstChild);
-	container.style.width = 'auto';
-	container.style.height = 'auto';
+	// container.getBoundingClientRect() = container.getBoundingClientRect();
+	// console.log(container.getBoundingClientRect());
 	renderBackToCameraButton();
 	renderButton(captureButton);
-	renderButton(signButton);
+	clearPhoto();
 }
 
 const backToCameraHandler = () => {
@@ -598,6 +584,7 @@ const backToCameraHandler = () => {
 	renderCamera();
 	upload.value = '';
 	buttonBlock.removeChild(backToCameraButton);
+	clearPhoto();
 }
 
 const renderBackToCameraButton = () => {
@@ -704,49 +691,6 @@ const renderNotification = () => {
 	}, printError);
 }
 
-const renderCanvas = () => {
-	if (drawing) {
-		let signature = document.createElement('canvas');
-		let ctx = signature.getContext("2d");
-		
-		signature.width = vmin(80);
-		signature.height = vmin(60);
-		signature.classList.add('signature');
-		signButton.classList.toggle('can-draw');
-		signature.onmousedown = () => {
-			signature.onmousemove = (event) => {
-				let shift = vmin(0.5);
-
-				// var centerX = canvas.width / 2;
-				// var centerY = canvas.height / 2;
-				// var radius = 70;
-		  
-				ctx.beginPath();
-				ctx.arc(event.offsetX - shift, event.offsetY - shift, 2 * shift, 0, 2 * Math.PI, false);
-				ctx.fillStyle = color;
-				ctx.fill();
-				// ctx.lineWidth = 5;
-				// ctx.strokeStyle = '#003300';
-				// ctx.stroke();
-				
-				// ctx.fillCircle(event.offsetX - shift, event.offsetY - shift, 2 * shift, 2 * shift);
-				// ctx.fillStyle = color;
-				// ctx.fill();
-			}
-			signature.onmouseup = (event) => {
-				signature.onmousemove = null;
-			}
-		}
-		container.append(signature);
-	} else {
-		signButton.classList.toggle('can-draw');
-		Array.from(document.getElementsByClassName('signature')).forEach((elem) => {
-			elem.onmousedown = null;
-		});
-	}
-	drawing === true ? drawing = false : drawing = true;
-}
-
 const render = () => {
 	renderHello();
 	renderCamera();
@@ -756,8 +700,6 @@ const render = () => {
 	captureButton.addEventListener('click', savePhoto);
 	renderMessageContainer(messageContainer);
 	clearButton.addEventListener('click', clearPhoto);
-	signButton.addEventListener('click', renderCanvas);
-	palette.addEventListener('input', event => color = event.target.value);
 	email.addEventListener('keypress', (event) => enterPressHandler(event, changeEmailHandler));
 	changeEmailButton.addEventListener('click', changeEmailHandler);
 	login.addEventListener('keypress', (event) => enterPressHandler(event, changeLoginHandler));

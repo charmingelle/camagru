@@ -232,12 +232,6 @@ input:focus {
 	margin-top: 1%;
 }
 
-#uploaded-image {
-	position: relative;
-	width: auto;
-	height: auto;
-}
-
 #content {
 	padding-top: 77px;
 }
@@ -274,12 +268,10 @@ input:focus {
 }
 
 #container {
-	text-align: center;
 	position: relative;
-	overflow: hidden;
-	width: 80vh;
-	height: 60vh;
 	margin: 1%;
+	max-width: 80vh;
+	max-height: 60vh;
 }
 
 #video {
@@ -292,6 +284,12 @@ input:focus {
 
 #video-error {
 	text-align: center;
+}
+
+#uploaded-image {
+    position: relative;
+    max-width: 80vh;
+    max-height: 60vh;
 }
 
 #change-section {
@@ -385,15 +383,4 @@ input:focus {
 
 input[type="file"] {
 	display: none;
-}
-
-.signature {
-	position: absolute;
-	top: 0;
-	left: 0;
-	border: 1px solid black;
-}
-
-#sign-button:disabled {
-	cursor: auto;
 }

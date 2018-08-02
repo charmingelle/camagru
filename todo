@@ -52,6 +52,7 @@ TODO
 	change his own email, login, password, notification status
 + check what to do with message container position
 + add scrolling on sticker size
++ probably remove drawing on canvas
 
 - create account page layout
 - check if I can make corner sticker resizing better
@@ -61,7 +62,6 @@ TODO
 - empty $_SESSION data in one function
 - add the ability to remove like
 - check why comment input doesn't have border
-- probably remove drawing on canvas
 - make sure that layout is responsive
 - add site logo
 - find out why though min width is there, elements go crazy
