@@ -28,7 +28,6 @@ let color = '#000000';
 let changeEmailButton = document.getElementById('change-email-button');
 let changeLoginButton = document.getElementById('change-login-button');
 let changePasswordButton = document.getElementById('change-password-button');
-let scale = vmin(50);
 let messageContainer = document.getElementById('account-message-container');
 let email = document.getElementById('email');
 let login = document.getElementById('login');
@@ -578,10 +577,12 @@ const uploadPhoto = () => {
 	}
 	uploadedImage = document.createElement('img');
 	uploadedImage.id = 'uploaded-image';
-	uploadedImage.classList.add('sticker-base');
+	// uploadedImage.classList.add('sticker-base');
 	uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
-	uploadedImage.classList.add('img-fluid');
+	// uploadedImage.classList.add('img-fluid');
 	container.insertBefore(uploadedImage, container.firstChild);
+	container.style.width = 'auto';
+	container.style.height = 'auto';
 	renderBackToCameraButton();
 	renderButton(captureButton);
 	renderButton(signButton);
