@@ -57,9 +57,36 @@ class Photos {
 							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
+	private static function getLikeStatus($id) {
+		$query_result = DBConnect::sendQuery('SELECT * FROM likes WHERE photo_id = :photoId AND login = :login',
+									['photoId' => $photoId, 'login' => $_SESSION['auth-data']['login']])->fetchAll();
+
+		if (empty($query_result)) {
+			return false;
+		}
+		return true;
+	}
+
+	private static function addLikeStatus($id) {
+		DBConnect::sendQuery('INSERT INTO likes(photo_id, login) VALUES (:id, :login)',
+							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
+	}
+
+	private static function deleteLikeStatus($id) {
+		DBConnect::sendQuery('DELETE FROM likes WHERE photo_id = :id AND login = :login',
+							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
+	}
+
 	public static function likePicture($id) {
-		DBConnect::sendQuery('UPDATE photo SET likes = likes + 1 WHERE id = :id',
-							['id' => $id]);
+		if (self::getLikeStatus($id)) {
+			DBConnect::sendQuery('UPDATE photo SET likes = likes - 1 WHERE id = :id',
+								['id' => $id]);
+			self::deleteLikeStatus($id);
+		} else {
+			DBConnect::sendQuery('UPDATE photo SET likes = likes + 1 WHERE id = :id',
+								['id' => $id]);
+			self::addLikeStatus($id);
+		}
 	}
 
 	public static function getLikes($id) {
