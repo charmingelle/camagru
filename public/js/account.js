@@ -451,8 +451,6 @@ const renderButton = (button) => {
 }
 
 const dragAndDropInsideContainer = (element, shouldCopy) => {
-	// container.getBoundingClientRect() = container.getBoundingClientRect();
-	// console.log(container.getBoundingClientRect());
 	let drag = false;
 	
 	element.onmousedown = (downEvent) => {
@@ -464,6 +462,10 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 			if (shouldCopy) {
 				toMove = element.cloneNode(true);
 			}
+			toMove.classList.remove('sticker');
+			toMove.classList.add('sticked-sticker');
+			toMove.style.width = window.getComputedStyle(element).width;
+			toMove.style.height = window.getComputedStyle(element).height;
 			drag = true;
 			toMove.ondragstart = () => {
 				return false;
@@ -539,7 +541,7 @@ const clearPhoto = () => {
 	let stickedStickers = [];
 
 	for (let elem of container.children) {
-		if (elem.classList.contains('sticker')) {
+		if (elem.classList.contains('sticked-sticker')) {
 			stickedStickers.push(elem);
 		}
 	}
@@ -567,8 +569,6 @@ const uploadPhoto = () => {
 	uploadedImage.id = 'uploaded-image';
 	uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
 	container.insertBefore(uploadedImage, container.firstChild);
-	// container.getBoundingClientRect() = container.getBoundingClientRect();
-	// console.log(container.getBoundingClientRect());
 	renderBackToCameraButton();
 	renderButton(captureButton);
 	clearPhoto();
