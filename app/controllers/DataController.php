@@ -37,12 +37,16 @@ class DataController {
 		Photos::publish(Utils::getBodyFromJson()['id']);
 	}
 
-	public static function likePicture() {
-		Photos::likePicture(Utils::getBodyFromJson()['id']);
+	public static function getLikeStatus() {
+		Photos::getLikeStatus(Utils::getBodyFromJson()['id']);
 	}
 
 	public static function getLikes() {
 		echo json_encode(Photos::getLikes(Utils::getBodyFromJson()['id']));
+	}
+
+	public static function likeDislike() {
+		Photos::likeDislike(Utils::getBodyFromJson()['id']);
 	}
 
 	public static function addComment() {

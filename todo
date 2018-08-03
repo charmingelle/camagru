@@ -53,6 +53,7 @@ TODO
 + check what to do with message container position
 + add scrolling on sticker size
 + probably remove drawing on canvas
++ add the ability to remove like
 
 - create account page layout
 - check if I can make corner sticker resizing better
@@ -60,8 +61,16 @@ TODO
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
-- add the ability to remove like
 - check why comment input doesn't have border
 - make sure that layout is responsive
 - add site logo
 - find out why though min width is there, elements go crazy
+
+render likeIcon (call getLikeStatus for it)
+render likeEl (call getLikes for it)
+
+add event listener to likeIcon, which does the following:
+	like or dislike depending on like status on server
+	change like status on server side
+	rerender likeIcon
+	rerender likeEl

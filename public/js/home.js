@@ -295,7 +295,7 @@ const setSignedInAddComment = (addCommentEl, commentsEl, photoId, commentAmountE
 }
 
 const setNotSignedInAddComment = (addCommentEl) => {
-	addCommentEl.placeholder = 'Sign in to add a comment';
+	addCommentEl.placeholder = 'Sign in to like photos and add comments';
 	addCommentEl.disabled = 'disabled';
 }
 
@@ -307,13 +307,14 @@ const setAddCommentEl = (addCommentEl, commentsEl, photoId, commentAmountEl) => 
 	}
 }
 
-const likeIconClickHandler = (like, photoId) => {
-	fetch('/like', {
+const dislikeHandler = (likeIcon, likeEl, photoId) => {
+	fetch('/dislike', {
 		method: 'POST',
 		credentials: 'include',
 		body: JSON.stringify({'id': photoId})
 	})
-	.then(
+	.then(() => {
+		likeIcon.classList.remove('like-symbol-liked');
 		fetch('/getLikes', {
 			method: 'POST',
 			credentials: 'include',
@@ -321,9 +322,9 @@ const likeIconClickHandler = (like, photoId) => {
 		})
 		.then(response => response.json(), printError)
 		.then(data => {
-			like.innerHTML = data;
-		}, printError)
-	);
+			likeEl.innerHTML = data;
+		}, printError);
+	}, printError)
 }
 
 const renderLoginEl = (source) => {
@@ -342,6 +343,29 @@ const renderImageEl = (source) => {
 	return imageEl;
 }
 
+const rerenderLikeEl = (likeEl, photoId) => {
+	fetch('/getLikes', {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify({'id': photoId})
+	})
+	.then(response => response.json(), printError)
+	.then(data => {
+		likeEl.innerHTML = data;
+	}, printError);
+
+	// fetch('/getLikes', {
+	// 	method: 'POST',
+	// 	credentials: 'include',
+	// 	body: JSON.stringify({'id': photoId})
+	// })
+	// .then(response => response.text(), printError)
+	// .then(data => {
+	// 	console.log(`photoId = ${photoId}`);
+	// 	console.log(`data = ${data}`);
+	// }, printError);
+}
+
 const renderLikeEl = (source) => {
 	let likeEl = document.createElement('div');
 	
@@ -350,13 +374,50 @@ const renderLikeEl = (source) => {
 	return likeEl;
 }
 
-const renderLikeIcon = (source, likeEl) => {
+const rerenderLikeIcon = (likeIcon, photoId) => {
+	fetch('/getLikeStatus', {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify({'id': photoId})
+	})
+	.then(response => response.json())
+	.then(data => {
+		if (data) {
+			likeIcon.classList.add('like-symbol-liked');
+		} else {
+			likeIcon.classList.remove('like-symbol-liked');
+		}
+	});
+}
+
+const likeDislikeHandler = (likeIcon, likeEl, photoId) => {
+	fetch('/likeDislike', {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify({'id': photoId})
+	})
+	.then(() => {
+		rerenderLikeIcon(likeIcon, photoId);
+		rerenderLikeEl(likeEl, photoId)
+	})
+
+	// fetch('/likeDislike', {
+	// 	method: 'POST',
+	// 	credentials: 'include',
+	// 	body: JSON.stringify({'id': photoId})
+	// })
+	// .then(response => response.json())
+	// .then(data => console.log(data));
+}
+
+const renderLikeIcon = (likeEl, source) => {
 	let likeIcon = document.createElement('div');
 	
 	likeIcon.innerHTML = '<i class="far fa-heart"></i>';
-	likeIcon.classList.add('like-symbol');
 	if (isSignedIn) {
-		likeIcon.addEventListener('click', () => likeIconClickHandler(likeEl, source['id']));
+		likeIcon.classList.add('like-symbol-active');
+		rerenderLikeIcon(likeIcon, source['id']);
+		likeIcon.addEventListener('click', () => likeDislikeHandler(likeIcon, likeEl, source['id']));
 	}
 	return likeIcon;
 }
@@ -402,7 +463,7 @@ const renderPhoto = (sources) => {
 			let imageEl = renderImageEl(source);
 			let likeCommentEl = document.createElement('div');
 			let likeEl = renderLikeEl(source);
-			let likeIcon = renderLikeIcon(source, likeEl);
+			let likeIcon = renderLikeIcon(likeEl, source);
 			let commentAmountEl = renderCommentAmountEl(source);
 			let commentAmountIcon = renderCommentAmountIcon();
 			let commentsEl = renderCommentsEl(source);

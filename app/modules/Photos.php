@@ -59,7 +59,7 @@ class Photos {
 
 	private static function _getLikeStatus($id) {
 		$query_result = DBConnect::sendQuery('SELECT * FROM likes WHERE photo_id = :photoId AND login = :login',
-									['photoId' => $id, 'login' => $_SESSION['auth-data']['login']])->fetchAll();
+											['photoId' => $id, 'login' => $_SESSION['auth-data']['login']])->fetchAll();
 
 		if (empty($query_result)) {
 			return false;
@@ -67,9 +67,18 @@ class Photos {
 		return true;
 	}
 
-	private static function _addLikeStatus($id) {
-		DBConnect::sendQuery('INSERT INTO likes(photo_id, login) VALUES (:id, :login)',
-							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
+	public static function getLikeStatus($id) {
+		echo json_encode(self::_getLikeStatus($id));
+	}
+	
+	public static function getLikes($id) {
+		return DBConnect::sendQuery('SELECT likes FROM photo WHERE id = :id',
+										['id' => $id])->fetchAll()[0]['likes'];
+	}
+	
+	private static function _dislike($id) {
+		DBConnect::sendQuery('UPDATE photo SET likes = likes - 1 WHERE id = :id',
+							['id' => $id]);
 	}
 
 	private static function _deleteLikeStatus($id) {
@@ -77,21 +86,24 @@ class Photos {
 							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
-	public static function likePicture($id) {
-		if (self::_getLikeStatus($id)) {
-			DBConnect::sendQuery('UPDATE photo SET likes = likes - 1 WHERE id = :id',
-								['id' => $id]);
-			self::_deleteLikeStatus($id);
-		} else {
-			DBConnect::sendQuery('UPDATE photo SET likes = likes + 1 WHERE id = :id',
-								['id' => $id]);
-			self::_addLikeStatus($id);
-		}
+	private static function _like($id) {
+		DBConnect::sendQuery('UPDATE photo SET likes = likes + 1 WHERE id = :id',
+							['id' => $id]);
+	}
+	
+	private static function _addLikeStatus($id) {
+		DBConnect::sendQuery('INSERT INTO likes(photo_id, login) VALUES (:id, :login)',
+							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
-	public static function getLikes($id) {
-		return DBConnect::sendQuery('SELECT likes FROM photo WHERE id = :id',
-										['id' => $id])->fetchAll()[0]['likes'];
+	public static function likeDislike($id) {
+		if (self::_getLikeStatus($id)) {
+			self::_dislike($id);
+			self::_deleteLikeStatus($id);
+		} else {
+			self::_like($id);
+			self::_addLikeStatus($id);
+		}
 	}
 
 	public static function addComment($comment, $photoId) {

@@ -200,8 +200,12 @@ input:focus {
 	margin: 5px;
 }
 
-.like-symbol:hover {
+.like-symbol-active:hover {
 	cursor: pointer;
+}
+
+.like-symbol-liked {
+	color: red;
 }
 
 .like {
