@@ -54,10 +54,12 @@ TODO
 + add scrolling on sticker size
 + probably remove drawing on canvas
 + add the ability to remove like
++ check if I can make corner sticker resizing better
++ check if drag and drop works smoothly (not really now)
+
+
 
 - create account page layout
-- check if I can make corner sticker resizing better
-- check if drag and drop works smoothly (not really now)
 - think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function

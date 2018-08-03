@@ -353,22 +353,23 @@ const isPointInsideRect = (x, y, rect) => {
 
 const moveOrChangeStickerSize = (mouseMoveEvent) => {
 	let stickerCoords = mouseMoveEvent.target.getBoundingClientRect();
-	let shift = vmin(1);
+	// let shift = vmin(1);
+	let shift = 5;
 	
 	mouseMoveEvent.target.style.cursor = '-webkit-grab';
 	mouseMoveEvent.target.style.cursor = 'grab';
 	if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
-		'left': stickerCoords.left - shift,
+		'left': stickerCoords.left,
 		'right': stickerCoords.left + shift,
-		'top': stickerCoords.top - shift,
+		'top': stickerCoords.top,
 		'bottom': stickerCoords.top + shift
 	})) {
 		mouseMoveEvent.target.style.cursor = 'nwse-resize';
 		stretchLeftUp(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.right - shift,
-		'right': stickerCoords.right + shift,
-		'top': stickerCoords.top - shift,
+		'right': stickerCoords.right,
+		'top': stickerCoords.top,
 		'bottom': stickerCoords.top + shift
 	})) {
 		mouseMoveEvent.target.style.cursor = 'nesw-resize';
@@ -383,16 +384,16 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		stretchLeftDown(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.right - shift,
-		'right': stickerCoords.right + shift,
+		'right': stickerCoords.right,
 		'top': stickerCoords.bottom - shift,
-		'bottom': stickerCoords.bottom + shift
+		'bottom': stickerCoords.bottom
 	})) {
 		mouseMoveEvent.target.style.cursor = 'nwse-resize';
 		stretchRightDown(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.left,
 		'right': stickerCoords.right,
-		'top': stickerCoords.top - shift,
+		'top': stickerCoords.top,
 		'bottom': stickerCoords.top + shift
 	})) {
 		mouseMoveEvent.target.style.cursor = 'ns-resize';
@@ -401,12 +402,12 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		'left': stickerCoords.left,
 		'right': stickerCoords.right,
 		'top': stickerCoords.bottom - shift,
-		'bottom': stickerCoords.bottom + shift
+		'bottom': stickerCoords.bottom
 	})) {
 		mouseMoveEvent.target.style.cursor = 'ns-resize';
 		stretchDown(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
-		'left': stickerCoords.left - shift,
+		'left': stickerCoords.left,
 		'right': stickerCoords.left + shift,
 		'top': stickerCoords.top,
 		'bottom': stickerCoords.bottom
@@ -415,7 +416,7 @@ const moveOrChangeStickerSize = (mouseMoveEvent) => {
 		stretchLeft(mouseMoveEvent.target);
 	} else if (isPointInsideRect(mouseMoveEvent.clientX, mouseMoveEvent.clientY, {
 		'left': stickerCoords.right - shift,
-		'right': stickerCoords.right + shift,
+		'right': stickerCoords.right,
 		'top': stickerCoords.top,
 		'bottom': stickerCoords.bottom
 	})) {

@@ -353,17 +353,6 @@ const rerenderLikeEl = (likeEl, photoId) => {
 	.then(data => {
 		likeEl.innerHTML = data;
 	}, printError);
-
-	// fetch('/getLikes', {
-	// 	method: 'POST',
-	// 	credentials: 'include',
-	// 	body: JSON.stringify({'id': photoId})
-	// })
-	// .then(response => response.text(), printError)
-	// .then(data => {
-	// 	console.log(`photoId = ${photoId}`);
-	// 	console.log(`data = ${data}`);
-	// }, printError);
 }
 
 const renderLikeEl = (source) => {
@@ -400,14 +389,6 @@ const likeDislikeHandler = (likeIcon, likeEl, photoId) => {
 		rerenderLikeIcon(likeIcon, photoId);
 		rerenderLikeEl(likeEl, photoId)
 	})
-
-	// fetch('/likeDislike', {
-	// 	method: 'POST',
-	// 	credentials: 'include',
-	// 	body: JSON.stringify({'id': photoId})
-	// })
-	// .then(response => response.json())
-	// .then(data => console.log(data));
 }
 
 const renderLikeIcon = (likeEl, source) => {

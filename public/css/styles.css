@@ -362,6 +362,14 @@ input:focus {
 	cursor: pointer;
 }
 
+.sticked-sticker {
+	box-sizing: border-box;
+}
+
+.sticked-sticker:hover {
+	border: 1px solid #dbdbdb;
+}
+
 #user-photos {
 	display: flex;
 	flex-direction: column;
