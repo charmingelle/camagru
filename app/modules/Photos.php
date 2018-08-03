@@ -57,9 +57,9 @@ class Photos {
 							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
-	private static function getLikeStatus($id) {
+	private static function _getLikeStatus($id) {
 		$query_result = DBConnect::sendQuery('SELECT * FROM likes WHERE photo_id = :photoId AND login = :login',
-									['photoId' => $photoId, 'login' => $_SESSION['auth-data']['login']])->fetchAll();
+									['photoId' => $id, 'login' => $_SESSION['auth-data']['login']])->fetchAll();
 
 		if (empty($query_result)) {
 			return false;
@@ -67,25 +67,25 @@ class Photos {
 		return true;
 	}
 
-	private static function addLikeStatus($id) {
+	private static function _addLikeStatus($id) {
 		DBConnect::sendQuery('INSERT INTO likes(photo_id, login) VALUES (:id, :login)',
 							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
-	private static function deleteLikeStatus($id) {
+	private static function _deleteLikeStatus($id) {
 		DBConnect::sendQuery('DELETE FROM likes WHERE photo_id = :id AND login = :login',
 							['id' => $id, 'login' => $_SESSION['auth-data']['login']]);
 	}
 
 	public static function likePicture($id) {
-		if (self::getLikeStatus($id)) {
+		if (self::_getLikeStatus($id)) {
 			DBConnect::sendQuery('UPDATE photo SET likes = likes - 1 WHERE id = :id',
 								['id' => $id]);
-			self::deleteLikeStatus($id);
+			self::_deleteLikeStatus($id);
 		} else {
 			DBConnect::sendQuery('UPDATE photo SET likes = likes + 1 WHERE id = :id',
 								['id' => $id]);
-			self::addLikeStatus($id);
+			self::_addLikeStatus($id);
 		}
 	}
 
@@ -122,6 +122,11 @@ class Photos {
 	}
 
 	public static function getLastPublicPhotoId() {
-		return DBConnect::sendQuery('SELECT id FROM photo WHERE private = FALSE ORDER BY id DESC LIMIT 1')->fetchAll()[0]['id'];
+		$query_result = DBConnect::sendQuery('SELECT id FROM photo WHERE private = FALSE ORDER BY id DESC LIMIT 1')->fetchAll();
+
+		if ($query_result) {
+			return $query_result[0]['id'];
+		}
+		return [];
 	}
 }

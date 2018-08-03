@@ -428,9 +428,11 @@ const renderGallery = () => {
 	})
 	.then(response => response.json(), printError)
 	.then(data => {
-		lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
-		renderPhoto(data);
-		isLoading = false;
+		if (data.length > 0) {
+			lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
+			renderPhoto(data);
+			isLoading = false;
+		}
 	}, printError);
 }
 
@@ -476,6 +478,15 @@ const render = () => {
 	})
 	.then(response => response.json(), printError)
 	.then(renderSignedInOrAnonymousPage, printError);
+
+	// fetch('/isSignedIn', {
+	// 	method: 'POST',
+	// 	credentials: 'include'
+	// })
+	// .then(response => {
+	// 	return response.text();
+	// }, printError)
+	// .then(data => console.log(data));
 }
 
 render();
