@@ -1,4 +1,4 @@
-import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom, printError, customConfirm } from '/js/utils.js';
+import { ENTER, removeAllChildren, enterPressHandler, renderMessageContainer, isScrolledToBottom, printError, customConfirm, postFetch, postFetchNoResponse } from '/js/utils.js';
 
 let isSignedIn = false;
 let gallery = document.getElementById('gallery');
@@ -8,26 +8,9 @@ let messageContainer = document.getElementById('home-message-container');
 let lastPhotoId = 0;
 let isLoading = false;
 
-const postFetchWithResponseData = (uri, requestBody) => {
-	return fetch(uri, {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify(requestBody)
-	})
-	.then(response => response.json(), printError);
-}
-
 const signinFormHandler = (loginInput, passwordInput) => {
 	if (loginInput.value !== '' && passwordInput.value != '') {
-		fetch('/signin', {
-			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({
-				'login': loginInput.value,
-				'password': passwordInput.value
-			})
-		})
-		.then(response => response.json(), printError)
+		postFetch('/signin', {'login': loginInput.value, 'password': passwordInput.value})
 		.then(data => {
 			if (data !== 'OK') {
 				renderMessageContainer(messageContainer, data);
@@ -59,16 +42,11 @@ const renderSigninForm = () => {
 
 const signupFormHandler = (emailInput, loginInput, passwordInput) => {
 	if (emailInput.value !== '' && loginInput.value !== '' && passwordInput.value !== '') {
-		fetch('/signup', {
-			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({
-				'email': emailInput.value,
-				'login': loginInput.value,
-				'password': passwordInput.value
-			})
+		postFetch('signup', {
+			'email': emailInput.value,
+			'login': loginInput.value,
+			'password': passwordInput.value
 		})
-		.then(response => response.json(), printError)
 		.then(data => {
 			renderMessageContainer(messageContainer, data['message']);
 			if (data['status'] === true) {
@@ -106,7 +84,7 @@ const renderSignupForm = () => {
 
 const resetPasswordFormHandler = (emailInput) => {
 	if (emailInput.value !== '') {
-		postFetchWithResponseData('/forgotPassword', {'email': emailInput.value})
+		postFetch('/forgotPassword', {'email': emailInput.value})
 		.then(data => {
 			renderMessageContainer(messageContainer, data);
 			emailInput.value = '';
@@ -184,19 +162,10 @@ const renderHeaderButtonsDiv = () => {
 }
 
 const okCallbacForDeleteComment = (id, photoId, commentsEl, commentEl, commentAmountEl) => {
-	fetch('/deleteComment', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': id})
-	})
+	postFetchNoResponse('/deleteComment', {'id': id})
 	.then(commentsEl.removeChild(commentEl))
 	.then(() => {
-		fetch('/decreaseCommentCount', {
-			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({'id': photoId})
-		})
-		.then(response => response.json(), printError)
+		postFetch('/decreaseCommentCount', {'id': photoId})
 		.then(commentAmount => {
 			commentAmountEl.innerHTML = commentAmount;
 		}, printError);
@@ -233,21 +202,12 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
 const fillComments = (commentsEl, photoId, commentAmountEl) => {
 	let login;
 	
-	fetch('/getLogin', {
-		method: 'POST',
-		credentials: 'include'
-	})
-	.then(response => response.json(), printError)
+	postFetch('/getLogin', {})
 	.then(data => {
 		login = data;
 	})
 	.then(() => {
-		fetch('/getComments', {
-			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({'id': photoId})
-		})
-		.then(response => response.json(), printError)
+		postFetch('/getComments', {'id': photoId})
 		.then((comments) => {
 			if (comments) {
 				const commentDivs = comments.map(comment => renderComment(comment, login, commentsEl, commentAmountEl));
@@ -271,21 +231,9 @@ const setSignedInAddComment = (addCommentEl, commentsEl, photoId, commentAmountE
 		
 		if (keycode === ENTER) {
 			if (addCommentEl.value) {
-				fetch('/addComment', {
-					method: 'POST',
-					credentials: 'include',
-					body: JSON.stringify({
-						'comment': addCommentEl.value,
-						'photo-id': photoId
-					})
-				})
+				postFetchNoResponse('/addComment', {'comment': addCommentEl.value, 'photo-id': photoId})
 				.then(() => {
-					fetch('/increaseCommentCount', {
-						method: 'POST',
-						credentials: 'include',
-						body: JSON.stringify({'id': photoId})
-					})
-					.then(response => response.json(), printError)
+					postFetch('/increaseCommentCount', {'id': photoId})
 					.then(commentAmount => {
 						commentAmountEl.innerHTML = commentAmount;
 					}, printError)
@@ -312,19 +260,10 @@ const setAddCommentEl = (addCommentEl, commentsEl, photoId, commentAmountEl) => 
 }
 
 const dislikeHandler = (likeIcon, likeEl, photoId) => {
-	fetch('/dislike', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': photoId})
-	})
+	postFetchNoResponse('/dislike', {'id': photoId})
 	.then(() => {
 		likeIcon.classList.remove('like-symbol-liked');
-		fetch('/getLikes', {
-			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({'id': photoId})
-		})
-		.then(response => response.json(), printError)
+		postFetch('/getLikes', {'id': photoId})
 		.then(data => {
 			likeEl.innerHTML = data;
 		}, printError);
@@ -348,7 +287,7 @@ const renderImageEl = (source) => {
 }
 
 const rerenderLikeEl = (likeEl, photoId) => {
-	postFetchWithResponseData('/getLikes', {'id': photoId})
+	postFetch('/getLikes', {'id': photoId})
 	.then(data => {
 		likeEl.innerHTML = data;
 	}, printError);
@@ -363,7 +302,7 @@ const renderLikeEl = (source) => {
 }
 
 const rerenderLikeIcon = (likeIcon, photoId) => {
-	postFetchWithResponseData('/getLikeStatus', {'id': photoId})
+	postFetch('/getLikeStatus', {'id': photoId})
 	.then(data => {
 		if (data) {
 			likeIcon.classList.add('like-symbol-liked');
@@ -374,11 +313,7 @@ const rerenderLikeIcon = (likeIcon, photoId) => {
 }
 
 const likeDislikeHandler = (likeIcon, likeEl, photoId) => {
-	fetch('/likeDislike', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': photoId})
-	})
+	postFetchNoResponse('/likeDislike', {'id': photoId})
 	.then(() => {
 		rerenderLikeIcon(likeIcon, photoId);
 		rerenderLikeEl(likeEl, photoId)
@@ -457,7 +392,7 @@ const renderPhoto = (sources) => {
 
 const renderGallery = () => {
 	isLoading = true;
-	postFetchWithResponseData('/photos', {'lastId': lastPhotoId})
+	postFetch('/photos', {'lastId': lastPhotoId})
 	.then(data => {
 		if (data.length > 0) {
 			lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
@@ -469,7 +404,7 @@ const renderGallery = () => {
 
 const getLastPhotoId = () => {
 	removeAllChildren(gallery);
-	postFetchWithResponseData('/getLastPublicPhotoId', {}) 
+	postFetch('/getLastPublicPhotoId', {}) 
 	.then(data => {
 		lastPhotoId = parseInt(data);
 		renderGallery();
@@ -499,7 +434,7 @@ const renderSignedInOrAnonymousPage = (signInStatus) => {
 }
 
 const render = () => {
-	postFetchWithResponseData('/isSignedIn', {})
+	postFetch('/isSignedIn', {})
 	.then(renderSignedInOrAnonymousPage, printError);
 }
 

@@ -1,4 +1,4 @@
-import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer, printError, customConfirm, isLeftButton } from '/js/utils.js';
+import { vmin, removeAllChildren, dragAndDrop, enterPressHandler, renderMessageContainer, printError, customConfirm, isLeftButton, postFetch, postFetchNoResponse } from '/js/utils.js';
 
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
@@ -39,11 +39,7 @@ const getCoords = (elem) => {
 }
 
 const okCallbacForkDeletePhoto = (id, imageContainer) => {
-	fetch('/deleteUserPhoto', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': id})
-	})
+	postFetchNoResponse('/deleteUserPhoto', {'id': id})
 	.then(() => photosContainer.removeChild(imageContainer), printError);
 }
 
@@ -52,11 +48,7 @@ const deletePhoto = (id, imageContainer) => {
 }
 
 const okCallbackForPublish = (button, id, privateStatus, action) => {
-	fetch('/publish', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': id})
-	})
+	postFetchNoResponse('/publish', {'id': id})
 	.then(() => {
 		action === 'hide' ? action = 'publish' : action = 'hide';
 		button.innerHTML = `${action[0].toUpperCase()}${action.slice(1)}`;
@@ -73,12 +65,7 @@ const publish = (button, id, privateStatus) => {
 }
 
 const renderPublishButton = (button, id) => {
-	fetch('/getPhotoPrivate', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': id})
-	})
-	.then(response => response.json(), printError)
+	postFetch('/getPhotoPrivate', {'id': id})
 	.then(privateStatus => {
 		if (privateStatus == true) {
 			button.innerHTML = 'Publish';
@@ -118,11 +105,7 @@ const renderPhoto = (sources) => {
 
 const renderPhotos = () => {
 	removeAllChildren(photosContainer);
-	fetch('/userPictures', {
-		method: 'POST',
-		credentials: 'include'
-	})
-	.then(response => response.json(), printError)
+	postFetch('/userPictures', {})
 	.then(renderPhoto, printError);
 }
 
@@ -182,13 +165,7 @@ const savePhoto = () => {
 			'height': height
 		};
 	});
-	fetch('/savePhoto', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({
-			'layers': layersData
-		})
-	})
+	postFetchNoResponse('/savePhoto', {'layers': layersData})
 	.then(renderPhotos, printError);
 }
 
@@ -528,11 +505,7 @@ const stickerBackHandler = () => {
 }
 
 const renderStickers = () => {
-	fetch('/stickers', {
-		method: 'POST',
-		credentials: 'include'
-	})
-	.then(response => response.json(), printError)
+	postFetch('/stickers', {})
 	.then(renderSticker, printError);
 	document.getElementById('stickers-forward').addEventListener('click', stickersForwardHander);
 	document.getElementById('stickers-back').addEventListener('click', stickerBackHandler);
@@ -598,12 +571,7 @@ const renderBackToCameraButton = () => {
 }
 
 const okCallbackForChangeEmailHandler = () => {
-	fetch('/changeEmail', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'email': email.value})
-	})
-	.then(response => response.json(), printError)
+	postFetch('/changeEmail', {'email': email.value})
 	.then(data => renderMessageContainer(messageContainer, data), printError);
 }
 
@@ -614,12 +582,7 @@ const changeEmailHandler = () => {
 }
 
 const okCallbackForChangeLoginHandler = () => {
-	fetch('/changeLogin', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'login': login.value})
-	})
-	.then(response => response.json(), printError)
+	postFetch('/changeLogin', {'login': login.value})
 	.then(data => renderMessageContainer(messageContainer, data), printError);
 }
 
@@ -630,12 +593,7 @@ const changeLoginHandler = () => {
 }
 
 const okCallbackForChangePasswordHandler = () => {
-	fetch('/changePassword', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'password': password.value})
-	})
-	.then(response => response.json(), printError)
+	postFetch('/changePassword', {'password': password.value})
 	.then(data => renderMessageContainer(messageContainer, data), printError);
 }
 
@@ -646,19 +604,12 @@ const changePasswordHandler = () => {
 }
 
 const renderHello = () => {
-	fetch('/getLogin', {
-		method: 'POST',
-		credentials: 'include'
-	})
-	.then(response => response.json(), printError)
+	postFetch('/getLogin', {})
 	.then(login => {hello.innerHTML = `Hello, ${login}`}, printError);
 }
 
 const okCallbackForChangeNotification = (action) => {
-	fetch('/changeNotification', {
-		method: 'POST',
-		credentials: 'include'
-	})
+	postFetchNoResponse('/changeNotification', {})
 	.then(() => {
 		renderMessageContainer(messageContainer, `Email notifications have been ${action}d for your account`);
 		notification.innerHTML === 'Disable notifications' ?
@@ -675,12 +626,7 @@ const changeNotification = () => {
 
 const renderNotification = () => {
 	notification = document.getElementById('notification');
-
-	fetch('/getNotification', {
-		method: 'POST',
-		credentials: 'include'
-	})
-	.then(response => response.json(), printError)
+	postFetch('/getNotification', {})
 	.then(data => {
 		// Amazing moment
 		if (data == true) {

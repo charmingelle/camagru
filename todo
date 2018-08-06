@@ -58,13 +58,17 @@ TODO
 + check if drag and drop works smoothly (not really now)
 + check why comment input doesn't have border
 + add site logo
++ think about covering fetch in some shorter function
 
 
 
 - create account page layout
-- think about covering fetch in some shorter function
 - think about what happens with fetch when DB error happens
 - empty $_SESSION data in one function
 - make sure that layout is responsive
 - find out why though min width is there, elements go crazy
 - move website to free hosting
+- fix bug with comment amount
+- fix bug with sticker put on error message
+- fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
+- fix bug with several back to camera buttons

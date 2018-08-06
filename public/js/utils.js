@@ -120,3 +120,20 @@ export const customConfirm = (question, okCallback) => {
 		document.body.append(modalWindow);
 	}
 }
+
+export const postFetch = (uri, requestBody) => {
+	return fetch(uri, {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify(requestBody)
+	})
+	.then(response => response.json(), printError);
+}
+
+export const postFetchNoResponse = (uri, requestBody) => {
+	return fetch(uri, {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify(requestBody)
+	});
+}
