@@ -13,6 +13,7 @@ const E = 'e';
 const DELETE = 'Delete';
 
 let hello = document.getElementById('hello');
+let stickableContainer = true; 
 let container = document.getElementById('container');
 let stickersContainer = document.getElementById('stickers');
 let photosContainer = document.getElementById('user-photos');
@@ -120,6 +121,7 @@ const renderCamera = () => {
 			video.autoplay = 'true';
 			video.srcObject = stream;
 			container.insertBefore(video, container.firstChild);
+			stickableContainer = true;
 			renderButton(captureButton);
 		})
 		.catch((error) => {
@@ -129,6 +131,7 @@ const renderCamera = () => {
 				errorMessage.innerHTML = 'Your camera cannot be used. Please upload a photo.';
 				errorMessage.id = 'video-error';
 				container.insertBefore(errorMessage, container.firstChild);
+				stickableContainer = false;
 				renderButton(captureButton);
 			}
 		});
@@ -461,7 +464,7 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 			document.onmouseup = (upEvent) => {
 				if (drag) {
 					drag = false;
-					if (isElementInsideContainer(toMove)) {
+					if (isElementInsideContainer(toMove) && stickableContainer) {
 						container.append(toMove);
 						toMove.style.left = upEvent.clientX - container.getBoundingClientRect().left - shiftX + 'px';
 						toMove.style.top = upEvent.clientY - container.getBoundingClientRect().top - shiftY + 'px';
@@ -543,6 +546,7 @@ const uploadPhoto = () => {
 	uploadedImage.id = 'uploaded-image';
 	uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
 	container.insertBefore(uploadedImage, container.firstChild);
+	stickableContainer = true;
 	renderBackToCameraButton();
 	renderButton(captureButton);
 	clearPhoto();

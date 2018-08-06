@@ -60,6 +60,7 @@ TODO
 + add site logo
 + think about covering fetch in some shorter function
 + fix bug with several back to camera buttons
++ fix bug with sticker put on error message
 
 
 
@@ -70,5 +71,4 @@ TODO
 - find out why though min width is there, elements go crazy
 - move website to free hosting
 - fix bug with comment amount
-- fix bug with sticker put on error message
 - fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
