@@ -8,6 +8,15 @@ let messageContainer = document.getElementById('home-message-container');
 let lastPhotoId = 0;
 let isLoading = false;
 
+const postFetchWithResponseData = (uri, requestBody) => {
+	return fetch(uri, {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify(requestBody)
+	})
+	.then(response => response.json(), printError);
+}
+
 const signinFormHandler = (loginInput, passwordInput) => {
 	if (loginInput.value !== '' && passwordInput.value != '') {
 		fetch('/signin', {
@@ -97,12 +106,7 @@ const renderSignupForm = () => {
 
 const resetPasswordFormHandler = (emailInput) => {
 	if (emailInput.value !== '') {
-		fetch('/forgotPassword', {
-			method: 'POST',
-			credentials: 'include',
-			body: JSON.stringify({'email': emailInput.value})
-		})
-		.then(response => response.json(), printError)
+		postFetchWithResponseData('/forgotPassword', {'email': emailInput.value})
 		.then(data => {
 			renderMessageContainer(messageContainer, data);
 			emailInput.value = '';
@@ -344,12 +348,7 @@ const renderImageEl = (source) => {
 }
 
 const rerenderLikeEl = (likeEl, photoId) => {
-	fetch('/getLikes', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': photoId})
-	})
-	.then(response => response.json(), printError)
+	postFetchWithResponseData('/getLikes', {'id': photoId})
 	.then(data => {
 		likeEl.innerHTML = data;
 	}, printError);
@@ -364,12 +363,7 @@ const renderLikeEl = (source) => {
 }
 
 const rerenderLikeIcon = (likeIcon, photoId) => {
-	fetch('/getLikeStatus', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'id': photoId})
-	})
-	.then(response => response.json())
+	postFetchWithResponseData('/getLikeStatus', {'id': photoId})
 	.then(data => {
 		if (data) {
 			likeIcon.classList.add('like-symbol-liked');
@@ -463,12 +457,7 @@ const renderPhoto = (sources) => {
 
 const renderGallery = () => {
 	isLoading = true;
-	fetch('/photos', {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify({'lastId': lastPhotoId})
-	})
-	.then(response => response.json(), printError)
+	postFetchWithResponseData('/photos', {'lastId': lastPhotoId})
 	.then(data => {
 		if (data.length > 0) {
 			lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
@@ -480,11 +469,7 @@ const renderGallery = () => {
 
 const getLastPhotoId = () => {
 	removeAllChildren(gallery);
-	fetch('/getLastPublicPhotoId', {
-		method: 'POST',
-		credentials: 'include'
-	})
-	.then(response => response.json(), printError)
+	postFetchWithResponseData('/getLastPublicPhotoId', {}) 
 	.then(data => {
 		lastPhotoId = parseInt(data);
 		renderGallery();
@@ -514,21 +499,8 @@ const renderSignedInOrAnonymousPage = (signInStatus) => {
 }
 
 const render = () => {
-	fetch('/isSignedIn', {
-		method: 'POST',
-		credentials: 'include'
-	})
-	.then(response => response.json(), printError)
+	postFetchWithResponseData('/isSignedIn', {})
 	.then(renderSignedInOrAnonymousPage, printError);
-
-	// fetch('/isSignedIn', {
-	// 	method: 'POST',
-	// 	credentials: 'include'
-	// })
-	// .then(response => {
-	// 	return response.text();
-	// }, printError)
-	// .then(data => console.log(data));
 }
 
 render();
