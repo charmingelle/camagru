@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 03, 2018 at 05:20 AM
+-- Generation Time: Aug 06, 2018 at 03:15 AM
 -- Server version: 5.7.21
 -- PHP Version: 7.1.15
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `camagru`
 --
-CREATE DATABASE IF NOT EXISTS `camagru` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `camagru`;
 
 -- --------------------------------------------------------
 
@@ -65,6 +63,15 @@ CREATE TABLE `comment` (
   `login` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `comment`
+--
+
+INSERT INTO `comment` (`id`, `comment`, `photo_id`, `login`) VALUES
+(5, 'xvvxcv', 18, 'anna'),
+(7, 'dgfsg', 17, 'anna'),
+(8, 'sfgsfgfsg', 17, 'anna');
+
 -- --------------------------------------------------------
 
 --
@@ -72,9 +79,22 @@ CREATE TABLE `comment` (
 --
 
 CREATE TABLE `likes` (
+  `id` int(11) UNSIGNED NOT NULL,
   `photo_id` int(11) UNSIGNED NOT NULL,
   `login` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`id`, `photo_id`, `login`) VALUES
+(6, 11, 'vasya'),
+(12, 11, 'kolya'),
+(17, 11, 'anna'),
+(22, 12, 'anna'),
+(24, 18, 'anna'),
+(26, 17, 'anna');
 
 -- --------------------------------------------------------
 
@@ -96,7 +116,9 @@ CREATE TABLE `photo` (
 --
 
 INSERT INTO `photo` (`id`, `url`, `likes`, `comments`, `login`, `private`) VALUES
-(10, 'photo/d096f05366d219b9.png', 0, 0, 'anna', 0);
+(16, 'photo/bb11fb97512f74eb.png', 0, 0, 'anna', 1),
+(17, 'photo/661c4ce9697ec789.png', 1, 2, 'anna', 0),
+(18, 'photo/a8c1bcdc4e26d680.png', 1, 1, 'anna', 0);
 
 -- --------------------------------------------------------
 
@@ -150,7 +172,7 @@ ALTER TABLE `comment`
 -- Indexes for table `likes`
 --
 ALTER TABLE `likes`
-  ADD PRIMARY KEY (`photo_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `photo`
@@ -178,13 +200,19 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `photo`
 --
 ALTER TABLE `photo`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `sticker`

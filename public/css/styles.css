@@ -1,3 +1,37 @@
+/* @font-face {
+	font-family: "Harabara Bold";
+	src: url("css/fonts/Harabara.eot");
+	src: 
+	url("css/fonts/Harabara.woff") format("woff"),
+	url("css/fonts/Harabara.otf") format("opentype"),
+	url("css/fonts/Harabara.svg#filename") format("svg");
+} */
+
+/* @font-face {
+	font-family: "Harabara Bold";
+	src: url("../fonts/chalala/chalala.otf") format("opentype");
+} */
+
+/* @font-face {
+	font-family: "Youthness";
+	src: url("../fonts/effort/Effort TTF.ttf") format("opentype");
+} */
+
+@font-face {
+	font-family: "Shefilla";
+	src: url("../fonts/shefilla/Shefilla TTF.ttf") format("opentype");
+}
+
+/* @font-face {
+	font-family: "Well Bred";
+	src: url("../fonts/well-bred/Well Bred Font by Situjuh (7NTypes).otf") format("opentype");
+} */
+
+#website-title {
+	font-family: "Shefilla";
+	font-size: 3em;
+}
+
 body {
 	box-sizing: border-box;
 	min-width: 800px;
@@ -68,7 +102,7 @@ input {
 	box-sizing: border-box;
 	padding: 5px;
 	color: #717171;
-	border: 0;
+	border: 1px solid #dbdbdb;
 	border-radius: 4px;
 }
 
@@ -143,6 +177,11 @@ input:focus {
 	background-color: #ffffff;
 	border: 1px solid #e6e6e6;
 	border-radius: 4px;
+}
+
+#hello {
+	font-family: "Shefilla";
+	font-size: 3em;
 }
 
 #account-message-container {
