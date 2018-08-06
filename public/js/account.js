@@ -562,12 +562,14 @@ const backToCameraHandler = () => {
 }
 
 const renderBackToCameraButton = () => {
-	let button = document.createElement('button');
-
-	button.id = 'back-to-camera-button';
-	button.innerHTML = 'Back to Camera';
-	button.addEventListener('click', backToCameraHandler);
-	buttonBlock.insertBefore(button, buttonBlock.firstChild);
+	if (!document.getElementById('back-to-camera-button')) {
+		let button = document.createElement('button');
+	
+		button.id = 'back-to-camera-button';
+		button.innerHTML = 'Back to Camera';
+		button.addEventListener('click', backToCameraHandler);
+		buttonBlock.insertBefore(button, buttonBlock.firstChild);
+	}
 }
 
 const okCallbackForChangeEmailHandler = () => {

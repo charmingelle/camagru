@@ -59,6 +59,7 @@ TODO
 + check why comment input doesn't have border
 + add site logo
 + think about covering fetch in some shorter function
++ fix bug with several back to camera buttons
 
 
 
@@ -71,4 +72,3 @@ TODO
 - fix bug with comment amount
 - fix bug with sticker put on error message
 - fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
-- fix bug with several back to camera buttons
