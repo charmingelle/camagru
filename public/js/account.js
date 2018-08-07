@@ -481,6 +481,20 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 	}
 }
 
+// const stickSticker = (event) => {
+// 	let sticked = event.target.cloneNode(true);
+
+// 	sticked.classList.remove('sticker');
+// 	sticked.classList.add('sticked-sticker');
+// 	sticked.style.width = window.getComputedStyle(event.target).width;
+// 	sticked.style.height = window.getComputedStyle(event.target).height;
+// 	sticked.style.position = 'absolute';
+// 	sticked.style.left = '0px';
+// 	sticked.style.top = '0px';
+// 	sticked.onmousemove = moveOrChangeStickerSize;
+// 	container.append(sticked);
+// }
+
 const renderSticker = (sources) => {
 	if (sources) {
 		const images = sources.map(source => {
@@ -491,6 +505,7 @@ const renderSticker = (sources) => {
 			imageDiv.classList.add('image-div');
 			image.src = source['url'];
 			image.classList.add('sticker');
+			// image.addEventListener('click', stickSticker);
 			dragAndDropInsideContainer(image, true);
 			imageDiv.append(image);
 			return imageDiv;

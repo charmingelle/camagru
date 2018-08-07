@@ -73,3 +73,5 @@ TODO
 - move website to free hosting
 - fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
 - test everything
+- include media queries for responsive layout
+- check what happens with drag and drop on mobile device
