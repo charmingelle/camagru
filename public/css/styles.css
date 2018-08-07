@@ -17,15 +17,15 @@
 	src: url("../fonts/effort/Effort TTF.ttf") format("opentype");
 } */
 
-@font-face {
-	font-family: "Shefilla";
-	src: url("../fonts/shefilla/Shefilla TTF.ttf") format("opentype");
-}
-
 /* @font-face {
 	font-family: "Well Bred";
 	src: url("../fonts/well-bred/Well Bred Font by Situjuh (7NTypes).otf") format("opentype");
 } */
+
+@font-face {
+	font-family: "Shefilla";
+	src: url("../fonts/shefilla/Shefilla TTF.ttf") format("opentype");
+}
 
 #website-title {
 	font-family: "Shefilla";

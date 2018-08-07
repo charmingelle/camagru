@@ -17,14 +17,9 @@ class Route {
 				return true;
 			}
 			return false;
-		} else if ($condition === 'not signed in') {
-			if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '') {
-				return true;
-			}
-			return false;
 		}
-		// else if ($condition === 'emailed') {
-		// 	if (!isset($_SESSION['auth-data']['email']) || $_SESSION['auth-data']['email'] === '') {
+		// else if ($condition === 'not signed in') {
+		// 	if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '') {
 		// 		return true;
 		// 	}
 		// 	return false;

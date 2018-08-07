@@ -180,7 +180,7 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
 	let commentEl = document.createElement('div');
 	let loginDiv = document.createElement('div');
 	let commentDiv = document.createElement('div');
-
+	
 	commentEl.classList.add('comment-container');
 	loginDiv.innerHTML = `${comment['login']}:`;
 	loginDiv.classList.add('login-div');
@@ -189,7 +189,7 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
 	commentEl.append(loginDiv, commentDiv);
 	if (comment['login'] === login) {
 		let deleteDiv = document.createElement('button');
-
+		
 		deleteDiv.innerHTML = '&#10005;';
 		deleteDiv.title = 'Delete';
 		deleteDiv.classList.add('delete-comment-button');
@@ -211,7 +211,7 @@ const fillComments = (commentsEl, photoId, commentAmountEl) => {
 		.then((comments) => {
 			if (comments) {
 				const commentDivs = comments.map(comment => renderComment(comment, login, commentsEl, commentAmountEl));
-
+				
 				return commentDivs;
 			}
 		}, printError)
@@ -348,11 +348,11 @@ const renderCommentAmountIcon = () => {
 	return commentAmountIcon;
 }
 
-const renderCommentsEl = (source) => {
+const renderCommentsEl = (source, commentAmountEl) => {
 	let commentsEl = document.createElement('div');
 	
 	commentsEl.classList.add('comments');
-	fillComments(commentsEl, source['id']);
+	fillComments(commentsEl, source['id'], commentAmountEl);
 	return commentsEl;
 }
 
@@ -376,7 +376,7 @@ const renderPhoto = (sources) => {
 			let likeIcon = renderLikeIcon(likeEl, source);
 			let commentAmountEl = renderCommentAmountEl(source);
 			let commentAmountIcon = renderCommentAmountIcon();
-			let commentsEl = renderCommentsEl(source);
+			let commentsEl = renderCommentsEl(source, commentAmountEl);
 			let addCommentEl = renderAddCommentEl(commentsEl, source, commentAmountEl);
 			
 			containerEl.classList.add('photo-container');

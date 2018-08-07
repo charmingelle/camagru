@@ -24,18 +24,11 @@ Route::post(['uri' => '/photos', 'controller' => 'DataController@getPhotos']);
 
 Route::post(['uri' => '/isSignedIn', 'controller' => 'AuthController@isSignedIn']);
 
-
-
 Route::post(['uri' => '/getLikeStatus', 'controller' => 'DataController@getLikeStatus', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/getLikes', 'controller' => 'DataController@getLikes', 'condition' => 'signed in']);
 
 Route::post(['uri' => '/likeDislike', 'controller' => 'DataController@likeDislike', 'condition' => 'signed in']);
-
-
-
-
-
 
 Route::post(['uri' => '/addComment', 'controller' => 'DataController@addComment', 'condition' => 'signed in']);
 

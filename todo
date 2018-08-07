@@ -61,14 +61,13 @@ TODO
 + think about covering fetch in some shorter function
 + fix bug with several back to camera buttons
 + fix bug with sticker put on error message
++ fix bug with comment amount
 
 
 
 - create account page layout
 - think about what happens with fetch when DB error happens
-- empty $_SESSION data in one function
 - make sure that layout is responsive
 - find out why though min width is there, elements go crazy
 - move website to free hosting
-- fix bug with comment amount
 - fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
