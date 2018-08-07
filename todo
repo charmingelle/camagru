@@ -62,6 +62,7 @@ TODO
 + fix bug with several back to camera buttons
 + fix bug with sticker put on error message
 + fix bug with comment amount
++ add publish comment button
 
 
 
@@ -71,3 +72,4 @@ TODO
 - find out why though min width is there, elements go crazy
 - move website to free hosting
 - fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
+- test everything

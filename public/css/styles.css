@@ -275,6 +275,10 @@ input:focus {
 	margin-top: 1%;
 }
 
+.add-comment-button {
+	width: 100%;
+}
+
 #content {
 	padding-top: 77px;
 }

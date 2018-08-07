@@ -33,7 +33,7 @@ const renderSigninForm = () => {
 	passwordInput.type = 'password';
 	passwordInput.value = '';
 	submitButton.innerHTML = 'Sign in';
-	submitButton.addEventListener('click', () => signinFormHandler(loginInput.value, passwordInput.value));
+	submitButton.addEventListener('click', () => signinFormHandler(loginInput, passwordInput));
 	loginInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
 	passwordInput.addEventListener('keypress', (event) => enterPressHandler(event, signinFormHandler, loginInput, passwordInput));
 	removeAllChildren(formContainer);
@@ -223,27 +223,25 @@ const fillComments = (commentsEl, photoId, commentAmountEl) => {
 	});
 }
 
+const addCommentHandler = (commentsEl, addCommentEl, commentAmountEl, photoId) => {
+	if (addCommentEl.value) {
+		postFetchNoResponse('/addComment', {'comment': addCommentEl.value, 'photo-id': photoId})
+		.then(() => {
+			postFetch('/increaseCommentCount', {'id': photoId})
+			.then(commentAmount => {
+				commentAmountEl.innerHTML = commentAmount;
+			}, printError)
+		});
+		addCommentEl.value = '';
+		removeAllChildren(commentsEl);
+		fillComments(commentsEl, photoId, commentAmountEl);
+	}
+}
+
 const setSignedInAddComment = (addCommentEl, commentsEl, photoId, commentAmountEl) => {
 	addCommentEl.placeholder = 'Add a comment...';
 	addCommentEl.maxLength = '8000';
-	addCommentEl.addEventListener('keypress', (event) => {
-		let keycode = (event.keyCode ? event.keyCode : event.which);
-		
-		if (keycode === ENTER) {
-			if (addCommentEl.value) {
-				postFetchNoResponse('/addComment', {'comment': addCommentEl.value, 'photo-id': photoId})
-				.then(() => {
-					postFetch('/increaseCommentCount', {'id': photoId})
-					.then(commentAmount => {
-						commentAmountEl.innerHTML = commentAmount;
-					}, printError)
-				});
-				addCommentEl.value = '';
-				removeAllChildren(commentsEl);
-				fillComments(commentsEl, photoId, commentAmountEl);
-			}
-		}
-	});
+	addCommentEl.addEventListener('keypress', (event) => enterPressHandler(event, addCommentHandler, commentsEl, addCommentEl, commentAmountEl, photoId));
 }
 
 const setNotSignedInAddComment = (addCommentEl) => {
@@ -365,6 +363,15 @@ const renderAddCommentEl = (commentsEl, source, commentAmountEl) => {
 	return addCommentEl;
 }
 
+const renderAddCommentButton = (commentsEl, addCommentEl, commentAmountEl, photoId) => {
+	let addCommentButton = document.createElement('button');
+
+	addCommentButton.innerHTML = 'Publish';
+	addCommentButton.classList.add('add-comment-button');
+	addCommentButton.addEventListener('click', () => addCommentHandler(commentsEl, addCommentEl, commentAmountEl, photoId));
+	return addCommentButton;
+}
+
 const renderPhoto = (sources) => {
 	if (sources) {
 		const images = sources.map(source => {
@@ -383,7 +390,12 @@ const renderPhoto = (sources) => {
 			likeCommentEl.classList.add('like-comment');
 
 			likeCommentEl.append(likeIcon, likeEl, commentAmountIcon, commentAmountEl);
-			containerEl.append(loginEl, imageEl, likeCommentEl, commentsEl, addCommentEl);			
+			containerEl.append(loginEl, imageEl, likeCommentEl, commentsEl, addCommentEl);
+			if (isSignedIn) {
+				let addCommentButton = renderAddCommentButton(commentsEl, addCommentEl, commentAmountEl, source['id']);
+				
+				containerEl.appendChild(addCommentButton);
+			}
 			return containerEl;
 		});
 		gallery.append(...images);
