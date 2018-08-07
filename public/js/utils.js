@@ -1,139 +1,177 @@
 export const ENTER = 13;
 
-const vh = (v) => {
-	let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+const vh = v => {
+  let h = Math.max(
+    document.documentElement.clientHeight,
+    window.innerHeight || 0
+  );
 
-	return (v * h) / 100;
-}
+  return (v * h) / 100;
+};
 
-const vw = (v) => {
-	let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+const vw = v => {
+  let w = Math.max(
+    document.documentElement.clientWidth,
+    window.innerWidth || 0
+  );
 
-	return (v * w) / 100;
-}
+  return (v * w) / 100;
+};
 
-export const vmin = (v) => {
-	return Math.min(vh(v), vw(v));
-}
+export const vmin = v => {
+  return Math.min(vh(v), vw(v));
+};
 
-export const removeAllChildren = (elem) => {
-	while (elem.firstChild) {
-		elem.removeChild(elem.firstChild);
-	}
-}
+export const removeAllChildren = elem => {
+  while (elem.firstChild) {
+    elem.removeChild(elem.firstChild);
+  }
+};
 
-export const isLeftButton = (event) => {
-	event = event || window.event;
-	if ("buttons" in event) {
-		return event.buttons == 1;
-	}
-	let button = event.which || event.button;
+export const isLeftButton = event => {
+  event = event || window.event;
+  if ('buttons' in event) {
+    return event.buttons == 1;
+  }
+  let button = event.which || event.button;
 
-	return button == 1;
-}
+  return button == 1;
+};
 
-export const dragAndDrop = (element, mouseDownHandler, mouseMoveHandler, mouseUpHandler) => {
-	let drag = false;
-	
-	element.onmousedown = (downEvent) => {
-		if (isLeftButton(downEvent)) {
-			drag = true;
-			element.ondragstart = () => {
-				return false;
-			};
-			mouseDownHandler(downEvent);
-			document.onmousemove = (moveEvent) => {
-				if (drag) {
-					mouseMoveHandler(moveEvent);
-				}
-			}
-			document.onmouseup = (upEvent) => {
-				if (drag) {
-					drag = false;
-					mouseUpHandler(upEvent);
-				}
-			}
-		}
-	}
-}
+/**
+ * TODO: Consider using of named arguments
+ * export const dragAndDrop = (
+ *		element,
+ *		{
+ *     onMouseDownHandler,
+ *		 onMouseMoveHandler,
+ *		 onMouseUpHandler
+ *		}
+ *		) => {
+ */
+
+export const dragAndDrop = (
+  element,
+  mouseDownHandler,
+  mouseMoveHandler,
+  mouseUpHandler
+) => {
+  let drag = false;
+
+  element.onmousedown = downEvent => {
+    if (isLeftButton(downEvent)) {
+      drag = true;
+      element.ondragstart = () => {
+        return false;
+      };
+      mouseDownHandler(downEvent);
+      document.onmousemove = moveEvent => {
+        if (drag) {
+          mouseMoveHandler(moveEvent);
+        }
+      };
+      document.onmouseup = upEvent => {
+        if (drag) {
+          drag = false;
+          mouseUpHandler(upEvent);
+        }
+      };
+    }
+  };
+};
+
+/**
+ *  TODO: Replace with form and onSubmit
+ *
+ * const handleSumbmit = ev => {
+ * 	ev.preventDefault()
+ * 	callback()
+ * }
+ */
 
 export const enterPressHandler = (event, callback, ...params) => {
-	let keycode = (event.keyCode ? event.keyCode : event.which);
-	
-	if (keycode === ENTER) {
-		callback(...params);
-	}
-}
+  let keycode = event.keyCode ? event.keyCode : event.which;
+
+  if (keycode === ENTER) {
+    callback(...params);
+  }
+};
 
 export const renderMessageContainer = (container, message) => {
-	removeAllChildren(container);
-	if (!message) {
-		container.classList.add('invisible');
-	} else {
-		container.classList.remove('invisible');
-		container.innerHTML = message;
-	}
-}
+  removeAllChildren(container);
+  if (!message) {
+    container.classList.add('invisible');
+  } else {
+    container.classList.remove('invisible');
+    container.innerHTML = message;
+  }
+};
 
 export const isScrolledToBottom = () => {
-	return (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
-}
+  return window.innerHeight + window.scrollY >= document.body.offsetHeight;
+};
 
-export const printError = (error) => {
-	console.error(error);
-}
+// TODO: Remove redundant wrapper -> then(console.error)
+export const printError = error => {
+  console.error(error);
+};
 
 const cancelHandler = (overlay, modalWindow) => {
-	document.body.removeChild(overlay);
-	document.body.removeChild(modalWindow);
-	document.body.classList.remove('no-scroll');
-}
+  document.body.removeChild(overlay);
+  document.body.removeChild(modalWindow);
+  document.body.classList.remove('no-scroll');
+};
 
 const okHandler = (overlay, modalWindow, okCallback) => {
-	document.body.removeChild(overlay);	
-	document.body.removeChild(modalWindow);
-	document.body.classList.remove('no-scroll');
+  document.body.removeChild(overlay);
+  document.body.removeChild(modalWindow);
+  document.body.classList.remove('no-scroll');
 
-	okCallback();
-}
+  okCallback();
+};
 
 export const customConfirm = (question, okCallback) => {
-	if (!document.getElementById('custom-confirm')) {
-		let overlay = document.createElement('div');
-		let modalWindow = document.createElement('div');
-		let questionContainer = document.createElement('p');
-		let cancelButton = document.createElement("button");
-		let okButton = document.createElement('button');
-		let okButtonWindow = document.createElement('input');
-		
-		document.body.classList.add('no-scroll');
-		overlay.id = 'overlay';
-		modalWindow.id = 'custom-confirm';
-		questionContainer.innerHTML = question;
-		cancelButton.innerHTML = 'Cancel';
-		cancelButton.addEventListener('click', cancelHandler.bind(this, overlay, modalWindow));
-		okButton.innerHTML = 'OK';
-		okButton.classList.add('ok-button');
-		okButton.addEventListener('click', okHandler.bind(this, overlay, modalWindow, okCallback));
-		modalWindow.append(questionContainer, cancelButton, okButton);
-		document.body.append(overlay);
-		document.body.append(modalWindow);
-	}
-}
+  if (!document.getElementById('custom-confirm')) {
+    let overlay = document.createElement('div');
+    let modalWindow = document.createElement('div'); //TODO: modal
+    let questionContainer = document.createElement('p');
+    let cancelButton = document.createElement('button');
+    let okButton = document.createElement('button');
+    // let okButtonWindow = document.createElement('input');
+
+    document.body.classList.add('no-scroll');
+    overlay.id = 'overlay';
+    modalWindow.id = 'custom-confirm';
+    questionContainer.innerHTML = question;
+    cancelButton.innerHTML = 'Cancel';
+    cancelButton.addEventListener(
+      'click',
+      cancelHandler.bind(this, overlay, modalWindow)
+    );
+    okButton.innerHTML = 'OK';
+    okButton.classList.add('ok-button');
+    okButton.addEventListener(
+      'click',
+      okHandler.bind(this, overlay, modalWindow, okCallback)
+    );
+    modalWindow.append(questionContainer, cancelButton, okButton);
+    document.body.append(overlay);
+    document.body.append(modalWindow);
+  }
+};
 
 export const postFetch = (uri, requestBody) => {
-	return fetch(uri, {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify(requestBody)
-	})
-	.then(response => response.json(), printError);
-}
+  return fetch(uri, {
+    method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify(requestBody),
+  }).then(response => response.json(), printError);
+};
 
 export const postFetchNoResponse = (uri, requestBody) => {
-	return fetch(uri, {
-		method: 'POST',
-		credentials: 'include',
-		body: JSON.stringify(requestBody)
-	});
-}
+  return fetch(uri, {
+    method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify(requestBody),
+  });
+};
