@@ -63,6 +63,7 @@ TODO
 + fix bug with sticker put on error message
 + fix bug with comment amount
 + add publish comment button
++ replace all binds with lambdas
 
 
 
@@ -75,3 +76,11 @@ TODO
 - test everything
 - include media queries for responsive layout
 - check what happens with drag and drop on mobile device
+- prettify everything
+- replace all object['property'] with object.property
+- replace my custom forms with normal ones
+- check if I need to use https://css-tricks.com/almanac/properties/t/text-transform/ anywhere
+
+
+
+// error_log("message");

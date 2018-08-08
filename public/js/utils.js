@@ -1,28 +1,6 @@
 export const ENTER = 13;
 
-const vh = v => {
-  let h = Math.max(
-    document.documentElement.clientHeight,
-    window.innerHeight || 0
-  );
-
-  return (v * h) / 100;
-};
-
-const vw = v => {
-  let w = Math.max(
-    document.documentElement.clientWidth,
-    window.innerWidth || 0
-  );
-
-  return (v * w) / 100;
-};
-
-export const vmin = v => {
-  return Math.min(vh(v), vw(v));
-};
-
-export const removeAllChildren = elem => {
+export const clear = elem => {
   while (elem.firstChild) {
     elem.removeChild(elem.firstChild);
   }
@@ -98,7 +76,7 @@ export const enterPressHandler = (event, callback, ...params) => {
 };
 
 export const renderMessageContainer = (container, message) => {
-  removeAllChildren(container);
+  clear(container);
   if (!message) {
     container.classList.add('invisible');
   } else {
@@ -109,11 +87,6 @@ export const renderMessageContainer = (container, message) => {
 
 export const isScrolledToBottom = () => {
   return window.innerHeight + window.scrollY >= document.body.offsetHeight;
-};
-
-// TODO: Remove redundant wrapper -> then(console.error)
-export const printError = error => {
-  console.error(error);
 };
 
 const cancelHandler = (overlay, modalWindow) => {
@@ -133,11 +106,10 @@ const okHandler = (overlay, modalWindow, okCallback) => {
 export const customConfirm = (question, okCallback) => {
   if (!document.getElementById('custom-confirm')) {
     let overlay = document.createElement('div');
-    let modalWindow = document.createElement('div'); //TODO: modal
+    let modalWindow = document.createElement('modal');
     let questionContainer = document.createElement('p');
     let cancelButton = document.createElement('button');
     let okButton = document.createElement('button');
-    // let okButtonWindow = document.createElement('input');
 
     document.body.classList.add('no-scroll');
     overlay.id = 'overlay';
@@ -146,13 +118,13 @@ export const customConfirm = (question, okCallback) => {
     cancelButton.innerHTML = 'Cancel';
     cancelButton.addEventListener(
       'click',
-      cancelHandler.bind(this, overlay, modalWindow)
+      () => cancelHandler(overlay, modalWindow)
     );
     okButton.innerHTML = 'OK';
     okButton.classList.add('ok-button');
     okButton.addEventListener(
       'click',
-      okHandler.bind(this, overlay, modalWindow, okCallback)
+      () => okHandler(overlay, modalWindow, okCallback)
     );
     modalWindow.append(questionContainer, cancelButton, okButton);
     document.body.append(overlay);
@@ -160,15 +132,15 @@ export const customConfirm = (question, okCallback) => {
   }
 };
 
-export const postFetch = (uri, requestBody) => {
+export const post = (uri, requestBody) => {
   return fetch(uri, {
     method: 'POST',
     credentials: 'include',
     body: JSON.stringify(requestBody),
-  }).then(response => response.json(), printError);
+  }).then(response => response.json(), console.error);
 };
 
-export const postFetchNoResponse = (uri, requestBody) => {
+export const postNoResponse = (uri, requestBody) => {
   return fetch(uri, {
     method: 'POST',
     credentials: 'include',

@@ -142,11 +142,11 @@ class Account {
 				&& $_SESSION['auth-data']['login'] !== '';
 	}
 
-	public static function getNotification($login) {
+	public static function getNotificationStatus($login) {
 		return DBConnect::sendQuery('SELECT notification FROM account WHERE login = :login', ['login' => $login])->fetchAll()[0]['notification'];
 	}
 
-	public static function changeNotification() {
+	public static function changeNotificationStatus() {
 		DBConnect::sendQuery('UPDATE account SET notification = NOT notification WHERE login = :login', ['login' => $_SESSION['auth-data']['login']]);
 	}
 	

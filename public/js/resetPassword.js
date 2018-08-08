@@ -1,7 +1,6 @@
 import {
   enterPressHandler,
   renderMessageContainer,
-  printError,
 } from '/js/utils.js';
 
 let messageContainer = document.getElementById(
@@ -18,8 +17,8 @@ const resetPasswordHandler = () => {
       credentials: 'include',
       body: JSON.stringify({ password }),
     })
-      .then(response => response.json(), printError) // TODO: Add if response.ok
-      .then(data => renderMessageContainer(messageContainer, data), printError);
+      .then(response => response.json(), console.error) // TODO: Add if response.ok
+      .then(data => renderMessageContainer(messageContainer, data), console.error);
   }
 };
 

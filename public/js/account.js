@@ -1,32 +1,18 @@
-// TODO: Consider replacing Function#bind with arrow functions
-
 import {
-  // vmin,
-  removeAllChildren,
+  clear,
   dragAndDrop,
   enterPressHandler,
   renderMessageContainer,
-  printError,
   customConfirm,
   isLeftButton,
-  postFetch,
-  postFetchNoResponse,
+  post,
+  postNoResponse,
 } from '/js/utils.js';
 
-// const UP = 'ArrowUp';
-// const DOWN = 'ArrowDown';
-// const LEFT = 'ArrowLeft';
-// const RIGHT = 'ArrowRight';
-// const W = 'w';
-// const S = 's';
-// const A = 'a';
-// const D = 'd';
-// const Q = 'q';
-// const E = 'e';
-// const DELETE = 'Delete';
+import { stretcher } from '/js/stretcher.js';
 
 const hello = document.getElementById('hello');
-const stickableContainer = true;
+let isContainerStickable = true;
 const container = document.getElementById('container');
 const stickersContainer = document.getElementById('stickers');
 const photosContainer = document.getElementById('user-photos');
@@ -41,7 +27,7 @@ const messageContainer = document.getElementById('account-message-container');
 const email = document.getElementById('email');
 const login = document.getElementById('login');
 const password = document.getElementById('password');
-const notification = document.getElementById('notification');
+let notificationStatus = document.getElementById('notification-status');
 
 const getCoords = elem => {
   const box = elem.getBoundingClientRect();
@@ -52,88 +38,80 @@ const getCoords = elem => {
   };
 };
 
+const renderImg = url => {
+  let image = document.createElement('img');
+
+  image.src = url;
+  image.classList.add('user-photo');
+  image.alt = 'Photo';
+  return image;
+};
+
 const sendDeletePhotoRequest = (id, imageContainer) => {
-  postFetchNoResponse('/deleteUserPhoto', { id: id }).then(
+  postNoResponse('/deleteUserPhoto', { id: id }).then(
     () => photosContainer.removeChild(imageContainer),
-    printError
+    console.error
   );
 };
 
 const showDeletePhotoConfirm = (id, imageContainer) => {
-  customConfirm(
-    'Are you sure you would like to delete this photo?',
-    sendDeletePhotoRequest.bind(this, id, imageContainer)
+  customConfirm('Are you sure you would like to delete this photo?', () =>
+    sendDeletePhotoRequest(id, imageContainer)
   );
 };
 
-const okCallbackForPublish = (button, id, buttonTitle) => {
-  postFetchNoResponse('/publish', { id }).then(() => {
-    // TODO: use https://css-tricks.com/almanac/properties/t/text-transform/
+const renderDeleteButton = (id, imageContainer) => {
+  let button = document.createElement('button');
+
+  button.innerHTML = 'Delete';
+  button.classList.add('delete-button');
+  button.addEventListener('click', () =>
+    showDeletePhotoConfirm(id, imageContainer)
+  );
+  return button;
+};
+
+const okCallbackForTogglePhotoStatus = (button, id, buttonTitle) => {
+  postNoResponse('/publish', { id }).then(() => {
     button.innerHTML = buttonTitle;
-  }, printError);
+  }, console.error);
 };
 
-/**
- * Consider replacing with 'publishPhoto' and 'hidePhoto'
- * or change naming to 'togglePhotoStatus'
- */
-const publish = (button, id, privateStatus) => {
+const togglePhotoStatus = (button, id, privateStatus) => {
   let action = privateStatus ? 'publish' : 'hide';
+  let buttonTitle = privateStatus ? 'Hide' : 'Publish';
 
-  customConfirm(
-    `Are you sure you would like to ${action} this photo?`,
-    okCallbackForPublish.bind(this, button, id, action)
+  customConfirm(`Are you sure you would like to ${action} this photo?`, () =>
+    okCallbackForTogglePhotoStatus(button, id, buttonTitle)
   );
 };
 
-const renderPublishButton = (button, id) => {
-  postFetch('/getPhotoPrivate', { id: id }).then(privateStatus => {
-    // TODO: use ternary
-    if (privateStatus) {
-      button.innerHTML = 'Publish';
-    } else {
-      button.innerHTML = 'Hide';
-    }
-    button.addEventListener(
-      'click',
-      publish.bind(this, button, id, privateStatus)
+const renderTogglePhotoStatusButton = id => {
+  let button = document.createElement('button');
+
+  post('/getPhotoPrivate', { id }).then(privateStatus => {
+    privateStatus
+      ? (button.innerHTML = 'Publish')
+      : (button.innerHTML = 'Hide');
+    button.addEventListener('click', () =>
+      togglePhotoStatus(button, id, privateStatus)
     );
-  }, printError);
+  }, console.error);
+  button.classList.add('publish-button');
+  return button;
 };
 
 const renderPhoto = sources => {
   if (sources) {
-    // TODO: Remove redundant reverse
-    // sources.reverse();
-
-    // const elem = `
-    // 	<div onclick=${listener} class='user-photo-container'>
-    // 		<img src='${source.url}' class='user-photo'/>
-    // 	</div>
-    // `;
-
-    // imageContainer.innerHTML(elem);
+    sources.reverse();
 
     const images = sources.map(source => {
       let imageContainer = document.createElement('div');
-      let image = document.createElement('img');
-      let deleteButton = document.createElement('button');
-      let publishButton = document.createElement('button');
+      let image = renderImg(source.url);
+      let deleteButton = renderDeleteButton(source.id, imageContainer);
+      let publishButton = renderTogglePhotoStatusButton(source.id);
 
       imageContainer.classList.add('user-photo-container');
-      image.src = source['url'];
-      image.classList.add('user-photo');
-      image.alt = 'Photo';
-      deleteButton.innerHTML = 'Delete';
-      deleteButton.classList.add('delete-button');
-
-      deleteButton.addEventListener('click', () =>
-        showDeletePhotoConfirm(source.id, imageContainer)
-      );
-
-      // TODO: Move all logic related to button to one function
-      renderPublishButton(publishButton, source['id']);
-      publishButton.classList.add('publish-button');
       imageContainer.append(image, deleteButton, publishButton);
       return imageContainer;
     });
@@ -143,294 +121,111 @@ const renderPhoto = sources => {
 };
 
 const renderPhotos = () => {
-  removeAllChildren(photosContainer);
-  postFetch('/userPictures', {}).then(renderPhoto, printError);
+  clear(photosContainer);
+  post('/userPictures', {}).then(renderPhoto, console.error);
+};
+
+const createVideoElement = stream => {
+  let video = document.createElement('video');
+
+  video.id = 'video';
+  video.classList.add('sticker-base');
+  video.autoplay = 'true';
+  video.srcObject = stream;
+  container.insertBefore(video, container.firstChild);
+  isContainerStickable = true;
+  canSavePhoto()
+    ? (captureButton.disabled = '')
+    : (captureButton.disabled = 'disabled');
+};
+
+const createVideoErrorElement = error => {
+  if (!document.getElementById('video-error')) {
+    let errorMessage = document.createElement('p');
+
+    errorMessage.innerHTML =
+      'Your camera cannot be used. Please upload a photo.';
+    errorMessage.id = 'video-error';
+    container.insertBefore(errorMessage, container.firstChild);
+    isContainerStickable = false;
+    canSavePhoto()
+      ? (captureButton.disabled = '')
+      : (captureButton.disabled = 'disabled');
+  }
 };
 
 const renderCamera = () => {
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices
       .getUserMedia({ video: true })
-      .then(stream => {
-        // TODO: consider moving logic of creating of video element to separate function
-        let video = document.createElement('video');
-
-        video.id = 'video';
-        video.classList.add('sticker-base');
-        video.autoplay = 'true';
-        video.srcObject = stream;
-        container.insertBefore(video, container.firstChild);
-        stickableContainer = true;
-        renderButton(captureButton);
-      })
-      .catch(error => {
-        if (!document.getElementById('video-error')) {
-          let errorMessage = document.createElement('p');
-
-          errorMessage.innerHTML =
-            'Your camera cannot be used. Please upload a photo.';
-          errorMessage.id = 'video-error';
-          container.insertBefore(errorMessage, container.firstChild);
-          stickableContainer = false;
-          renderButton(captureButton);
-        }
-      });
+      .then(createVideoElement)
+      .catch(createVideoErrorElement);
   }
 };
 
-const savePhoto = () => {
+const getBaseData = base => {
   let canvas = document.createElement('canvas');
-  let layers = Array.from(container.children);
-
-  /**
-   * TODO:
-   * 1) Move callback of map to separate function
-   * 2) Handle base and stickers separatly and remove redundant
-   * check 'id === 0'
-   */
-
-  // const [base, ...stickers] = Array.from(container.children);
+  let style = getComputedStyle(base);
+  let left = parseInt(style.left);
+  let top = parseInt(style.top);
+  let width = parseInt(style.width);
+  let height = parseInt(style.height);
+  let type = 'string';
 
   canvas.width = parseInt(getComputedStyle(container).width);
   canvas.height = parseInt(getComputedStyle(container).height);
+  canvas.getContext('2d').drawImage(base, left, top, width, height);
 
-  let layersData = layers.map((layer, id) => {
-    let style = getComputedStyle(layer);
-    let left = parseInt(style.left);
-    let top = parseInt(style.top);
-    let width = parseInt(style.width);
-    let height = parseInt(style.height);
-    let source = layer.src;
-    let type = 'file';
+  let source = canvas.toDataURL();
 
-    canvas.getContext('2d').drawImage(layer, left, top, width, height);
+  return {
+    source,
+    type,
+    left,
+    top,
+    width,
+    height,
+  };
+};
 
-    if (id === 0) {
-      source = canvas.toDataURL();
-      type = 'string';
+const getStickerData = sticker => {
+  let style = getComputedStyle(sticker);
+  let left = parseInt(style.left);
+  let top = parseInt(style.top);
+  let width = parseInt(style.width);
+  let height = parseInt(style.height);
+  let source = sticker.src;
+  let type = 'file';
+
+  return {
+    source,
+    type,
+    left,
+    top,
+    width,
+    height,
+  };
+};
+
+const savePhoto = () => {
+  let [base, ...stickers] = Array.from(container.children);
+  let layers = [
+    getBaseData(base),
+    ...stickers.map(sticker => getStickerData(sticker)),
+  ];
+
+  postNoResponse('/savePhoto', { layers }).then(renderPhotos, console.error);
+};
+
+const changeCursorClass = (elem, newClass, cursorClasses) => {
+  let elemClassList = Array.from(elem.classList);
+
+  cursorClasses.forEach(cursorClassName => {
+    if (elemClassList.includes(cursorClassName)) {
+      elem.classList.remove(cursorClassName);
     }
-
-    return {
-      source,
-      type,
-      left,
-      top,
-      width,
-      height,
-    };
   });
-
-  postFetchNoResponse('/savePhoto', { layers: layersData }).then(
-    renderPhotos,
-    printError
-  );
-};
-
-// TODO: Consider creating of separate module - Stretcher
-// TODO: Consider using of named arguments
-const stretchLeft = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      let diff =
-        parseInt(element.style.left) -
-        moveEvent.clientX +
-        container.getBoundingClientRect().left;
-      let prevLeft = element.getBoundingClientRect().left;
-      let currRight = prevLeft + element.getBoundingClientRect().width;
-      let currLeft = prevLeft - diff;
-
-      // TODO: Replace with transform
-      // https://habr.com/company/odnoklassniki/blog/313978/
-
-      if (currLeft < currRight) {
-        prevLeft = parseInt(element.style.left);
-        element.style.left = prevLeft - diff + 'px';
-        currLeft = parseInt(element.style.left);
-        element.style.width =
-          element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
-      }
-    },
-    () => {}
-  );
-};
-
-const stretchRight = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      let diff = moveEvent.clientX - element.getBoundingClientRect().right;
-
-      element.style.width = element.getBoundingClientRect().width + diff + 'px';
-    },
-    () => {}
-  );
-};
-
-const stretchUp = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      let diff =
-        parseInt(element.style.top) -
-        moveEvent.clientY +
-        container.getBoundingClientRect().top;
-      let prevTop = element.getBoundingClientRect().top;
-      let currBottom = prevTop + element.getBoundingClientRect().height;
-      let currTop = prevTop - diff;
-
-      if (currTop < currBottom) {
-        prevTop = parseInt(element.style.top);
-        element.style.top = prevTop - diff + 'px';
-        currTop = parseInt(element.style.top);
-        element.style.height =
-          element.getBoundingClientRect().height - currTop + prevTop + 'px';
-      }
-    },
-    () => {}
-  );
-};
-
-const stretchDown = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      let diff = moveEvent.clientY - element.getBoundingClientRect().bottom;
-
-      element.style.height =
-        element.getBoundingClientRect().height + diff + 'px';
-    },
-    () => {}
-  );
-};
-
-const stretchLeftUp = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      let diff =
-        (parseInt(element.style.left) -
-          moveEvent.clientX +
-          container.getBoundingClientRect().left +
-          parseInt(element.style.top) -
-          moveEvent.clientY +
-          container.getBoundingClientRect().top) /
-        2;
-
-      let prevLeft = element.getBoundingClientRect().left;
-      let prevTop = element.getBoundingClientRect().top;
-      let prevWidth = element.getBoundingClientRect().width;
-      let prevHeight = element.getBoundingClientRect().height;
-      let rightLimit = prevLeft + prevWidth;
-      let bottomLimit = prevTop + prevHeight;
-      let currLeft = prevLeft - diff;
-      let shiftY = ((diff + prevWidth) * prevHeight) / prevWidth - prevHeight;
-      let currTop = prevTop - shiftY;
-
-      if (currLeft < rightLimit && currTop < bottomLimit) {
-        prevLeft = parseInt(element.style.left);
-        prevTop = parseInt(element.style.top);
-        element.style.left = prevLeft - diff + 'px';
-        element.style.top = prevTop - shiftY + 'px';
-        currLeft = parseInt(element.style.left);
-        currTop = parseInt(element.style.top);
-        element.style.width = prevWidth - currLeft + prevLeft + 'px';
-        element.style.height = prevHeight - currTop + prevTop + 'px';
-      }
-    },
-    () => {}
-  );
-};
-
-const stretchRightUp = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      let diff =
-        (moveEvent.clientX -
-          element.getBoundingClientRect().right +
-          parseInt(element.style.top) -
-          moveEvent.clientY +
-          container.getBoundingClientRect().top) /
-        2;
-      let prevTop = element.getBoundingClientRect().top;
-      let currBottom = prevTop + element.getBoundingClientRect().height;
-      let currTop = prevTop - diff;
-
-      if (currTop < currBottom) {
-        prevTop = parseInt(element.style.top);
-        let prevHeight = element.getBoundingClientRect().height;
-        let prevWidth = element.getBoundingClientRect().width;
-        element.style.top = prevTop - diff + 'px';
-        currTop = parseInt(element.style.top);
-        element.style.height = prevHeight - currTop + prevTop + 'px';
-        let currHeight = element.getBoundingClientRect().height;
-        element.style.width = prevWidth * (currHeight / prevHeight) + 'px';
-      }
-    },
-    () => {}
-  );
-};
-
-const stretchLeftDown = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      // TODO: Consider using of cached value of client rect
-      // const clientRect = element.getBoundingClientRect()
-
-      let diff =
-        (moveEvent.clientY -
-          element.getBoundingClientRect().bottom +
-          parseInt(element.style.left) -
-          moveEvent.clientX +
-          container.getBoundingClientRect().left) /
-        2;
-      let prevLeft = element.getBoundingClientRect().left;
-      let currRight = prevLeft + element.getBoundingClientRect().width;
-      let currLeft = prevLeft - diff;
-
-      if (currLeft < currRight) {
-        prevLeft = parseInt(element.style.left);
-        let prevWidth = element.getBoundingClientRect().width;
-        let prevHeight = element.getBoundingClientRect().height;
-        element.style.left = prevLeft - diff + 'px';
-        currLeft = parseInt(element.style.left);
-        element.style.width = prevWidth - currLeft + prevLeft + 'px';
-        let currWidth = element.getBoundingClientRect().width;
-        element.style.height = prevHeight * (currWidth / prevWidth) + 'px';
-      }
-    },
-    () => {}
-  );
-};
-
-const stretchRightDown = element => {
-  dragAndDrop(
-    element,
-    () => {},
-    moveEvent => {
-      let diff =
-        (moveEvent.clientX -
-          element.getBoundingClientRect().right +
-          moveEvent.clientY -
-          element.getBoundingClientRect().bottom) /
-        2;
-      let prevWidth = element.getBoundingClientRect().width;
-      let prevHeight = element.getBoundingClientRect().height;
-      element.style.width = prevWidth + diff + 'px';
-      let currWidth = element.getBoundingClientRect().width;
-      element.style.height = prevHeight * (currWidth / prevWidth) + 'px';
-    },
-    () => {}
-  );
+  elem.classList.add(newClass);
 };
 
 // TODO: Read about currying
@@ -445,29 +240,28 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
     right,
     bottom,
   } = mouseMoveEvent.target.getBoundingClientRect();
-
-  // let shift = vmin(1);
-  let shift = 5; //px
-
-  // TODO: Use css classes for this
-  mouseMoveEvent.target.style.cursor = '-webkit-grab';
-  mouseMoveEvent.target.style.cursor = 'grab';
-
+  let shift = 5; // px
   const isPointInside = makeIsPointInsideRect(
     mouseMoveEvent.clientX,
     mouseMoveEvent.clientY
   );
-
   const leftUpRect = {
     left,
     right: left + shift,
     top,
     bottom: top + shift,
   };
+  const cursorClasses = [
+    'hand-cursor',
+    'horizontal-cursor',
+    'vertical-cursor',
+    'slash-cursor',
+    'backslash-cursor',
+  ];
 
   if (isPointInside(leftUpRect)) {
-    mouseMoveEvent.target.style.cursor = 'nwse-resize';
-    stretchLeftUp(mouseMoveEvent.target);
+    changeCursorClass(mouseMoveEvent.target, 'backslash-cursor', cursorClasses);
+    stretcher.stretchLeftUp(mouseMoveEvent.target);
   } else if (
     isPointInside({
       left: right - shift,
@@ -476,8 +270,8 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       bottom: top + shift,
     })
   ) {
-    mouseMoveEvent.target.style.cursor = 'nesw-resize';
-    stretchRightUp(mouseMoveEvent.target);
+    changeCursorClass(mouseMoveEvent.target, 'slash-cursor', cursorClasses);
+    stretcher.stretchRightUp(mouseMoveEvent.target);
   } else if (
     isPointInside({
       left: left,
@@ -486,8 +280,8 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       bottom: bottom,
     })
   ) {
-    mouseMoveEvent.target.style.cursor = 'nesw-resize';
-    stretchLeftDown(mouseMoveEvent.target);
+    changeCursorClass(mouseMoveEvent.target, 'slash-cursor', cursorClasses);
+    stretcher.stretchLeftDown(mouseMoveEvent.target);
   } else if (
     isPointInside({
       left: right - shift,
@@ -496,8 +290,8 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       bottom: bottom,
     })
   ) {
-    mouseMoveEvent.target.style.cursor = 'nwse-resize';
-    stretchRightDown(mouseMoveEvent.target);
+    changeCursorClass(mouseMoveEvent.target, 'backslash-cursor', cursorClasses);
+    stretcher.stretchRightDown(mouseMoveEvent.target);
   } else if (
     isPointInside({
       left: left,
@@ -506,8 +300,8 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       bottom: top + shift,
     })
   ) {
-    mouseMoveEvent.target.style.cursor = 'ns-resize';
-    stretchUp(mouseMoveEvent.target);
+    changeCursorClass(mouseMoveEvent.target, 'vertical-cursor', cursorClasses);
+    stretcher.stretchUp(mouseMoveEvent.target);
   } else if (
     isPointInside({
       left: left,
@@ -516,8 +310,8 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       bottom: bottom,
     })
   ) {
-    mouseMoveEvent.target.style.cursor = 'ns-resize';
-    stretchDown(mouseMoveEvent.target);
+    changeCursorClass(mouseMoveEvent.target, 'vertical-cursor', cursorClasses);
+    stretcher.stretchDown(mouseMoveEvent.target);
   } else if (
     isPointInside({
       left: left,
@@ -526,8 +320,12 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       bottom: bottom,
     })
   ) {
-    mouseMoveEvent.target.style.cursor = 'ew-resize';
-    stretchLeft(mouseMoveEvent.target);
+    changeCursorClass(
+      mouseMoveEvent.target,
+      'horizontal-cursor',
+      cursorClasses
+    );
+    stretcher.stretchLeft(mouseMoveEvent.target);
   } else if (
     isPointInside({
       left: right - shift,
@@ -536,9 +334,14 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       bottom: bottom,
     })
   ) {
-    mouseMoveEvent.target.style.cursor = 'ew-resize';
-    stretchRight(mouseMoveEvent.target);
+    changeCursorClass(
+      mouseMoveEvent.target,
+      'horizontal-cursor',
+      cursorClasses
+    );
+    stretcher.stretchRight(mouseMoveEvent.target);
   } else {
+    changeCursorClass(mouseMoveEvent.target, 'hand-cursor', cursorClasses);
     dragAndDropInsideContainer(mouseMoveEvent.target, false);
   }
 };
@@ -590,15 +393,6 @@ const canSavePhoto = () => {
   );
 };
 
-// TODO: Consider removing redundant wrapper
-const renderButton = button => {
-  if (canSavePhoto()) {
-    button.disabled = '';
-  } else {
-    button.disabled = 'disabled';
-  }
-};
-
 const dragAndDropInsideContainer = (element, shouldCopy) => {
   let drag = false;
 
@@ -633,7 +427,7 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
       document.onmouseup = upEvent => {
         if (drag) {
           drag = false;
-          if (isElementInsideContainer(toMove) && stickableContainer) {
+          if (isElementInsideContainer(toMove) && isContainerStickable) {
             container.append(toMove);
             toMove.style.left =
               upEvent.clientX -
@@ -651,26 +445,14 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
           } else {
             document.body.removeChild(toMove);
           }
-          renderButton(captureButton);
+          canSavePhoto()
+            ? (captureButton.disabled = '')
+            : (captureButton.disabled = 'disabled');
         }
       };
     }
   };
 };
-
-// const stickSticker = (event) => {
-// 	let sticked = event.target.cloneNode(true);
-
-// 	sticked.classList.remove('sticker');
-// 	sticked.classList.add('sticked-sticker');
-// 	sticked.style.width = window.getComputedStyle(event.target).width;
-// 	sticked.style.height = window.getComputedStyle(event.target).height;
-// 	sticked.style.position = 'absolute';
-// 	sticked.style.left = '0px';
-// 	sticked.style.top = '0px';
-// 	sticked.onmousemove = moveOrChangeStickerSize;
-// 	container.append(sticked);
-// }
 
 const renderSticker = sources => {
   if (sources) {
@@ -682,7 +464,6 @@ const renderSticker = sources => {
       imageDiv.classList.add('image-div');
       image.src = source['url'];
       image.classList.add('sticker');
-      // image.addEventListener('click', stickSticker);
       dragAndDropInsideContainer(image, true);
       imageDiv.append(image);
       return imageDiv;
@@ -700,7 +481,7 @@ const stickerBackHandler = () => {
 };
 
 const renderStickers = () => {
-  postFetch('/stickers', {}).then(renderSticker, printError);
+  post('/stickers', {}).then(renderSticker, console.error);
   document
     .getElementById('stickers-forward')
     .addEventListener('click', stickersForwardHander);
@@ -720,7 +501,9 @@ const clearPhoto = () => {
   stickedStickers.forEach(elem => {
     container.removeChild(elem);
   });
-  renderButton(captureButton);
+  canSavePhoto()
+    ? (captureButton.disabled = '')
+    : (captureButton.disabled = 'disabled');
 };
 
 const uploadPhoto = () => {
@@ -741,9 +524,11 @@ const uploadPhoto = () => {
   uploadedImage.id = 'uploaded-image';
   uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
   container.insertBefore(uploadedImage, container.firstChild);
-  stickableContainer = true;
+  isContainerStickable = true;
   renderBackToCameraButton();
-  renderButton(captureButton);
+  canSavePhoto()
+    ? (captureButton.disabled = '')
+    : (captureButton.disabled = 'disabled');
   clearPhoto();
 };
 
@@ -772,96 +557,69 @@ const renderBackToCameraButton = () => {
 };
 
 const okCallbackForChangeEmailHandler = () => {
-  postFetch('/changeEmail', { email: email.value }).then(
+  post('/changeEmail', { email: email.value }).then(
     data => renderMessageContainer(messageContainer, data),
-    printError
+    console.error
   );
-};
-
-const changeEmailHandler = () => {
-  if (email.value !== '') {
-    customConfirm(
-      'Are you sure you would like to change your email address?',
-      okCallbackForChangeEmailHandler
-    );
-  }
 };
 
 const okCallbackForChangeLoginHandler = () => {
-  postFetch('/changeLogin', { login: login.value }).then(
+  post('/changeLogin', { login: login.value }).then(
     data => renderMessageContainer(messageContainer, data),
-    printError
+    console.error
   );
-};
-
-const changeLoginHandler = () => {
-  if (login.value !== '') {
-    customConfirm(
-      'Are you sure you would like to change your login?',
-      okCallbackForChangeLoginHandler
-    );
-  }
 };
 
 const okCallbackForChangePasswordHandler = () => {
-  postFetch('/changePassword', { password: password.value }).then(
+  post('/changePassword', { password: password.value }).then(
     data => renderMessageContainer(messageContainer, data),
-    printError
+    console.error
   );
 };
 
-const changePasswordHandler = () => {
-  if (password.value !== '') {
+const changeInputHandler = (input, text, callback) => {
+  if (input.value !== '') {
     customConfirm(
-      'Are you sure you would like to change your password?',
-      okCallbackForChangePasswordHandler
+      `Are you sure you would like to change your ${text}?`,
+      callback
     );
   }
 };
 
 const renderHello = () => {
-  postFetch('/getLogin', {}).then(login => {
+  post('/getLogin', {}).then(login => {
     hello.innerHTML = `Hello, ${login}`;
-  }, printError);
+  }, console.error);
 };
 
-const okCallbackForChangeNotification = action => {
-  postFetchNoResponse('/changeNotification', {}).then(() => {
+const okCallbackForChangeNotificationStatus = action => {
+  postNoResponse('/changeNotificationStatus', {}).then(() => {
     renderMessageContainer(
       messageContainer,
-      `Email notifications have been ${action}d for your account`
+      `Email notifications have been ${action}D for your account`
     );
-    notification.innerHTML === 'Disable notifications'
-      ? (notification.innerHTML = 'Enable notifications')
-      : (notification.innerHTML = 'Disable notifications');
-  }, printError);
+    notificationStatus.innerHTML === 'Disable notifications'
+      ? (notificationStatus.innerHTML = 'Enable notifications')
+      : (notificationStatus.innerHTML = 'Disable notifications');
+  }, console.error);
 };
 
-const changeNotification = () => {
-  let action = notification.innerHTML.split(' ')[0];
+const changeNotificationStatus = () => {
+  let action = notificationStatus.innerHTML.split(' ')[0].toUpperCase();
 
   customConfirm(
     `Are you sure you would like to ${action} email notifications?`,
-    okCallbackForChangeNotification.bind(this, action)
+    () => okCallbackForChangeNotificationStatus(action)
   );
 };
 
-const renderNotification = () => {
-  notification = document.getElementById('notification');
-  /**
-   * TODO:
-   * 1) Replace url with get-notification-status
-   * 2) Change response object and wrap it with named variable
-   */
-  postFetch('/getNotification', {}).then(data => {
-    // Amazing moment
-    if (data) {
-      notification.innerHTML = 'Disable notifications';
-    } else {
-      notification.innerHTML = 'Enable notifications';
-    }
-    notification.addEventListener('click', changeNotification);
-  }, printError);
+const renderNotificationStatus = () => {
+  post('/getNotificationStatus', {}).then(data => {
+    data.notificationStatus
+      ? (notificationStatus.innerHTML = 'Disable notifications')
+      : (notificationStatus.innerHTML = 'Enable notifications');
+    notificationStatus.addEventListener('click', changeNotificationStatus);
+  }, console.error);
 };
 
 const render = () => {
@@ -874,18 +632,38 @@ const render = () => {
   renderMessageContainer(messageContainer);
   clearButton.addEventListener('click', clearPhoto);
   email.addEventListener('keypress', event =>
-    enterPressHandler(event, changeEmailHandler)
+    enterPressHandler(event, () =>
+      changeInputHandler(
+        email,
+        'email address',
+        okCallbackForChangeEmailHandler
+      )
+    )
   );
-  changeEmailButton.addEventListener('click', changeEmailHandler);
+  changeEmailButton.addEventListener('click', () =>
+    changeInputHandler(email, 'email address', okCallbackForChangeEmailHandler)
+  );
   login.addEventListener('keypress', event =>
-    enterPressHandler(event, changeLoginHandler)
+    enterPressHandler(event, () =>
+      changeInputHandler(login, 'login', okCallbackForChangeLoginHandler)
+    )
   );
-  changeLoginButton.addEventListener('click', changeLoginHandler);
+  changeLoginButton.addEventListener('click', () =>
+    changeInputHandler(login, 'login', okCallbackForChangeLoginHandler)
+  );
   password.addEventListener('keypress', event =>
-    enterPressHandler(event, changePasswordHandler)
+    enterPressHandler(event, () =>
+      changeInputHandler(
+        password,
+        'password',
+        okCallbackForChangePasswordHandler
+      )
+    )
   );
-  changePasswordButton.addEventListener('click', changePasswordHandler);
-  renderNotification();
+  changePasswordButton.addEventListener('click', () =>
+    changeInputHandler(password, 'password', okCallbackForChangePasswordHandler)
+  );
+  renderNotificationStatus();
 };
 
 render();

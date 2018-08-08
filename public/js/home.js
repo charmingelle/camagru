@@ -1,62 +1,68 @@
 import {
   ENTER,
-  removeAllChildren,
+  clear,
   enterPressHandler,
   renderMessageContainer,
   isScrolledToBottom,
-  printError,
   customConfirm,
-  postFetch,
-  postFetchNoResponse,
-} from '/js/utils.js';
+  post,
+  postNoResponse
+} from "/js/utils.js";
 
 let isSignedIn = false;
-let gallery = document.getElementById('gallery');
-let formContainer = document.getElementById('form-container');
-let headerButtonsDiv = document.getElementById('header-buttons-div');
-let messageContainer = document.getElementById('home-message-container');
+let gallery = document.getElementById("gallery");
+let formContainer = document.getElementById("form-container");
+let headerButtonsDiv = document.getElementById("header-buttons-div");
+let messageContainer = document.getElementById("home-message-container");
 let lastPhotoId = 0;
 let isLoading = false;
 
+const createInput = (placeholder, type, value) => {
+  let input = document.createElement('input');
+
+  input.placeholder = placeholder;
+  input.type = type;
+  input.value = value;
+  return input;
+}
+
+const createSubmitButton = (text, clickHandler, ...params) => {
+  let submitButton = document.createElement("button");
+
+  submitButton.innerHTML = text;
+  submitButton.addEventListener("click", () => clickHandler(...params));
+  return submitButton;
+}
+
 const signinFormHandler = (loginInput, passwordInput) => {
-  if (loginInput.value !== '' && passwordInput.value != '') {
-    postFetch('/signin', {
+  if (loginInput.value !== "" && passwordInput.value != "") {
+    post("/signin", {
       login: loginInput.value,
-      password: passwordInput.value,
+      password: passwordInput.value
     }).then(data => {
       // TODO: Read about using of status codes instead of string response body
-      if (data !== 'OK') {
+      if (data !== "OK") {
         renderMessageContainer(messageContainer, data);
       } else {
         // TODO: Boolean arguments are VERY BAD!!!!
         renderSignedInOrAnonymousPage(true);
       }
-    }, printError);
+    }, console.error);
   }
 };
 
 const renderSigninForm = () => {
-  let loginInput = document.createElement('input');
-  let passwordInput = document.createElement('input');
-  let submitButton = document.createElement('button');
+  let loginInput = createInput("Login", "text", "");
+  let passwordInput = createInput("Password", "password", "");
+  let submitButton = createSubmitButton("Sign in", signinFormHandler, loginInput, passwordInput);
 
-  loginInput.placeholder = 'Login';
-  loginInput.type = 'text';
-  loginInput.value = '';
-  passwordInput.placeholder = 'Password';
-  passwordInput.type = 'password';
-  passwordInput.value = '';
-  submitButton.innerHTML = 'Sign in';
-  submitButton.addEventListener('click', () =>
-    signinFormHandler(loginInput, passwordInput)
-  );
-  loginInput.addEventListener('keypress', event =>
+  loginInput.addEventListener("keypress", event =>
     enterPressHandler(event, signinFormHandler, loginInput, passwordInput)
   );
-  passwordInput.addEventListener('keypress', event =>
+  passwordInput.addEventListener("keypress", event =>
     enterPressHandler(event, signinFormHandler, loginInput, passwordInput)
   );
-  removeAllChildren(formContainer);
+  clear(formContainer);
   formContainer.append(
     loginInput,
     passwordInput,
@@ -67,46 +73,33 @@ const renderSigninForm = () => {
 
 const signupFormHandler = (emailInput, loginInput, passwordInput) => {
   if (
-    emailInput.value !== '' &&
-    loginInput.value !== '' &&
-    passwordInput.value !== ''
+    emailInput.value !== "" &&
+    loginInput.value !== "" &&
+    passwordInput.value !== ""
   ) {
     // TODO: Read about REST API
-    postFetch('signup', {
+    post("signup", {
       email: emailInput.value,
       login: loginInput.value,
-      password: passwordInput.value,
+      password: passwordInput.value
     }).then(data => {
-      renderMessageContainer(messageContainer, data['message']);
-      if (data['status'] === true) {
-        emailInput.value = '';
-        loginInput.value = '';
-        passwordInput.value = '';
+      renderMessageContainer(messageContainer, data["message"]);
+      if (data["status"] === true) {
+        emailInput.value = "";
+        loginInput.value = "";
+        passwordInput.value = "";
       }
-    }, printError);
+    }, console.error);
   }
 };
 
 const renderSignupForm = () => {
-  let emailInput = document.createElement('input');
-  let loginInput = document.createElement('input');
-  let passwordInput = document.createElement('input');
-  let submitButton = document.createElement('button');
+  let emailInput = createInput("Email", "text", "");
+  let loginInput = createInput("Login", "text", "");
+  let passwordInput = createInput("Password", "password", "");
+  let submitButton = createSubmitButton("Sign up", signupFormHandler, emailInput, loginInput, passwordInput);
 
-  emailInput.placeholder = 'Email';
-  emailInput.type = 'text';
-  emailInput.value = '';
-  loginInput.placeholder = 'Login';
-  loginInput.type = 'text';
-  loginInput.value = '';
-  passwordInput.placeholder = 'Password';
-  passwordInput.type = 'password';
-  passwordInput.value = '';
-  submitButton.innerHTML = 'Sign up';
-  submitButton.addEventListener('click', () =>
-    signupFormHandler(emailInput, loginInput, passwordInput)
-  );
-  emailInput.addEventListener('keypress', event =>
+  emailInput.addEventListener("keypress", event =>
     enterPressHandler(
       event,
       signupFormHandler,
@@ -115,7 +108,7 @@ const renderSignupForm = () => {
       passwordInput
     )
   );
-  loginInput.addEventListener('keypress', event =>
+  loginInput.addEventListener("keypress", event =>
     enterPressHandler(
       event,
       signupFormHandler,
@@ -124,7 +117,7 @@ const renderSignupForm = () => {
       passwordInput
     )
   );
-  passwordInput.addEventListener('keypress', event =>
+  passwordInput.addEventListener("keypress", event =>
     enterPressHandler(
       event,
       signupFormHandler,
@@ -133,7 +126,7 @@ const renderSignupForm = () => {
       passwordInput
     )
   );
-  removeAllChildren(formContainer);
+  clear(formContainer);
   formContainer.append(
     emailInput,
     loginInput,
@@ -144,84 +137,77 @@ const renderSignupForm = () => {
 };
 
 const resetPasswordFormHandler = emailInput => {
-  if (emailInput.value !== '') {
-    postFetch('/forgotPassword', { email: emailInput.value }).then(data => {
+  if (emailInput.value !== "") {
+    post("/forgotPassword", { email: emailInput.value }).then(data => {
       renderMessageContainer(messageContainer, data);
-      emailInput.value = '';
-    }, printError);
+      emailInput.value = "";
+    }, console.error);
   }
 };
 
 const renderResetPasswordForm = () => {
-  let emailInput = document.createElement('input');
-  let submitButton = document.createElement('button');
+  let emailInput = createInput("Email", "text", "");
+  let submitButton = createSubmitButton("Get reset password link", resetPasswordFormHandler, emailInput);
 
-  emailInput.placeholder = 'Email';
-  emailInput.type = 'text';
-  emailInput.value = '';
   // TODO: Consider moving creation of button to separate function
-  submitButton.innerHTML = 'Get reset password link';
-  submitButton.addEventListener('click', () =>
-    resetPasswordFormHandler(emailInput)
-  );
-  emailInput.addEventListener('keypress', event =>
+  emailInput.addEventListener("keypress", event =>
     enterPressHandler(event, resetPasswordFormHandler, emailInput)
   );
-  removeAllChildren(formContainer);
+  clear(formContainer);
   formContainer.append(emailInput, submitButton, messageContainer);
 };
 
 const renderFormContainer = formName => {
-  removeAllChildren(formContainer);
-  removeAllChildren(messageContainer);
+  clear(formContainer);
+  clear(messageContainer);
   if (!formName) {
-    formContainer.classList.add('invisible');
+    formContainer.classList.add("invisible");
   } else {
-    formContainer.classList.remove('invisible');
-    if (formName === 'signin-form') renderSigninForm();
-    else if (formName === 'signup-form') renderSignupForm();
-    else if (formName === 'reset-password-form') renderResetPasswordForm();
+    formContainer.classList.remove("invisible");
+    if (formName === "signin-form") renderSigninForm();
+    else if (formName === "signup-form") renderSignupForm();
+    else if (formName === "reset-password-form") renderResetPasswordForm();
   }
 };
 
 const renderSignedInHeader = () => {
-  let myAccountButton = document.createElement('a');
-  let signoutButton = document.createElement('a');
+  let myAccountButton = document.createElement("a");
+  let signoutButton = document.createElement("a");
 
-  myAccountButton.id = 'my-account-button';
-  myAccountButton.href = '/account';
-  myAccountButton.innerHTML = 'My account';
-  signoutButton.id = 'signout-button';
-  signoutButton.href = '/signout';
-  signoutButton.innerHTML = 'Sign out';
+  myAccountButton.id = "my-account-button";
+  myAccountButton.href = "/account";
+  myAccountButton.innerHTML = "My account";
+  signoutButton.id = "signout-button";
+  signoutButton.href = "/signout";
+  signoutButton.innerHTML = "Sign out";
   headerButtonsDiv.append(myAccountButton, signoutButton);
 };
 
 const renderNotSignedInHeader = () => {
-  let signinButton = document.createElement('button');
-  let signupButton = document.createElement('button');
-  let resetPasswordButton = document.createElement('button');
+  let signinButton = document.createElement("button");
+  let signupButton = document.createElement("button");
+  let resetPasswordButton = document.createElement("button");
 
-  signinButton.id = 'signin-button';
-  signinButton.innerHTML = 'Sign in';
-  signinButton.addEventListener('click', () =>
-    renderFormContainer('signin-form')
+  signinButton.id = "signin-button";
+  signinButton.innerHTML = "Sign in";
+  signinButton.addEventListener("click", () =>
+    renderFormContainer("signin-form")
   );
-  signupButton.id = 'signup-button';
-  signupButton.innerHTML = 'Sign up';
-  signupButton.addEventListener('click', () =>
-    renderFormContainer('signup-form')
+  signupButton.id = "signup-button";
+  signupButton.innerHTML = "Sign up";
+  signupButton.addEventListener("click", () =>
+    renderFormContainer("signup-form")
   );
-  resetPasswordButton.id = 'reset-password-button';
-  resetPasswordButton.innerHTML = 'Forgot password?';
-  resetPasswordButton.addEventListener('click', () =>
-    renderFormContainer('reset-password-form')
+  resetPasswordButton.id = "reset-password-button";
+  resetPasswordButton.innerHTML = "Forgot password?";
+  resetPasswordButton.addEventListener("click", () =>
+    renderFormContainer("reset-password-form")
   );
   headerButtonsDiv.append(signinButton, signupButton, resetPasswordButton);
 };
 
 const renderHeaderButtonsDiv = () => {
-  removeAllChildren(headerButtonsDiv);
+  clear(headerButtonsDiv);
   if (isSignedIn) {
     renderSignedInHeader();
   } else {
@@ -236,23 +222,22 @@ const okCallbacForDeleteComment = (
   commentEl,
   commentAmountEl
 ) => {
-  postFetchNoResponse('/deleteComment', { id: id })
+  postNoResponse("/deleteComment", { id: id })
     .then(commentsEl.removeChild(commentEl))
     .then(() => {
-      postFetch('/decreaseCommentCount', { id: photoId }).then(
+      post("/decreaseCommentCount", { id: photoId }).then(
         commentAmount => {
           commentAmountEl.innerHTML = commentAmount;
         },
-        printError
+        console.error
       );
     });
 };
 
 const deleteComment = (id, photoId, commentsEl, commentEl, commentAmountEl) => {
   customConfirm(
-    'Are you sure you would like to delete this photo?',
-    okCallbacForDeleteComment.bind(
-      this,
+    "Are you sure you would like to delete this photo?",
+    () => okCallbacForDeleteComment(
       id,
       photoId,
       commentsEl,
@@ -263,28 +248,27 @@ const deleteComment = (id, photoId, commentsEl, commentEl, commentAmountEl) => {
 };
 
 const renderComment = (comment, login, commentsEl, commentAmountEl) => {
-  let commentEl = document.createElement('div');
-  let loginDiv = document.createElement('div');
-  let commentDiv = document.createElement('div');
+  let commentEl = document.createElement("div");
+  let loginDiv = document.createElement("div");
+  let commentDiv = document.createElement("div");
 
-  commentEl.classList.add('comment-container');
-  loginDiv.innerHTML = `${comment['login']}:`;
-  loginDiv.classList.add('login-div');
-  commentDiv.innerHTML = comment['comment'];
-  commentDiv.classList.add('comment-div');
+  commentEl.classList.add("comment-container");
+  loginDiv.innerHTML = `${comment["login"]}:`;
+  loginDiv.classList.add("login-div");
+  commentDiv.innerHTML = comment["comment"];
+  commentDiv.classList.add("comment-div");
   commentEl.append(loginDiv, commentDiv);
-  if (comment['login'] === login) {
-    let deleteDiv = document.createElement('button');
+  if (comment["login"] === login) {
+    let deleteDiv = document.createElement("button");
 
-    deleteDiv.innerHTML = '&#10005;';
-    deleteDiv.title = 'Delete';
-    deleteDiv.classList.add('delete-comment-button');
+    deleteDiv.innerHTML = "&#10005;";
+    deleteDiv.title = "Delete";
+    deleteDiv.classList.add("delete-comment-button");
     deleteDiv.addEventListener(
-      'click',
-      deleteComment.bind(
-        this,
-        comment['id'],
-        comment['photo_id'],
+      "click",
+      () => deleteComment(
+        comment["id"],
+        comment["photo_id"],
         commentsEl,
         commentEl,
         commentAmountEl
@@ -298,12 +282,12 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
 const fillComments = (commentsEl, photoId, commentAmountEl) => {
   let login;
 
-  postFetch('/getLogin', {})
+  post("/getLogin", {})
     .then(data => {
       login = data;
     })
     .then(() => {
-      postFetch('/getComments', { id: photoId }).then(comments => {
+      post("/getComments", { id: photoId }).then(comments => {
         if (comments) {
           const commentDivs = comments.map(comment =>
             commentsEl.append(
@@ -313,7 +297,7 @@ const fillComments = (commentsEl, photoId, commentAmountEl) => {
 
           commentsEl.append(...commentDivs);
         }
-      }, printError);
+      }, console.error);
     });
 };
 
@@ -324,19 +308,19 @@ const addCommentHandler = (
   photoId
 ) => {
   if (addCommentEl.value) {
-    postFetchNoResponse('/addComment', {
+    postNoResponse("/addComment", {
       comment: addCommentEl.value,
-      'photo-id': photoId,
+      "photo-id": photoId
     }).then(() => {
-      postFetch('/increaseCommentCount', { id: photoId }).then(
+      post("/increaseCommentCount", { id: photoId }).then(
         commentAmount => {
           commentAmountEl.innerHTML = commentAmount;
         },
-        printError
+        console.error
       );
     });
-    addCommentEl.value = '';
-    removeAllChildren(commentsEl);
+    addCommentEl.value = "";
+    clear(commentsEl);
     fillComments(commentsEl, photoId, commentAmountEl);
   }
 };
@@ -347,9 +331,9 @@ const setSignedInAddComment = (
   photoId,
   commentAmountEl
 ) => {
-  addCommentEl.placeholder = 'Add a comment...';
-  addCommentEl.maxLength = '8000';
-  addCommentEl.addEventListener('keypress', event =>
+  addCommentEl.placeholder = "Add a comment...";
+  addCommentEl.maxLength = "8000";
+  addCommentEl.addEventListener("keypress", event =>
     enterPressHandler(
       event,
       addCommentHandler,
@@ -362,8 +346,8 @@ const setSignedInAddComment = (
 };
 
 const setNotSignedInAddComment = addCommentEl => {
-  addCommentEl.placeholder = 'Sign in to like photos and add comments';
-  addCommentEl.disabled = 'disabled';
+  addCommentEl.placeholder = "Sign in to like photos and add comments";
+  addCommentEl.disabled = "disabled";
 };
 
 const setAddCommentEl = (
@@ -379,107 +363,98 @@ const setAddCommentEl = (
   }
 };
 
-// const dislikeHandler = (likeIcon, likeEl, photoId) => {
-//   postFetchNoResponse('/dislike', { id: photoId }).then(() => {
-//     likeIcon.classList.remove('like-symbol-liked');
-//     postFetch('/getLikes', { id: photoId }).then(data => {
-//       likeEl.innerHTML = data;
-//     }, printError);
-//   }, printError);
-// };
-
 const renderLoginEl = source => {
-  let loginEl = document.createElement('div');
+  let loginEl = document.createElement("div");
 
-  loginEl.innerHTML = source['login'];
-  loginEl.classList.add('login');
+  loginEl.innerHTML = source["login"];
+  loginEl.classList.add("login");
   return loginEl;
 };
 
 const renderImageEl = source => {
-  let imageEl = document.createElement('img');
+  let imageEl = document.createElement("img");
 
-  imageEl.src = source['url'];
-  imageEl.classList.add('photo');
+  imageEl.src = source["url"];
+  imageEl.classList.add("photo");
   return imageEl;
 };
 
 const rerenderLikeEl = (likeEl, photoId) => {
-  postFetch('/getLikes', { id: photoId }).then(data => {
+  post("/getLikes", { id: photoId }).then(data => {
     likeEl.innerHTML = data;
-  }, printError);
+  }, console.error);
 };
 
 const renderLikeEl = source => {
-  let likeEl = document.createElement('div');
+  let likeEl = document.createElement("div");
 
-  likeEl.innerHTML = source['likes'];
-  likeEl.classList.add('like');
+  likeEl.innerHTML = source["likes"];
+  likeEl.classList.add("like");
   return likeEl;
 };
 
 const rerenderLikeIcon = (likeIcon, photoId) => {
-  postFetch('/getLikeStatus', { id: photoId }).then(data => {
+  post("/getLikeStatus", { id: photoId }).then(data => {
     // TODO: Consider using of classList.toggle
     if (data) {
-      likeIcon.classList.add('like-symbol-liked');
+      likeIcon.classList.add("like-symbol-liked");
     } else {
-      likeIcon.classList.remove('like-symbol-liked');
+      likeIcon.classList.remove("like-symbol-liked");
     }
   });
 };
 
 const likeDislikeHandler = (likeIcon, likeEl, photoId) => {
-  postFetchNoResponse('/likeDislike', { id: photoId }).then(() => {
+  postNoResponse("/likeDislike", { id: photoId }).then(() => {
     rerenderLikeIcon(likeIcon, photoId);
     rerenderLikeEl(likeEl, photoId);
   });
 };
 
 const renderLikeIcon = (likeEl, source) => {
-  let likeIcon = document.createElement('div');
+  let likeIcon = document.createElement("div");
 
   likeIcon.innerHTML = '<i class="far fa-heart"></i>';
   if (isSignedIn) {
-    likeIcon.classList.add('like-symbol-active');
-    rerenderLikeIcon(likeIcon, source['id']);
-    likeIcon.addEventListener('click', () =>
-      likeDislikeHandler(likeIcon, likeEl, source['id'])
+    likeIcon.classList.add("like-symbol-active");
+    rerenderLikeIcon(likeIcon, source["id"]);
+    likeIcon.addEventListener("click", () =>
+      likeDislikeHandler(likeIcon, likeEl, source["id"])
     );
   }
   return likeIcon;
 };
 
 const renderCommentAmountEl = source => {
-  let commentAmountEl = document.createElement('div');
+  let commentAmountEl = document.createElement("div");
 
-  commentAmountEl.innerHTML = source['comments'];
-  commentAmountEl.classList.add('comment');
+  commentAmountEl.innerHTML = source["comments"];
+  commentAmountEl.classList.add("comment");
   return commentAmountEl;
 };
 
 const renderCommentAmountIcon = () => {
-  let commentAmountIcon = document.createElement('div');
+  let commentAmountIcon = document.createElement("div");
 
   commentAmountIcon.innerHTML = '<i class="far fa-comment"></i>';
-  commentAmountIcon.classList.add('comment-symbol');
+  commentAmountIcon.classList.add("comment-symbol");
   return commentAmountIcon;
 };
 
 const renderCommentsEl = (source, commentAmountEl) => {
-  let commentsEl = document.createElement('div');
+  let commentsEl = document.createElement("div");
 
-  commentsEl.classList.add('comments');
-  fillComments(commentsEl, source['id'], commentAmountEl);
+  commentsEl.classList.add("comments");
+  fillComments(commentsEl, source["id"], commentAmountEl);
   return commentsEl;
 };
 
 const renderAddCommentEl = (commentsEl, source, commentAmountEl) => {
-  let addCommentEl = document.createElement('input');
+  let addCommentEl = document.createElement("input");
 
-  addCommentEl.type = 'text';
-  addCommentEl.classList.add('add-comment-input');
-  setAddCommentEl(addCommentEl, commentsEl, source['id'], commentAmountEl);
+  addCommentEl.type = "text";
+  addCommentEl.classList.add("add-comment-input");
+  setAddCommentEl(addCommentEl, commentsEl, source["id"], commentAmountEl);
   return addCommentEl;
 };
 
@@ -489,11 +464,11 @@ const renderAddCommentButton = (
   commentAmountEl,
   photoId
 ) => {
-  let addCommentButton = document.createElement('button');
+  let addCommentButton = document.createElement("button");
 
-  addCommentButton.innerHTML = 'Publish';
-  addCommentButton.classList.add('add-comment-button');
-  addCommentButton.addEventListener('click', () =>
+  addCommentButton.innerHTML = "Publish";
+  addCommentButton.classList.add("add-comment-button");
+  addCommentButton.addEventListener("click", () =>
     addCommentHandler(commentsEl, addCommentEl, commentAmountEl, photoId)
   );
   return addCommentButton;
@@ -502,10 +477,10 @@ const renderAddCommentButton = (
 const renderPhoto = sources => {
   if (sources) {
     const images = sources.map(source => {
-      let containerEl = document.createElement('div');
+      let containerEl = document.createElement("div");
       let loginEl = renderLoginEl(source);
       let imageEl = renderImageEl(source);
-      let likeCommentEl = document.createElement('div');
+      let likeCommentEl = document.createElement("div");
       let likeEl = renderLikeEl(source);
       let likeIcon = renderLikeIcon(likeEl, source);
       let commentAmountEl = renderCommentAmountEl(source);
@@ -517,8 +492,8 @@ const renderPhoto = sources => {
         commentAmountEl
       );
 
-      containerEl.classList.add('photo-container');
-      likeCommentEl.classList.add('like-comment');
+      containerEl.classList.add("photo-container");
+      likeCommentEl.classList.add("like-comment");
 
       likeCommentEl.append(
         likeIcon,
@@ -538,7 +513,7 @@ const renderPhoto = sources => {
           commentsEl,
           addCommentEl,
           commentAmountEl,
-          source['id']
+          source["id"]
         );
 
         containerEl.appendChild(addCommentButton);
@@ -551,21 +526,21 @@ const renderPhoto = sources => {
 
 const renderGallery = () => {
   isLoading = true;
-  postFetch('/photos', { lastId: lastPhotoId }).then(data => {
+  post("/photos", { lastId: lastPhotoId }).then(data => {
     if (data.length > 0) {
-      lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
+      lastPhotoId = parseInt(data[data.length - 1]["id"]) - 1;
       renderPhoto(data);
       isLoading = false;
     }
-  }, printError);
+  }, console.error);
 };
 
 const getLastPhotoId = () => {
-  removeAllChildren(gallery);
-  postFetch('/getLastPublicPhotoId', {}).then(data => {
+  clear(gallery);
+  post("/getLastPublicPhotoId", {}).then(data => {
     lastPhotoId = parseInt(data);
     renderGallery();
-  }, printError);
+  }, console.error);
 };
 
 const loadNewPhotos = () => {
@@ -575,7 +550,7 @@ const loadNewPhotos = () => {
         renderGallery();
       }
     } else {
-      window.removeEventListener('scroll', loadNewPhotos);
+      window.removeEventListener("scroll", loadNewPhotos);
     }
   }
 };
@@ -586,14 +561,14 @@ const renderSignedInOrAnonymousPage = signInStatus => {
   renderMessageContainer(messageContainer);
   renderFormContainer();
   getLastPhotoId();
-  window.addEventListener('scroll', loadNewPhotos);
-  gallery.addEventListener('click', () =>
-    formContainer.classList.add('invisible')
+  window.addEventListener("scroll", loadNewPhotos);
+  gallery.addEventListener("click", () =>
+    formContainer.classList.add("invisible")
   );
 };
 
 const render = () => {
-  postFetch('/isSignedIn', {}).then(renderSignedInOrAnonymousPage, printError);
+  post("/isSignedIn", {}).then(renderSignedInOrAnonymousPage, console.error);
 };
 
 render();

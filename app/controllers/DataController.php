@@ -75,12 +75,12 @@ class DataController {
 		Comment::deleteComment(Utils::getBodyFromJson()['id']);
 	}
 
-	public static function getNotification() {
-		echo json_encode(Account::getNotification($_SESSION['auth-data']['login']));
+	public static function getNotificationStatus() {
+		echo json_encode(['notificationStatus' => Account::getNotificationStatus($_SESSION['auth-data']['login'])]);
 	}
 
-	public static function changeNotification() {
-		Account::changeNotification();
+	public static function changeNotificationStatus() {
+		Account::changeNotificationStatus();
 	}
 
 	public static function getLastPublicPhotoId() {

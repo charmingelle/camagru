@@ -58,10 +58,8 @@ Route::post(['uri' => '/getPhotoPrivate', 'controller' => 'DataController@getPho
 
 Route::post(['uri' => '/publish', 'controller' => 'DataController@publish', 'condition' => 'signed in']);
 
-Route::post(['uri' => '/getNotification', 'controller' => 'DataController@getNotification', 'condition' => 'signed in']);
+Route::post(['uri' => '/getNotificationStatus', 'controller' => 'DataController@getNotificationStatus', 'condition' => 'signed in']);
 
-Route::post(['uri' => '/changeNotification', 'controller' => 'DataController@changeNotification', 'condition' => 'signed in']);
+Route::post(['uri' => '/changeNotificationStatus', 'controller' => 'DataController@changeNotificationStatus', 'condition' => 'signed in']);
 
 Route::notFound();
-
-// error_log("message");
