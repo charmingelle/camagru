@@ -1,12 +1,12 @@
 import {
   clear,
   dragAndDrop,
-  enterPressHandler,
   renderMessageContainer,
   customConfirm,
   isLeftButton,
   post,
   postNoResponse,
+  onsubmitHandler
 } from '/js/utils.js';
 
 import { stretcher } from '/js/stretcher.js';
@@ -20,9 +20,9 @@ const buttonBlock = document.getElementById('photo-buttons');
 const upload = document.getElementById('file-upload');
 const captureButton = document.getElementById('capture-button');
 const clearButton = document.getElementById('clear-button');
-const changeEmailButton = document.getElementById('change-email-button');
-const changeLoginButton = document.getElementById('change-login-button');
-const changePasswordButton = document.getElementById('change-password-button');
+const changeEmailForm = document.getElementById('change-email-form');
+const changeLoginForm = document.getElementById('change-login-form');
+const changePasswordForm = document.getElementById('change-password-form');
 const messageContainer = document.getElementById('account-message-container');
 const email = document.getElementById('email');
 const login = document.getElementById('login');
@@ -631,38 +631,9 @@ const render = () => {
   captureButton.addEventListener('click', savePhoto);
   renderMessageContainer(messageContainer);
   clearButton.addEventListener('click', clearPhoto);
-  email.addEventListener('keypress', event =>
-    enterPressHandler(event, () =>
-      changeInputHandler(
-        email,
-        'email address',
-        okCallbackForChangeEmailHandler
-      )
-    )
-  );
-  changeEmailButton.addEventListener('click', () =>
-    changeInputHandler(email, 'email address', okCallbackForChangeEmailHandler)
-  );
-  login.addEventListener('keypress', event =>
-    enterPressHandler(event, () =>
-      changeInputHandler(login, 'login', okCallbackForChangeLoginHandler)
-    )
-  );
-  changeLoginButton.addEventListener('click', () =>
-    changeInputHandler(login, 'login', okCallbackForChangeLoginHandler)
-  );
-  password.addEventListener('keypress', event =>
-    enterPressHandler(event, () =>
-      changeInputHandler(
-        password,
-        'password',
-        okCallbackForChangePasswordHandler
-      )
-    )
-  );
-  changePasswordButton.addEventListener('click', () =>
-    changeInputHandler(password, 'password', okCallbackForChangePasswordHandler)
-  );
+  changeEmailForm.onsubmit = (event) => onsubmitHandler(event, changeInputHandler, email, 'email address', okCallbackForChangeEmailHandler);
+  changeLoginForm.onsubmit = (event) => onsubmitHandler(event, changeInputHandler, login, 'login', okCallbackForChangeLoginHandler);
+  changePasswordForm.onsubmit = (event) => onsubmitHandler(event, changeInputHandler, password, 'password', okCallbackForChangePasswordHandler);
   renderNotificationStatus();
 };
 

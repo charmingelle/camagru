@@ -192,10 +192,9 @@ input:focus {
   text-align: center;
 }
 
-#reset-password-message-container {
-  background-color: #13232f;
+/* #reset-password-message-container {
   padding: 1%;
-}
+} */
 
 #form-container {
   position: fixed;

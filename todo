@@ -80,6 +80,9 @@ TODO
 - replace all object['property'] with object.property
 - replace my custom forms with normal ones
 - check if I need to use https://css-tricks.com/almanac/properties/t/text-transform/ anywhere
+- make sure that there cannot be two similar emails
+- replace let with const where possible
+- style reset password page
 
 
 

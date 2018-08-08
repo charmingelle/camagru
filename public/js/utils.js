@@ -58,23 +58,6 @@ export const dragAndDrop = (
   };
 };
 
-/**
- *  TODO: Replace with form and onSubmit
- *
- * const handleSumbmit = ev => {
- * 	ev.preventDefault()
- * 	callback()
- * }
- */
-
-export const enterPressHandler = (event, callback, ...params) => {
-  let keycode = event.keyCode ? event.keyCode : event.which;
-
-  if (keycode === ENTER) {
-    callback(...params);
-  }
-};
-
 export const renderMessageContainer = (container, message) => {
   clear(container);
   if (!message) {
@@ -147,3 +130,8 @@ export const postNoResponse = (uri, requestBody) => {
     body: JSON.stringify(requestBody),
   });
 };
+
+export const onsubmitHandler = (event, callback, ...params) => {
+  event.preventDefault();
+  callback(...params);
+}
