@@ -64,6 +64,7 @@ TODO
 + fix bug with comment amount
 + add publish comment button
 + replace all binds with lambdas
++ make sure that two emails cannot be equal
 
 
 
@@ -80,9 +81,9 @@ TODO
 - replace all object['property'] with object.property
 - replace my custom forms with normal ones
 - check if I need to use https://css-tricks.com/almanac/properties/t/text-transform/ anywhere
-- make sure that there cannot be two similar emails
 - replace let with const where possible
 - style reset password page
+- check what happens with spaces in email, login and password
 
 
 

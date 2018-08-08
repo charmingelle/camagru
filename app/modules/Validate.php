@@ -7,6 +7,15 @@ class Validate {
 		}
 		return true;
 	}
+
+	public static function busyEmail($email) {
+		$query_result = DBConnect::sendQuery('SELECT email FROM account WHERE email = :email', ['email' => $email])->fetchAll();
+		
+		if (empty($query_result)) {
+			return false;
+		}
+		return true;
+	}
 	
 	public static function isValidLogin($login) {
 		if (ctype_alnum($login) && ctype_alpha($login[0])) {

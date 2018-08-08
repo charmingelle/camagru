@@ -14,6 +14,10 @@ class AuthController {
 			echo json_encode(['status' => FALSE, 'message' => Message::$invalidEmail]);
 			exit ;
 		}
+		if (Validate::busyEmail($body['email'])) {
+			echo json_encode(['status' => FALSE, 'message' => Message::$busyEmail]);
+			exit ;
+		}
 		if (!Validate::isValidLogin($body['login'])) {
 			echo json_encode(['status' => FALSE, 'message' => Message::$invalidLogin]);
 			exit ;
@@ -65,9 +69,13 @@ class AuthController {
 		}
 		if (!Validate::isValidEmail($body['email'])) {
 			echo json_encode(Message::$invalidEmail);
-		} else {
-			Account::changeEmail($body['email'], $_SESSION['auth-data']['login']);
+			exit ;
 		}
+		if (Validate::busyEmail($body['email'])) {
+			echo json_encode(Message::$busyEmail);
+			exit ;
+		}
+		Account::changeEmail($body['email'], $_SESSION['auth-data']['login']);
 	}
 	
 	public static function changeLogin() {
