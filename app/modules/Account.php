@@ -23,7 +23,7 @@ class Account {
 
 	public static function sendSignupEmail($email, $login, $password) {
 		if (self::_busyLogin($login)) {
-			echo json_encode(Message::$busyLogin);
+			echo json_encode(['status' => FALSE, 'message' => Message::$busyLogin]);
 		} else {
 			DBConnect::sendQuery('INSERT INTO account(email, login, password) VALUES (:email, :login, :password)',
 			['email' => $email, 'login' => $login, 'password' => $password]);
