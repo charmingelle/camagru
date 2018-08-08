@@ -462,7 +462,7 @@ const renderSticker = sources => {
       let drag = false;
 
       imageDiv.classList.add('image-div');
-      image.src = source['url'];
+      image.src = source.url;
       image.classList.add('sticker');
       dragAndDropInsideContainer(image, true);
       imageDiv.append(image);

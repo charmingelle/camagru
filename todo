@@ -64,9 +64,11 @@ TODO
 + fix bug with comment amount
 + add publish comment button
 + replace all binds with lambdas
++ replace my custom forms with normal ones
 + make sure that two emails cannot be equal
 + check what happens with spaces in email, login and password
 + make sure that two logins cannot be equal
++ replace all object['property'] with object.property
 
 
 
@@ -80,11 +82,10 @@ TODO
 - include media queries for responsive layout
 - check what happens with drag and drop on mobile device
 - prettify everything
-- replace all object['property'] with object.property
-- replace my custom forms with normal ones
 - check if I need to use https://css-tricks.com/almanac/properties/t/text-transform/ anywhere
 - replace let with const where possible
 - style reset password page
+- style home message container
 
 
 

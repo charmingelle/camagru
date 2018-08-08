@@ -84,8 +84,8 @@ const signupFormHandler = (emailInput, loginInput, passwordInput) => {
       login: loginInput.value,
       password: passwordInput.value,
     }).then(data => {
-      renderMessageContainer(messageContainer, data['message']);
-      if (data['status'] === true) {
+      renderMessageContainer(messageContainer, data.message);
+      if (data.status === true) {
         emailInput.value = '';
         loginInput.value = '';
         passwordInput.value = '';
@@ -229,12 +229,12 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
   let commentDiv = document.createElement('div');
 
   commentEl.classList.add('comment-container');
-  loginDiv.innerHTML = `${comment['login']}:`;
+  loginDiv.innerHTML = `${comment.login}:`;
   loginDiv.classList.add('login-div');
-  commentDiv.innerHTML = comment['comment'];
+  commentDiv.innerHTML = comment.comment;
   commentDiv.classList.add('comment-div');
   commentEl.append(loginDiv, commentDiv);
-  if (comment['login'] === login) {
+  if (comment.login === login) {
     let deleteDiv = document.createElement('button');
 
     deleteDiv.innerHTML = '&#10005;';
@@ -242,8 +242,8 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
     deleteDiv.classList.add('delete-comment-button');
     deleteDiv.addEventListener('click', () =>
       deleteComment(
-        comment['id'],
-        comment['photo_id'],
+        comment.id,
+        comment.photo_id,
         commentsEl,
         commentEl,
         commentAmountEl
@@ -324,7 +324,7 @@ const setAddCommentEl = (
 const renderLoginEl = source => {
   let loginEl = document.createElement('div');
 
-  loginEl.innerHTML = source['login'];
+  loginEl.innerHTML = source.login;
   loginEl.classList.add('login');
   return loginEl;
 };
@@ -332,7 +332,7 @@ const renderLoginEl = source => {
 const renderImageEl = source => {
   let imageEl = document.createElement('img');
 
-  imageEl.src = source['url'];
+  imageEl.src = source.url;
   imageEl.classList.add('photo');
   return imageEl;
 };
@@ -346,7 +346,7 @@ const rerenderLikeEl = (likeEl, photoId) => {
 const renderLikeEl = source => {
   let likeEl = document.createElement('div');
 
-  likeEl.innerHTML = source['likes'];
+  likeEl.innerHTML = source.likes;
   likeEl.classList.add('like');
   return likeEl;
 };
@@ -373,9 +373,9 @@ const renderLikeIcon = (likeEl, source) => {
   likeIcon.innerHTML = '<i class="far fa-heart"></i>';
   if (isSignedIn) {
     likeIcon.classList.add('like-symbol-active');
-    rerenderLikeIcon(likeIcon, source['id']);
+    rerenderLikeIcon(likeIcon, source.id);
     likeIcon.addEventListener('click', () =>
-      likeDislikeHandler(likeIcon, likeEl, source['id'])
+      likeDislikeHandler(likeIcon, likeEl, source.id)
     );
   }
   return likeIcon;
@@ -384,7 +384,7 @@ const renderLikeIcon = (likeEl, source) => {
 const renderCommentAmountEl = source => {
   let commentAmountEl = document.createElement('div');
 
-  commentAmountEl.innerHTML = source['comments'];
+  commentAmountEl.innerHTML = source.comments;
   commentAmountEl.classList.add('comment');
   return commentAmountEl;
 };
@@ -401,7 +401,7 @@ const renderCommentsEl = (source, commentAmountEl) => {
   let commentsEl = document.createElement('div');
 
   commentsEl.classList.add('comments');
-  fillComments(commentsEl, source['id'], commentAmountEl);
+  fillComments(commentsEl, source.id, commentAmountEl);
   return commentsEl;
 };
 
@@ -410,7 +410,7 @@ const renderAddCommentEl = (commentsEl, source, commentAmountEl) => {
 
   addCommentEl.type = 'text';
   addCommentEl.classList.add('add-comment-input');
-  setAddCommentEl(addCommentEl, commentsEl, source['id'], commentAmountEl);
+  setAddCommentEl(addCommentEl, commentsEl, source.id, commentAmountEl);
   return addCommentEl;
 };
 
@@ -502,7 +502,7 @@ const renderGallery = () => {
   isLoading = true;
   post('/photos', { lastId: lastPhotoId }).then(data => {
     if (data.length > 0) {
-      lastPhotoId = parseInt(data[data.length - 1]['id']) - 1;
+      lastPhotoId = parseInt(data[data.length - 1].id) - 1;
       renderPhoto(data);
       isLoading = false;
     }
