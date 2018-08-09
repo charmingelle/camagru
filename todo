@@ -72,6 +72,7 @@ TODO
 
 
 
+- move hostname to separate variable for emails to contain valid links
 - create account page layout
 - think about what happens with fetch when DB error happens
 - make sure that layout is responsive

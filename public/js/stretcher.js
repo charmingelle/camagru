@@ -209,3 +209,26 @@ export const stretcher = {
     );
   }
 };
+
+const changeWidth = (stickerToEdit, widthLimit, heightLimit, scale, stickerToEditWidth, stickerToEditHeight) => {
+  stickerToEdit.style.width = parseInt(stickerToEditWidth + widthLimit * scale) + 'px';
+}
+
+const changeHeight = (stickerToEdit, widthLimit, heightLimit, scale, stickerToEditWidth, stickerToEditHeight) => {
+  stickerToEdit.style.height = parseInt(stickerToEditHeight + heightLimit * scale) + 'px';
+}
+
+const changeSize = (stickerToEdit, widthLimit, heightLimit, scale, stickerToEditWidth, stickerToEditHeight) => {
+  stickerToEdit.style.width = parseInt(stickerToEditWidth + widthLimit * scale) + 'px';
+  stickerToEdit.style.height = parseInt(stickerToEditHeight + heightLimit * scale) + 'px';
+}
+
+const moveUpDown = () => {
+
+}
+
+const moveLeftRight = () => {
+
+}
+
+export const scrollStretcher = [changeWidth, changeHeight, changeSize, moveUpDown, moveLeftRight];

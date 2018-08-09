@@ -34,6 +34,7 @@ export const dragAndDrop = (
   mouseMoveHandler,
   mouseUpHandler
 ) => {
+  // console.log('dragAndDrop happened');
   let drag = false;
 
   element.onmousedown = downEvent => {
