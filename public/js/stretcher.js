@@ -38,8 +38,9 @@ export const stretcher = {
       () => {},
       moveEvent => {
         let diff = moveEvent.clientX - element.getBoundingClientRect().right;
-  
-        element.style.width = element.getBoundingClientRect().width + diff + 'px';
+
+        element.style.width =
+          element.getBoundingClientRect().width + diff + 'px';
       },
       () => {}
     );
@@ -57,7 +58,7 @@ export const stretcher = {
         let prevTop = element.getBoundingClientRect().top;
         let currBottom = prevTop + element.getBoundingClientRect().height;
         let currTop = prevTop - diff;
-  
+
         if (currTop < currBottom) {
           prevTop = parseInt(element.style.top);
           element.style.top = prevTop - diff + 'px';
@@ -76,7 +77,7 @@ export const stretcher = {
       () => {},
       moveEvent => {
         let diff = moveEvent.clientY - element.getBoundingClientRect().bottom;
-  
+
         element.style.height =
           element.getBoundingClientRect().height + diff + 'px';
       },
@@ -97,7 +98,7 @@ export const stretcher = {
             moveEvent.clientY +
             container.getBoundingClientRect().top) /
           2;
-  
+
         let prevLeft = element.getBoundingClientRect().left;
         let prevTop = element.getBoundingClientRect().top;
         let prevWidth = element.getBoundingClientRect().width;
@@ -107,7 +108,7 @@ export const stretcher = {
         let currLeft = prevLeft - diff;
         let shiftY = ((diff + prevWidth) * prevHeight) / prevWidth - prevHeight;
         let currTop = prevTop - shiftY;
-  
+
         if (currLeft < rightLimit && currTop < bottomLimit) {
           prevLeft = parseInt(element.style.left);
           prevTop = parseInt(element.style.top);
@@ -138,7 +139,7 @@ export const stretcher = {
         let prevTop = element.getBoundingClientRect().top;
         let currBottom = prevTop + element.getBoundingClientRect().height;
         let currTop = prevTop - diff;
-  
+
         if (currTop < currBottom) {
           prevTop = parseInt(element.style.top);
           let prevHeight = element.getBoundingClientRect().height;
@@ -161,7 +162,7 @@ export const stretcher = {
       moveEvent => {
         // TODO: Consider using of cached value of client rect
         // const clientRect = element.getBoundingClientRect()
-  
+
         let diff =
           (moveEvent.clientY -
             element.getBoundingClientRect().bottom +
@@ -172,7 +173,7 @@ export const stretcher = {
         let prevLeft = element.getBoundingClientRect().left;
         let currRight = prevLeft + element.getBoundingClientRect().width;
         let currLeft = prevLeft - diff;
-  
+
         if (currLeft < currRight) {
           prevLeft = parseInt(element.style.left);
           let prevWidth = element.getBoundingClientRect().width;
@@ -207,28 +208,67 @@ export const stretcher = {
       },
       () => {}
     );
+  },
+};
+
+// let stickerToEdit = {
+//   'sticker': null,
+//   'width': 0,
+//   'height': 0,
+//   'left': 0,
+//   'top': 0
+// };
+
+const changeWidth = (stickerToEdit, shouldIncrease, shift) => {
+  shouldIncrease
+    ? (stickerToEdit.sticker.style.width =
+        parseInt(stickerToEdit.width) + shift + 'px')
+    : (stickerToEdit.sticker.style.width =
+        parseInt(stickerToEdit.width) - shift / 10 + 'px');
+};
+
+const changeHeight = (stickerToEdit, shouldIncrease, shift) => {
+  shouldIncrease
+    ? (stickerToEdit.sticker.style.height =
+        parseInt(stickerToEdit.height) + shift + 'px')
+    : (stickerToEdit.sticker.style.height =
+        parseInt(stickerToEdit.height) - shift / 10 + 'px');
+};
+
+const changeSize = (stickerToEdit, shouldIncrease, shift) => {
+  if (shouldIncrease) {
+    stickerToEdit.sticker.style.width =
+      parseInt(stickerToEdit.width + shift) + 'px';
+    stickerToEdit.sticker.style.height =
+      parseInt(stickerToEdit.height + shift) + 'px';
+  } else {
+    stickerToEdit.sticker.style.width =
+      parseInt(stickerToEdit.width - shift / 10) + 'px';
+    stickerToEdit.sticker.style.height =
+      parseInt(stickerToEdit.height - shift / 10) + 'px';
   }
 };
 
-const changeWidth = (stickerToEdit, widthLimit, heightLimit, scale, stickerToEditWidth, stickerToEditHeight) => {
-  stickerToEdit.style.width = parseInt(stickerToEditWidth + widthLimit * scale) + 'px';
-}
+const moveUpDown = (stickerToEdit, shouldIncrease, shift) => {
+  shouldIncrease
+    ? (stickerToEdit.sticker.style.top =
+        parseInt(stickerToEdit.top) + shift + 'px')
+    : (stickerToEdit.sticker.style.top =
+        parseInt(stickerToEdit.top) - shift + 'px');
+};
 
-const changeHeight = (stickerToEdit, widthLimit, heightLimit, scale, stickerToEditWidth, stickerToEditHeight) => {
-  stickerToEdit.style.height = parseInt(stickerToEditHeight + heightLimit * scale) + 'px';
-}
+const moveLeftRight = (stickerToEdit, shouldIncrease, shift) => {
+  shouldIncrease
+    ? (stickerToEdit.sticker.style.left =
+        parseInt(stickerToEdit.left) + shift + 'px')
+    : (stickerToEdit.sticker.style.left =
+        parseInt(stickerToEdit.left) - shift + 'px');
+};
 
-const changeSize = (stickerToEdit, widthLimit, heightLimit, scale, stickerToEditWidth, stickerToEditHeight) => {
-  stickerToEdit.style.width = parseInt(stickerToEditWidth + widthLimit * scale) + 'px';
-  stickerToEdit.style.height = parseInt(stickerToEditHeight + heightLimit * scale) + 'px';
-}
-
-const moveUpDown = () => {
-
-}
-
-const moveLeftRight = () => {
-
-}
-
-export const scrollStretcher = [changeWidth, changeHeight, changeSize, moveUpDown, moveLeftRight];
+export const scrollStretcher = [
+  changeWidth,
+  changeHeight,
+  changeSize,
+  moveUpDown,
+  moveLeftRight,
+];

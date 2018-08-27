@@ -407,7 +407,18 @@ input:focus {
   cursor: pointer;
 }
 
+.mobile-sticked-sticker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .sticked-sticker:hover {
+  outline: 1px solid #dbdbdb;
+}
+
+.selected-sticked-sticker {
   outline: 1px solid #dbdbdb;
 }
 
@@ -500,10 +511,15 @@ img {
 
 #resize-scroll::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: #262626;;
+  background-color: #262626;
+  left: 50%;
 }
 
 #scroll-content {
   width: 500%;
   height: 100%;
+}
+
+.selected-change-button {
+  border: 1px solid green;
 }

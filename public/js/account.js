@@ -29,15 +29,18 @@ const login = document.getElementById('login');
 const password = document.getElementById('password');
 let notificationStatus = document.getElementById('notification-status');
 
+const changeButtons = Array.from(
+  document.getElementsByClassName('change-button')
+);
 const changeWidthButton = document.getElementById('change-width-button');
 const changeHeightButton = document.getElementById('change-height-button');
 const changeSizeButton = document.getElementById('change-size-button');
+const moveUpDownButton = document.getElementById('move-up-down');
+const moveLeftRightButton = document.getElementById('move-left-right');
 const resizeScroll = document.getElementById('resize-scroll');
+
 let changeFunctionNumber = -1;
-// const changeFuctions = [scrollStretcher.changeWidth, scrollStretcher.changeHeight, scrollStretcher.changeSize];
 let stickerToEdit = null;
-let stickerToEditWidth = 0;
-let stickerToEditHeight = 0;
 
 const getCoords = elem => {
   const box = elem.getBoundingClientRect();
@@ -446,94 +449,46 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
   };
 };
 
-const mobileDragAndDropInsideContainer = (element, shouldCopy) => {
-  let drag = false;
 
-  element.ontouchstart = downEvent => {
-    // TODO: Consider using of 'key' property - event.key === 'left'
-    downEvent.preventDefault();
-    downEvent.stopPropagation();
-    if (isLeftButton(downEvent)) {
-      let coords = getCoords(element);
-      let shiftX = downEvent.clientX - coords.left;
-      let shiftY = downEvent.clientY - coords.top;
-      let toMove = element;
-      if (shouldCopy) {
-        toMove = element.cloneNode(true);
-      }
-      toMove.classList.remove('sticker');
-      toMove.classList.add('sticked-sticker');
-      toMove.style.width = window.getComputedStyle(element).width;
-      toMove.style.height = window.getComputedStyle(element).height;
-      drag = true;
-      // toMove.ontouchstart = () => {
-      //   return false;
-      // };
-      document.body.appendChild(toMove);
-      toMove.style.position = 'absolute';
-      toMove.style.left = downEvent.clientX - shiftX + 'px';
-      toMove.style.top = downEvent.clientY - shiftY + 'px';
-      document.ontouchmove = moveEvent => {
-        moveEvent.preventDefault();
-        moveEvent.stopPropagation();
-        if (drag) {
-          toMove.style.left = moveEvent.clientX - shiftX + 'px';
-          toMove.style.top = moveEvent.clientY - shiftY + 'px';
-        }
-      };
-      document.ontouchend = upEvent => {
-        upEvent.preventDefault();
-        upEvent.stopPropagation();
-        if (drag) {
-          drag = false;
-          if (isElementInsideContainer(toMove) && isContainerStickable) {
-            container.append(toMove);
-            toMove.style.left =
-              upEvent.clientX -
-              container.getBoundingClientRect().left -
-              shiftX +
-              'px';
-            toMove.style.top =
-              upEvent.clientY -
-              container.getBoundingClientRect().top -
-              shiftY +
-              'px';
-            if (shouldCopy) {
-              toMove.onmousemove = moveOrChangeStickerSize;
-            }
-          } else {
-            document.body.removeChild(toMove);
-          }
-          canSavePhoto()
-            ? (captureButton.disabled = '')
-            : (captureButton.disabled = 'disabled');
-        }
-      };
+const toggleSelectedStickedSticker = selectedSticker => {
+  const stickedStickers = Array.from(
+    document.getElementsByClassName('sticked-sticker')
+  );
+
+  stickedStickers.forEach(sticker => {
+    if (sticker.classList.contains('selected-sticked-sticker')) {
+      sticker.classList.remove('selected-sticked-sticker');
     }
+  });
+  selectedSticker.classList.add('selected-sticked-sticker');
+};
+
+const changeStickerToEdit = selectedSticker => {
+  let style = window.getComputedStyle(selectedSticker);
+
+  stickerToEdit = {
+    sticker: selectedSticker,
+    width: parseInt(style.width),
+    height: parseInt(style.height),
+    left: parseInt(style.left),
+    top: parseInt(style.top),
   };
 };
 
 const selectStickerToEdit = () => {
-  let style = window.getComputedStyle(event.target);
+  changeStickerToEdit(event.target);
+  toggleSelectedStickedSticker(event.target);
+};
 
-  stickerToEdit = event.target;
-  stickerToEditWidth = parseInt(style.width);
-  stickerToEditHeight = parseInt(style.height);
-}
-
-const stickSticker = event => {
+const stickStickerOnMobile = event => {
   if (isContainerStickable) {
     let sticked = event.target.cloneNode(true);
     let stickerStyle = window.getComputedStyle(event.target);
-  
+
     sticked.classList.remove('sticker');
-    sticked.classList.add('sticked-sticker');
+    sticked.classList.add('mobile-sticked-sticker');
     sticked.style.width = stickerStyle.width;
     sticked.style.height = stickerStyle.height;
-    sticked.style.position = 'absolute';
-    sticked.style.top = '50%';
-    sticked.style.left = '50%';
-    sticked.style.transform = 'translate(-50%, -50%)';
     sticked.addEventListener('click', selectStickerToEdit);
     container.append(sticked);
   }
@@ -549,9 +504,8 @@ const renderSticker = sources => {
       imageDiv.classList.add('image-div');
       image.src = source.url;
       image.classList.add('sticker');
-      image.addEventListener('click', stickSticker);
-      // dragAndDropInsideContainer(image, true);
-      // mobileDragAndDropInsideContainer(image, true);
+      image.addEventListener('touchend', stickStickerOnMobile);
+      dragAndDropInsideContainer(image, true);
       imageDiv.append(image);
       return imageDiv;
     });
@@ -709,6 +663,21 @@ const renderNotificationStatus = () => {
   }, console.error);
 };
 
+const toggleChangeButton = selectedButton => {
+  changeButtons.forEach(button => {
+    if (button.classList.contains('selected-change-button')) {
+      button.classList.remove('selected-change-button');
+    }
+  });
+  selectedButton.classList.add('selected-change-button');
+};
+
+const changeButtonLisener = (event, functionNumber) => {
+  changeFunctionNumber = functionNumber;
+  resizeScroll.scrollLeft = resizeScroll.scrollWidth * 0.4;
+  toggleChangeButton(event.target);
+};
+
 const render = () => {
   renderHello();
   renderCamera();
@@ -744,42 +713,28 @@ const render = () => {
     );
   renderNotificationStatus();
 
-  document.getElementById('change-width-button').addEventListener('click', () => {changeFunctionNumber = 0});
-  document.getElementById('change-height-button').addEventListener('click', () => {changeFunctionNumber = 1});
-  document.getElementById('change-size-button').addEventListener('click', () => {changeFunctionNumber = 2});
-  document.getElementById('move-up-down').addEventListener('click', () => {
-    changeFunctionNumber = 3;
-    resizeScroll.scrollLeft = resizeScroll.scrollWidth / 2;
+  resizeScroll.scrollLeft = resizeScroll.scrollWidth * 0.4;
+
+  changeButtons.forEach((changeButton, number) => {
+    changeButton.addEventListener('click', event =>
+      changeButtonLisener(event, number)
+    );
   });
-  document.getElementById('move-left-right').addEventListener('click', () => {
-    changeFunctionNumber = 4;
-    resizeScroll.scrollLeft = resizeScroll.scrollWidth / 2;
-  });
-  
-  
-  
+
   resizeScroll.addEventListener('scroll', () => {
-    if (stickerToEdit && changeFunctionNumber >= 0 && changeFunctionNumber < 3) {
-      // console.log(`container.width = ${container.width}`);
-      // console.log(`container.height = ${container.height}`);
+    if (stickerToEdit !== null && changeFunctionNumber !== -1) {
       let containerStyle = container.getBoundingClientRect();
-      let widthLimit = containerStyle.width - stickerToEditWidth;
-      let heightLimit = containerStyle.height - stickerToEditHeight;
-      let scale = resizeScroll.scrollLeft / resizeScroll.scrollWidth;
-      
-      // console.log(`stickerToEditWidth = ${stickerToEditWidth}`);
-      // console.log(`stickerToEditHeight = ${stickerToEditHeight}`);
-      scrollStretcher[changeFunctionNumber](stickerToEdit, widthLimit, heightLimit, scale, stickerToEditWidth, stickerToEditHeight);
+      // let widthLimit = (containerStyle.width - stickerToEdit.width);
+      // let heightLimit = (containerStyle.height - stickerToEdit.height) / 2;
+      // let scale = resizeScroll.scrollLeft / resizeScroll.scrollWidth;
+
+      scrollStretcher[changeFunctionNumber](
+        stickerToEdit,
+        resizeScroll.scrollLeft > resizeScroll.scrollWidth * 0.4,
+        Math.abs(resizeScroll.scrollLeft - resizeScroll.scrollWidth * 0.4)
+      );
     }
   });
 };
-
-// window.oncontextmenu = function(event) {
-//   if (event.target.src) {
-//     event.preventDefault();
-//     event.stopPropagation();
-//     return false;
-//   }
-// };
 
 render();

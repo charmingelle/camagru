@@ -264,7 +264,9 @@ const fillComments = (commentsEl, photoId, commentAmountEl) => {
     .then(() => {
       post('/getComments', { id: photoId }).then(comments => {
         if (comments) {
-          const commentDivs = comments.map(comment => renderComment(comment, login, commentsEl, commentAmountEl));
+          const commentDivs = comments.map(comment =>
+            renderComment(comment, login, commentsEl, commentAmountEl)
+          );
 
           commentsEl.append(...commentDivs);
         }

@@ -100,15 +100,13 @@ export const customConfirm = (question, okCallback) => {
     modalWindow.id = 'custom-confirm';
     questionContainer.innerHTML = question;
     cancelButton.innerHTML = 'Cancel';
-    cancelButton.addEventListener(
-      'click',
-      () => cancelHandler(overlay, modalWindow)
+    cancelButton.addEventListener('click', () =>
+      cancelHandler(overlay, modalWindow)
     );
     okButton.innerHTML = 'OK';
     okButton.classList.add('ok-button');
-    okButton.addEventListener(
-      'click',
-      () => okHandler(overlay, modalWindow, okCallback)
+    okButton.addEventListener('click', () =>
+      okHandler(overlay, modalWindow, okCallback)
     );
     modalWindow.append(questionContainer, cancelButton, okButton);
     document.body.append(overlay);
@@ -135,4 +133,4 @@ export const postNoResponse = (uri, requestBody) => {
 export const onsubmitHandler = (event, callback, ...params) => {
   event.preventDefault();
   callback(...params);
-}
+};
