@@ -504,8 +504,9 @@ const renderSticker = sources => {
       imageDiv.classList.add('image-div');
       image.src = source.url;
       image.classList.add('sticker');
-      image.addEventListener('touchend', stickStickerOnMobile);
-      dragAndDropInsideContainer(image, true);
+      // image.addEventListener('touchend', stickStickerOnMobile);
+      image.addEventListener('click', stickStickerOnMobile);
+      // dragAndDropInsideContainer(image, true);
       imageDiv.append(image);
       return imageDiv;
     });
@@ -728,10 +729,13 @@ const render = () => {
       // let heightLimit = (containerStyle.height - stickerToEdit.height) / 2;
       // let scale = resizeScroll.scrollLeft / resizeScroll.scrollWidth;
 
+      // console.log(resizeScroll.scrollLeft);
+
       scrollStretcher[changeFunctionNumber](
         stickerToEdit,
         resizeScroll.scrollLeft > resizeScroll.scrollWidth * 0.4,
-        Math.abs(resizeScroll.scrollLeft - resizeScroll.scrollWidth * 0.4)
+        resizeScroll.scrollWidth,
+        resizeScroll.scrollLeft
       );
     }
   });

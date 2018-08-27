@@ -211,28 +211,46 @@ export const stretcher = {
   },
 };
 
-// let stickerToEdit = {
-//   'sticker': null,
-//   'width': 0,
-//   'height': 0,
-//   'left': 0,
-//   'top': 0
+// const changeWidth = (stickerToEdit, shouldIncrease, coef) => {
+//   if (shouldIncrease) {
+//     stickerToEdit.sticker.style.width = stickerToEdit.width * coef + 'px';
+//   } else {
+//     stickerToEdit.sticker.style.width = stickerToEdit.width * coef + 'px';
+//   }
 // };
 
-const changeWidth = (stickerToEdit, shouldIncrease, shift) => {
-  shouldIncrease
-    ? (stickerToEdit.sticker.style.width =
-        parseInt(stickerToEdit.width) + shift + 'px')
-    : (stickerToEdit.sticker.style.width =
-        parseInt(stickerToEdit.width) - shift / 10 + 'px');
+const convertIntervalToInterval = (t, a, b, c, d) => {
+  return c + ((d - c) / (b - a)) * (t - a);
+}
+
+const changeWidth = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+  const convertScrollStartToInterval = convertIntervalToInterval.bind(scrollLeft, 0, scrollWidth / 2, null, null);
+  const convertScrollEndToInterval = convertIntervalToInterval.bind(scrollLeft, scrollWidth / 2, scrollWidth, null, null);
+
+  const convertScrollToInterval = (shouldIncrease, bottomLimit, original, topLimit) => {
+    console.log(arguments);
+
+    if (shouldIncrease) {
+      stickerToEdit.sticker.style.width = convertScrollEndToInterval(original, topLimit) + 'px';
+    } else {
+      stickerToEdit.sticker.style.width = convertScrollStartToInterval(bottomLimit, original) + 'px';
+    }
+  } 
+
+  convertScrollToInterval(shouldIncrease, 0, stickerToEdit.width, stickerToEdit.width * 2);
+  // if (shouldIncrease) {
+  //   stickerToEdit.sticker.style.width = convertIntervalToInterval(scrollLeft, scrollWidth / 2, scrollWidth, stickerToEdit.width, stickerToEdit.width * 2) + 'px';
+  // } else {
+  //   stickerToEdit.sticker.style.width = convertIntervalToInterval(scrollLeft, 0, scrollWidth / 2, 0, stickerToEdit.width) + 'px';
+  // }
 };
 
-const changeHeight = (stickerToEdit, shouldIncrease, shift) => {
-  shouldIncrease
-    ? (stickerToEdit.sticker.style.height =
-        parseInt(stickerToEdit.height) + shift + 'px')
-    : (stickerToEdit.sticker.style.height =
-        parseInt(stickerToEdit.height) - shift / 10 + 'px');
+const changeHeight = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+  if (shouldIncrease) {
+    stickerToEdit.sticker.style.height = convertIntervalToInterval(scrollLeft, scrollWidth/ 2, scrollWidth, stickerToEdit.height, stickerToEdit.height * 2) + 'px';
+  } else {
+    stickerToEdit.sticker.style.height = convertIntervalToInterval(scrollLeft, 0, scrollWidth / 2, 0, stickerToEdit.height) + 'px';
+  }
 };
 
 const changeSize = (stickerToEdit, shouldIncrease, shift) => {
@@ -249,20 +267,30 @@ const changeSize = (stickerToEdit, shouldIncrease, shift) => {
   }
 };
 
-const moveUpDown = (stickerToEdit, shouldIncrease, shift) => {
-  shouldIncrease
-    ? (stickerToEdit.sticker.style.top =
-        parseInt(stickerToEdit.top) + shift + 'px')
-    : (stickerToEdit.sticker.style.top =
-        parseInt(stickerToEdit.top) - shift + 'px');
+const moveUpDown = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+  if (shouldIncrease) {
+    stickerToEdit.sticker.style.top = convertIntervalToInterval(scrollLeft, scrollWidth / 2, scrollWidth, stickerToEdit.top, 2000) + 'px';
+  } else {
+    stickerToEdit.sticker.style.top = convertIntervalToInterval(scrollLeft, 0, scrollWidth / 2, 0, stickerToEdit.top) + 'px';
+  }
+  // shouldIncrease
+  //   ? (stickerToEdit.sticker.style.top =
+  //       coef + 'px')
+  //   : (stickerToEdit.sticker.style.top =
+  //       coef + 'px');
 };
 
-const moveLeftRight = (stickerToEdit, shouldIncrease, shift) => {
-  shouldIncrease
-    ? (stickerToEdit.sticker.style.left =
-        parseInt(stickerToEdit.left) + shift + 'px')
-    : (stickerToEdit.sticker.style.left =
-        parseInt(stickerToEdit.left) - shift + 'px');
+const moveLeftRight = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+  if (shouldIncrease) {
+    stickerToEdit.sticker.style.left = convertIntervalToInterval(scrollLeft, scrollWidth / 2, scrollWidth, stickerToEdit.left, 2000) + 'px';
+  } else {
+    stickerToEdit.sticker.style.left = convertIntervalToInterval(scrollLeft, 0, scrollWidth / 2, 0, stickerToEdit.left) + 'px';
+  }
+  // shouldIncrease
+  //   ? (stickerToEdit.sticker.style.left =
+  //       parseInt(stickerToEdit.left) + shift + 'px')
+  //   : (stickerToEdit.sticker.style.left =
+  //       parseInt(stickerToEdit.left) - shift + 'px');
 };
 
 export const scrollStretcher = [
