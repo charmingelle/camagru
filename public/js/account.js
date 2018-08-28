@@ -32,13 +32,13 @@ let notificationStatus = document.getElementById('notification-status');
 const changeButtons = Array.from(
   document.getElementsByClassName('change-button')
 );
+const resizeScroll = document.getElementById('resize-scroll');
 const changeWidthButton = document.getElementById('change-width-button');
 const changeHeightButton = document.getElementById('change-height-button');
 const changeSizeButton = document.getElementById('change-size-button');
 const moveUpDownButton = document.getElementById('move-up-down');
 const moveLeftRightButton = document.getElementById('move-left-right');
-const resizeScroll = document.getElementById('resize-scroll');
-
+const deleteStickerButton = document.getElementById('delete-sticker');
 let changeFunctionNumber = -1;
 let stickerToEdit = null;
 
@@ -242,7 +242,7 @@ const changeCursorClass = (elem, newClass, cursorClasses) => {
 };
 
 // TODO: Read about currying
-const makeIsPointInsideRect = (x, y) => rect => {
+const isPointInsideRect = (x, y) => rect => {
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 };
 
@@ -254,7 +254,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
     bottom,
   } = mouseMoveEvent.target.getBoundingClientRect();
   let shift = 5; // px
-  const isPointInside = makeIsPointInsideRect(
+  const isPointInside = isPointInsideRect(
     mouseMoveEvent.clientX,
     mouseMoveEvent.clientY
   );
@@ -364,21 +364,15 @@ const isElementInsideContainer = element => {
   const containerRect = container.getBoundingClientRect();
 
   // TODO: Consider using of currying
-  // const isPointInsideRect = makeIsPointInsideRect(elementCoords.left, elementCoords.top)
+  // const isPointInsideRect = isPointInsideRect(elementCoords.left, elementCoords.top)
 
   return (
-    makeIsPointInsideRect(elementCoords.left, elementCoords.top)(
+    isPointInsideRect(elementCoords.left, elementCoords.top)(containerRect) ||
+    isPointInsideRect(elementCoords.right, elementCoords.top)(containerRect) ||
+    isPointInsideRect(elementCoords.left, elementCoords.bottom)(
       containerRect
     ) ||
-    makeIsPointInsideRect(elementCoords.right, elementCoords.top)(
-      containerRect
-    ) ||
-    makeIsPointInsideRect(elementCoords.left, elementCoords.bottom)(
-      containerRect
-    ) ||
-    makeIsPointInsideRect(elementCoords.right, elementCoords.bottom)(
-      containerRect
-    )
+    isPointInsideRect(elementCoords.right, elementCoords.bottom)(containerRect)
   );
 };
 
@@ -449,10 +443,9 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
   };
 };
 
-
 const toggleSelectedStickedSticker = selectedSticker => {
   const stickedStickers = Array.from(
-    document.getElementsByClassName('sticked-sticker')
+    document.getElementsByClassName('mobile-sticked-sticker')
   );
 
   stickedStickers.forEach(sticker => {
@@ -464,14 +457,22 @@ const toggleSelectedStickedSticker = selectedSticker => {
 };
 
 const changeStickerToEdit = selectedSticker => {
-  let style = window.getComputedStyle(selectedSticker);
+  const style = window.getComputedStyle(selectedSticker);
+  const width = parseInt(style.width);
+  const height = parseInt(style.height);
+  const left = parseInt(style.left);
+  const top = parseInt(style.top);
+  const right = parseInt(style.right);
+  const bottom = parseInt(style.bottom);
 
   stickerToEdit = {
     sticker: selectedSticker,
-    width: parseInt(style.width),
-    height: parseInt(style.height),
-    left: parseInt(style.left),
-    top: parseInt(style.top),
+    width: width,
+    height: height,
+    left: left + width / 2,
+    top: top + height / 2,
+    right: right + width / 2,
+    bottom: bottom + height / 2,
   };
 };
 
@@ -491,6 +492,9 @@ const stickStickerOnMobile = event => {
     sticked.style.height = stickerStyle.height;
     sticked.addEventListener('click', selectStickerToEdit);
     container.append(sticked);
+    canSavePhoto()
+      ? (captureButton.disabled = '')
+      : (captureButton.disabled = 'disabled');
   }
 };
 
@@ -536,7 +540,10 @@ const clearPhoto = () => {
   let stickedStickers = [];
 
   for (let elem of container.children) {
-    if (elem.classList.contains('sticked-sticker')) {
+    if (
+      elem.classList.contains('sticked-sticker') ||
+      elem.classList.contains('mobile-sticked-sticker')
+    ) {
       stickedStickers.push(elem);
     }
   }
@@ -679,6 +686,18 @@ const changeButtonLisener = (event, functionNumber) => {
   toggleChangeButton(event.target);
 };
 
+const deleteSticker = () => {
+  const stickedStickers = Array.from(
+    document.getElementsByClassName('mobile-sticked-sticker')
+  );
+
+  stickedStickers.forEach(sticker => {
+    if (sticker.classList.contains('selected-sticked-sticker')) {
+      container.removeChild(sticker);
+    }
+  });
+};
+
 const render = () => {
   renderHello();
   renderCamera();
@@ -716,21 +735,8 @@ const render = () => {
 
   resizeScroll.scrollLeft = resizeScroll.scrollWidth * 0.4;
 
-  changeButtons.forEach((changeButton, number) => {
-    changeButton.addEventListener('click', event =>
-      changeButtonLisener(event, number)
-    );
-  });
-
   resizeScroll.addEventListener('scroll', () => {
     if (stickerToEdit !== null && changeFunctionNumber !== -1) {
-      let containerStyle = container.getBoundingClientRect();
-      // let widthLimit = (containerStyle.width - stickerToEdit.width);
-      // let heightLimit = (containerStyle.height - stickerToEdit.height) / 2;
-      // let scale = resizeScroll.scrollLeft / resizeScroll.scrollWidth;
-
-      // console.log(resizeScroll.scrollLeft);
-
       scrollStretcher[changeFunctionNumber](
         stickerToEdit,
         resizeScroll.scrollLeft > resizeScroll.scrollWidth * 0.4,
@@ -739,6 +745,14 @@ const render = () => {
       );
     }
   });
+
+  changeButtons.forEach((changeButton, number) => {
+    changeButton.addEventListener('click', event =>
+      changeButtonLisener(event, number)
+    );
+  });
+
+  deleteStickerButton.addEventListener('click', deleteSticker);
 };
 
 render();

@@ -87,6 +87,8 @@ TODO
 - replace let with const where possible
 - style reset password page
 - style home message container
+- choose good limits for sticker change functions, make sure that element moves smoothly
+- think about not changing element while moving scroll when buttons are switched
 
 
 
