@@ -9,8 +9,15 @@ import {
   onsubmitHandler,
 } from '/js/utils.js';
 
-// import { stretcher, scrollStretcher } from '/js/stretcher.js';
-import { stretcher, changeWidth, changeHeight, changeSize, moveUpDown, moveLeftRight } from '/js/stretcher.js';
+import {
+  stretcher,
+  convertIntervalToInterval,
+  changeWidth,
+  changeHeight,
+  changeSize,
+  moveUpDown,
+  moveLeftRight,
+} from '/js/stretcher.js';
 
 const hello = document.getElementById('hello');
 let isContainerStickable = true;
@@ -30,56 +37,277 @@ const login = document.getElementById('login');
 const password = document.getElementById('password');
 let notificationStatus = document.getElementById('notification-status');
 
-const changeButtons = Array.from(
-  document.getElementsByClassName('change-button')
-);
-// const resizeScroll = document.getElementById('resize-scroll');
-
-const changeScrolls = document.getElementById('change-scrolls');
-
-const changeWidthButton = document.getElementById('change-width-button');
-const changeHeightButton = document.getElementById('change-height-button');
-const changeSizeButton = document.getElementById('change-size-button');
-const moveUpDownButton = document.getElementById('move-up-down');
-const moveLeftRightButton = document.getElementById('move-left-right');
-
-
-
-const changeWidthScroll = document.createElement('div');
-changeWidthScroll.id = 'change-width-scroll';
-changeWidthScroll.classList.add('scroll');
-changeWidthScroll.innerHTML = `<div class='scroll-content'></div>`;
-let changeWidthScrollLeft = null;
-
-const changeHeightScroll = document.createElement('div');
-changeHeightScroll.id = 'change-height-scroll';
-changeHeightScroll.classList.add('scroll');
-changeHeightScroll.innerHTML = `<div class='scroll-content'></div>`;
-let changeHeightScrollLeft = null;
-
-const changeSizeScroll = document.createElement('div');
-changeSizeScroll.id = 'change-size-scroll';
-changeSizeScroll.classList.add('scroll');
-changeSizeScroll.innerHTML = `<div class='scroll-content'></div>`;
-let changeSizeScrollLeft = null;
-
-const moveUpDownScroll = document.createElement('div');
-moveUpDownScroll.id = 'move-up-down-scroll';
-moveUpDownScroll.classList.add('scroll');
-moveUpDownScroll.innerHTML = `<div class='scroll-content'></div>`;
-let moveUpDownScrollLeft = null;
-
-const moveLeftRightScroll = document.createElement('div');
-moveLeftRightScroll.id = 'move-left-right-scroll';
-moveLeftRightScroll.classList.add('scroll');
-moveLeftRightScroll.innerHTML = `<div class='scroll-content'></div>`;
-let moveLeftRightScrollLeft = null;
-
-
+let selectedScroll = null;
+let selectedSticker = null;
+let selectedStickerData = null;
 
 const deleteStickerButton = document.getElementById('delete-sticker');
-let changeFunctionNumber = -1;
-let stickerToEdit = null;
+
+// ---
+
+const toggleChangeButton = selectedButton => {
+  const changeButtons = Array.from(
+    document.getElementsByClassName('change-button')
+  );
+
+  changeButtons.forEach(button => {
+    if (button.classList.contains('selected-change-button')) {
+      button.classList.remove('selected-change-button');
+    }
+  });
+  selectedButton.classList.add('selected-change-button');
+};
+
+const createScroll = (scrollId) => {
+  const scroll = document.createElement('div');
+
+  scroll.id = scrollId;
+  scroll.classList.add('scroll');
+  scroll.innerHTML = `<div class='scroll-content'></div>`;
+  return scroll;
+};
+
+const createWidthScroll = () => {
+  const widthScroll = createScroll('change-width-scroll');
+
+  widthScroll.addEventListener('scroll', () => {
+    changeWidth(
+      selectedStickerData,
+      widthScroll.scrollLeft > widthScroll.scrollWidth * 0.4,
+      widthScroll.scrollWidth,
+      widthScroll.scrollLeft
+    );
+  });
+
+  return widthScroll;
+}
+
+const createHeightScroll = () => {
+  const heightScroll = createScroll('change-height-scroll');
+
+  heightScroll.addEventListener('scroll', () => {
+    changeHeight(
+      selectedStickerData,
+      heightScroll.scrollLeft > heightScroll.scrollWidth * 0.4,
+      heightScroll.scrollWidth,
+      heightScroll.scrollLeft
+    );
+  });
+  return heightScroll;
+}
+
+const createSizeScroll = () => {
+  const sizeScroll =  createScroll('change-size-scroll');
+
+  sizeScroll.addEventListener('scroll', () => {
+    changeSize(
+      selectedStickerData,
+      sizeScroll.scrollLeft > sizeScroll.scrollWidth * 0.4,
+      sizeScroll.scrollWidth,
+      sizeScroll.scrollLeft
+    );
+  });
+  return sizeScroll;
+}
+
+const createUpDownScroll = () => {
+  const upDownScroll = createScroll('move-up-down-scroll');
+
+  upDownScroll.addEventListener('scroll', () => {
+    moveUpDown(
+      selectedStickerData,
+      upDownScroll.scrollLeft > upDownScroll.scrollWidth * 0.4,
+      upDownScroll.scrollWidth,
+      upDownScroll.scrollLeft
+    );
+  });
+  return upDownScroll;
+}
+
+const createLeftRightScroll = () => {
+  const leftRightScroll =  createScroll('move-left-right-scroll');
+
+  leftRightScroll.addEventListener('scroll', () => {
+    moveLeftRight(
+      selectedStickerData,
+      leftRightScroll.scrollLeft > leftRightScroll.scrollWidth * 0.4,
+      leftRightScroll.scrollWidth,
+      leftRightScroll.scrollLeft
+    );
+  });
+  return leftRightScroll;
+}
+
+const createChangeScrolls = () => {
+  const changeScrolls = document.createElement('div');
+
+  changeScrolls.id = 'change-scrolls';
+  return changeScrolls;
+}
+
+const showScroll = (scroll, showScrolls) => {
+  clear(showScrolls);
+  showScrolls.append(scroll);
+}
+
+const createChangeButton = (id, innerHTML) => {
+  const button = document.createElement('button');
+
+  button.id = id;
+  button.classList.add('change-button');
+  button.innerHTML = innerHTML;
+  return button;
+};
+
+const shiftScroll = () => {
+  console.log('shift scroll is called');
+  const selectedStickerWidth = parseInt(window.getComputedStyle(selectedSticker).width);
+  const selectedScrollWidth = parseInt(window.getComputedStyle(selectedScroll).width);
+  const percent = convertIntervalToInterval(
+    selectedStickerWidth,
+    0,
+    selectedStickerWidth * 2,
+    0,
+    selectedScrollWidth
+  );
+
+  selectedScroll.scrollLeft = selectedScroll.scrollWidth * (percent / selectedScrollWidth);
+}
+
+const createWidthButton = (changeScrolls) => {
+  console.log(`createWidthButton is called`);
+  const widthButton = createChangeButton('change-width-button', 'Change width');
+  const widthScroll = createWidthScroll();
+
+  widthButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    showScroll(widthScroll, changeScrolls);
+    selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
+    selectedScroll = widthScroll;
+    shiftScroll();
+    // clear(changeScrolls);
+    // changeSelectedStickerData();
+    // renderScroll(changeWidthScroll, changeWidthScrollLeft);
+    // selectedScroll = changeWidthScroll;
+  });
+  return widthButton;
+};
+
+const createHeightButton = (changeScrolls) => {
+  const heighthButton = createChangeButton(
+    'change-height-button',
+    'Change height'
+  );
+  const heightScroll = createHeightScroll();
+
+  heighthButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    showScroll(heightScroll, changeScrolls);
+    selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
+    selectedScroll = heightScroll;
+    shiftScroll();
+  });
+  return heighthButton;
+};
+
+const createSizeButton = (changeScrolls) => {
+  const sizehButton = createChangeButton('change-size-button', 'Change size');
+  const sizeScroll = createSizeScroll();
+
+  sizehButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    showScroll(sizeScroll, changeScrolls);
+    selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
+    selectedScroll = sizeScroll;
+    shiftScroll();
+  });
+  return sizehButton;
+};
+
+const createUpDownButton = (changeScrolls) => {
+  const upDownButton = createChangeButton('move-up-down', 'Up - Down');
+  const upDownScroll = createUpDownScroll();
+
+  upDownButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    showScroll(upDownScroll, changeScrolls);
+    selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
+    selectedScroll = upDownScroll;
+    shiftScroll();
+  });
+  return upDownButton;
+};
+
+const createLeftRightButton = (changeScrolls) => {
+  const leftRightButton = createChangeButton('move-left-right', 'Left - Right');
+  const leftRightScroll = createLeftRightScroll();
+
+  leftRightButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    showScroll(leftRightScroll, changeScrolls);
+    selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
+    selectedScroll = leftRightScroll;
+    shiftScroll();
+  });
+  return leftRightButton;
+}
+
+const createDeleteButton = () => {
+  const button = document.createElement('button');
+
+  button.id = 'delete-sticker';
+  button.innerHTML = 'Delete sticker';
+  return button;
+};
+
+const createChangeButtonsSection = (changeScrolls) => {
+  console.log(`createChangeButtonsSection is called`);
+  const changeButtonsSection = document.createElement('div');
+  const widthButton = createWidthButton(changeScrolls);
+  const heighthButton = createHeightButton(changeScrolls);
+  const sizehButton = createSizeButton(changeScrolls);
+  const upDownButton = createUpDownButton(changeScrolls);
+  const leftRightButton = createLeftRightButton(changeScrolls);
+  const deleteButton = createDeleteButton();
+
+  changeButtonsSection.id = 'change-buttons';
+  changeButtonsSection.append(
+    widthButton,
+    heighthButton,
+    sizehButton,
+    upDownButton,
+    leftRightButton,
+    deleteButton
+  );
+  return changeButtonsSection;
+};
+
+const createChangeStickerSection = () => {
+  console.log(`createChangeStickerSection is called`);
+  const changeStickerSection = document.createElement('div');
+  const changeScrolls = createChangeScrolls();
+  const changeButtonsSection = createChangeButtonsSection(changeScrolls);
+
+  changeStickerSection.id = 'change-sticker-section';
+  changeStickerSection.append(changeButtonsSection, changeScrolls);
+  return changeStickerSection;
+};
+
+const showChangeStickerSection = () => {
+  console.log(`showChangeStickerSection is called`);
+  const changeStickerSection = createChangeStickerSection();
+
+  if (document.getElementById('change-sticker-section') === null) {
+    document
+      .getElementById('account-main')
+      .insertBefore(
+        changeStickerSection,
+        document.getElementById('stickers-container')
+      );
+  }
+};
+
+// ---
 
 const getCoords = elem => {
   const box = elem.getBoundingClientRect();
@@ -495,7 +723,7 @@ const toggleSelectedStickedSticker = selectedSticker => {
   selectedSticker.classList.add('selected-sticked-sticker');
 };
 
-const changeStickerToEdit = selectedSticker => {
+const changeSelectedStickerData = () => {
   const style = window.getComputedStyle(selectedSticker);
   const width = parseInt(style.width);
   const height = parseInt(style.height);
@@ -504,7 +732,7 @@ const changeStickerToEdit = selectedSticker => {
   const right = parseInt(style.right);
   const bottom = parseInt(style.bottom);
 
-  stickerToEdit = {
+  selectedStickerData = {
     sticker: selectedSticker,
     width: width,
     height: height,
@@ -515,9 +743,11 @@ const changeStickerToEdit = selectedSticker => {
   };
 };
 
-const selectStickerToEdit = () => {
-  changeStickerToEdit(event.target);
+const selectStickerToEdit = event => {
+  selectedSticker = event.target;
+  changeSelectedStickerData();
   toggleSelectedStickedSticker(event.target);
+  showChangeStickerSection();
 };
 
 const stickStickerOnMobile = event => {
@@ -710,21 +940,6 @@ const renderNotificationStatus = () => {
   }, console.error);
 };
 
-const toggleChangeButton = selectedButton => {
-  changeButtons.forEach(button => {
-    if (button.classList.contains('selected-change-button')) {
-      button.classList.remove('selected-change-button');
-    }
-  });
-  selectedButton.classList.add('selected-change-button');
-};
-
-const changeButtonLisener = (event, functionNumber) => {
-  changeFunctionNumber = functionNumber;
-  resizeScroll.scrollLeft = resizeScroll.scrollWidth * 0.4;
-  toggleChangeButton(event.target);
-};
-
 const deleteSticker = () => {
   const stickedStickers = Array.from(
     document.getElementsByClassName('mobile-sticked-sticker')
@@ -737,14 +952,25 @@ const deleteSticker = () => {
   });
 };
 
-const renderScroll = (scroll, scrollLeft) => {
+const initiateScroll = (scroll, scrollId) => {
+  scroll.id = scrollId;
+  scroll.classList.add('scroll');
+  scroll.innerHTML = `<div class='scroll-content'></div>`;
+};
+
+// const renderScroll = (scroll, scrollLeft) => {
+//   changeScrolls.append(scroll);
+//   if (scrollLeft !== null) {
+//     scroll.scrollLeft = scrollLeft;
+//   } else {
+//     scroll.scrollLeft = scroll.scrollWidth * 0.4;
+//   }
+// }
+
+const renderScroll = (scroll, selectedStickerScrollPos) => {
   changeScrolls.append(scroll);
-  if (scrollLeft !== null) {
-    scroll.scrollLeft = scrollLeft;
-  } else {
-    scroll.scrollLeft = scroll.scrollWidth * 0.4;
-  }
-}
+  scroll.scrollLeft = selectedSticker.selectedStickerScrollPos;
+};
 
 const render = () => {
   renderHello();
@@ -781,94 +1007,133 @@ const render = () => {
     );
   renderNotificationStatus();
 
-  changeWidthButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
-    clear(changeScrolls);
-    renderScroll(changeWidthScroll, changeWidthScrollLeft);
-  });
-  changeWidthScroll.addEventListener('scroll', () => {
-    if (stickerToEdit !== null) {
-      changeWidthScrollLeft = changeWidthScroll.scrollLeft;
-      changeSizeScrollLeft = changeWidthScroll.scrollLeft;
-      changeWidth(
-        stickerToEdit,
-        changeWidthScroll.scrollLeft > changeWidthScroll.scrollWidth * 0.4,
-        changeWidthScroll.scrollWidth,
-        changeWidthScroll.scrollLeft
-      );
-    }
-  });
-  
-  changeHeightButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
-    clear(changeScrolls);
-    renderScroll(changeHeightScroll, changeHeightScrollLeft);
-  });
-  changeHeightScroll.addEventListener('scroll', () => {
-    if (stickerToEdit !== null) {
-      changeHeightScrollLeft = changeHeightScroll.scrollLeft;
-      changeHeight(
-        stickerToEdit,
-        changeHeightScroll.scrollLeft > changeHeightScroll.scrollWidth * 0.4,
-        changeHeightScroll.scrollWidth,
-        changeHeightScroll.scrollLeft
-      );
-    }
-  });
+  // ---
 
-  changeSizeButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
-    clear(changeScrolls);
-    renderScroll(changeSizeScroll, changeSizeScrollLeft);
-  });
-  changeSizeScroll.addEventListener('scroll', () => {
-    if (stickerToEdit !== null) {
-      changeWidthScrollLeft = changeSizeScroll.scrollLeft;
-      changeSizeScrollLeft = changeSizeScroll.scrollLeft;
-      changeSize(
-        stickerToEdit,
-        changeSizeScroll.scrollLeft > changeSizeScroll.scrollWidth * 0.4,
-        changeSizeScroll.scrollWidth,
-        changeSizeScroll.scrollLeft
-      );
-    }
-  });
+  // const changeWidthButton = document.getElementById('change-width-button');
 
-  moveUpDownButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
-    clear(changeScrolls);
-    renderScroll(moveUpDownScroll, moveUpDownScrollLeft);
-  });
-  moveUpDownScroll.addEventListener('scroll', () => {
-    if (stickerToEdit !== null) {
-      moveUpDownScrollLeft = moveUpDownScroll.scrollLeft;
-      moveUpDown(
-        stickerToEdit,
-        moveUpDownScroll.scrollLeft > moveUpDownScroll.scrollWidth * 0.4,
-        moveUpDownScroll.scrollWidth,
-        moveUpDownScroll.scrollLeft
-      );
-    }
-  });
+  // const changeScrolls = document.getElementById('change-scrolls');
 
-  moveLeftRightButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
-    clear(changeScrolls);
-    renderScroll(moveLeftRightScroll, moveLeftRightScrollLeft);
-  });
-  moveLeftRightScroll.addEventListener('scroll', () => {
-    if (stickerToEdit !== null) {
-      moveLeftRightScrollLeft = moveLeftRightScroll.scrollLeft;
-      moveLeftRight(
-        stickerToEdit,
-        moveLeftRightScroll.scrollLeft > moveLeftRightScroll.scrollWidth * 0.4,
-        moveLeftRightScroll.scrollWidth,
-        moveLeftRightScroll.scrollLeft
-      );
-    }
-  });
+  // const changeWidthScroll = document.createElement('div');
+  // let changeWidthScrollLeft = null;
 
-  deleteStickerButton.addEventListener('click', deleteSticker);
+  // const changeHeightScroll = document.createElement('div');
+  // let changeHeightScrollLeft = null;
+
+  // const changeSizeScroll = document.createElement('div');
+  // let changeSizeScrollLeft = null;
+
+  // const moveUpDownScroll = document.createElement('div');
+  // let moveUpDownScrollLeft = null;
+
+  // const moveLeftRightScroll = document.createElement('div');
+  // let moveLeftRightScrollLeft = null;
+
+  // // ---
+
+  // initiateScroll(changeWidthScroll, 'change-width-scroll');
+  // initiateScroll(changeHeightScroll, 'change-height-scroll');
+  // initiateScroll(changeSizeScroll, 'change-size-scroll');
+  // initiateScroll(moveUpDownScroll, 'move-up-down-scroll');
+  // initiateScroll(moveLeftRightScroll, 'move-left-right-scroll');
+
+  // changeWidthButton.addEventListener('click', () => {
+  //   toggleChangeButton(event.target);
+  //   clear(changeScrolls);
+  //   changeSelectedStickerData();
+  //   renderScroll(changeWidthScroll, changeWidthScrollLeft);
+  //   selectedScroll = changeWidthScroll;
+  // });
+  // changeWidthScroll.addEventListener('scroll', () => {
+  //   if (selectedStickerData !== null) {
+  //     changeWidthScrollLeft = changeWidthScroll.scrollLeft;
+  //     changeSizeScrollLeft = changeWidthScroll.scrollLeft;
+  //     changeWidth(
+  //       selectedStickerData,
+  //       changeWidthScroll.scrollLeft > changeWidthScroll.scrollWidth * 0.4,
+  //       changeWidthScroll.scrollWidth,
+  //       changeWidthScroll.scrollLeft
+  //     );
+  //   }
+  // });
+
+  // changeHeightButton.addEventListener('click', () => {
+  //   toggleChangeButton(event.target);
+  //   clear(changeScrolls);
+  //   renderScroll(changeHeightScroll, changeHeightScrollLeft);
+  //   changeSelectedStickerData();
+  //   selectedScroll = changeHeightScroll;
+  // });
+  // changeHeightScroll.addEventListener('scroll', () => {
+  //   if (selectedStickerData !== null) {
+  //     changeHeightScrollLeft = changeHeightScroll.scrollLeft;
+  //     changeHeight(
+  //       selectedStickerData,
+  //       changeHeightScroll.scrollLeft > changeHeightScroll.scrollWidth * 0.4,
+  //       changeHeightScroll.scrollWidth,
+  //       changeHeightScroll.scrollLeft
+  //     );
+  //   }
+  // });
+
+  // changeSizeButton.addEventListener('click', () => {
+  //   toggleChangeButton(event.target);
+  //   clear(changeScrolls);
+  //   renderScroll(changeSizeScroll, changeSizeScrollLeft);
+  //   changeSelectedStickerData();
+  //   selectedScroll = changeSizeScroll;
+  // });
+  // changeSizeScroll.addEventListener('scroll', () => {
+  //   if (selectedStickerData !== null) {
+  //     changeWidthScrollLeft = changeSizeScroll.scrollLeft;
+  //     changeSizeScrollLeft = changeSizeScroll.scrollLeft;
+  //     changeSize(
+  //       selectedStickerData,
+  //       changeSizeScroll.scrollLeft > changeSizeScroll.scrollWidth * 0.4,
+  //       changeSizeScroll.scrollWidth,
+  //       changeSizeScroll.scrollLeft
+  //     );
+  //   }
+  // });
+
+  // moveUpDownButton.addEventListener('click', () => {
+  //   toggleChangeButton(event.target);
+  //   clear(changeScrolls);
+  //   renderScroll(moveUpDownScroll, moveUpDownScrollLeft);
+  //   changeSelectedStickerData();
+  //   selectedScroll = moveUpDownScroll;
+  // });
+  // moveUpDownScroll.addEventListener('scroll', () => {
+  //   if (selectedStickerData !== null) {
+  //     moveUpDownScrollLeft = moveUpDownScroll.scrollLeft;
+  //     moveUpDown(
+  //       selectedStickerData,
+  //       moveUpDownScroll.scrollLeft > moveUpDownScroll.scrollWidth * 0.4,
+  //       moveUpDownScroll.scrollWidth,
+  //       moveUpDownScroll.scrollLeft
+  //     );
+  //   }
+  // });
+
+  // moveLeftRightButton.addEventListener('click', () => {
+  //   toggleChangeButton(event.target);
+  //   clear(changeScrolls);
+  //   renderScroll(moveLeftRightScroll, moveLeftRightScrollLeft);
+  //   changeSelectedStickerData();
+  //   selectedScroll = moveLeftRightScroll;
+  // });
+  // moveLeftRightScroll.addEventListener('scroll', () => {
+  //   if (selectedStickerData !== null) {
+  //     moveLeftRightScrollLeft = moveLeftRightScroll.scrollLeft;
+  //     moveLeftRight(
+  //       selectedStickerData,
+  //       moveLeftRightScroll.scrollLeft > moveLeftRightScroll.scrollWidth * 0.4,
+  //       moveLeftRightScroll.scrollWidth,
+  //       moveLeftRightScroll.scrollLeft
+  //     );
+  //   }
+  // });
+
+  // deleteStickerButton.addEventListener('click', deleteSticker);
 };
 
 render();

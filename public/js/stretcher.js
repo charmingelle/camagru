@@ -211,7 +211,7 @@ export const stretcher = {
   },
 };
 
-const convertIntervalToInterval = (t, a, b, c, d) => {
+export const convertIntervalToInterval = (t, a, b, c, d) => {
   return c + ((d - c) / (b - a)) * (t - a);
 };
 
@@ -261,8 +261,12 @@ const convertScrollToInterval = (
       'px';
   } else {
     stickerToEdit.sticker.style[property] =
-      convertScrollStartToInterval(scrollLeft, scrollWidth, bottomLimit, original) +
-      'px';
+      convertScrollStartToInterval(
+        scrollLeft,
+        scrollWidth,
+        bottomLimit,
+        original
+      ) + 'px';
   }
 };
 
@@ -272,7 +276,6 @@ export const changeWidth = (
   scrollWidth,
   scrollLeft
 ) => {
-  console.log('change width is called');
   convertScrollToInterval(
     stickerToEdit,
     shouldIncrease,
@@ -303,7 +306,12 @@ export const changeHeight = (
   );
 };
 
-export const changeSize = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+export const changeSize = (
+  stickerToEdit,
+  shouldIncrease,
+  scrollWidth,
+  scrollLeft
+) => {
   convertScrollToInterval(
     stickerToEdit,
     shouldIncrease,
@@ -326,7 +334,12 @@ export const changeSize = (stickerToEdit, shouldIncrease, scrollWidth, scrollLef
   );
 };
 
-export const moveUpDown = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+export const moveUpDown = (
+  stickerToEdit,
+  shouldIncrease,
+  scrollWidth,
+  scrollLeft
+) => {
   convertScrollToInterval(
     stickerToEdit,
     shouldIncrease,

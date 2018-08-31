@@ -89,6 +89,7 @@ TODO
 - style reset password page
 - style home message container
 - choose good limits for sticker change functions, make sure that element moves smoothly
+- make sure that you hide change sticker section when clear button is clicked or when all stickers are deleted one by one
 
 
 
