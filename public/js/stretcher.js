@@ -266,12 +266,13 @@ const convertScrollToInterval = (
   }
 };
 
-const changeWidth = (
+export const changeWidth = (
   stickerToEdit,
   shouldIncrease,
   scrollWidth,
   scrollLeft
 ) => {
+  console.log('change width is called');
   convertScrollToInterval(
     stickerToEdit,
     shouldIncrease,
@@ -284,7 +285,7 @@ const changeWidth = (
   );
 };
 
-const changeHeight = (
+export const changeHeight = (
   stickerToEdit,
   shouldIncrease,
   scrollWidth,
@@ -302,7 +303,7 @@ const changeHeight = (
   );
 };
 
-const changeSize = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+export const changeSize = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
   convertScrollToInterval(
     stickerToEdit,
     shouldIncrease,
@@ -325,7 +326,7 @@ const changeSize = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
   );
 };
 
-const moveUpDown = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
+export const moveUpDown = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
   convertScrollToInterval(
     stickerToEdit,
     shouldIncrease,
@@ -338,7 +339,7 @@ const moveUpDown = (stickerToEdit, shouldIncrease, scrollWidth, scrollLeft) => {
   );
 };
 
-const moveLeftRight = (
+export const moveLeftRight = (
   stickerToEdit,
   shouldIncrease,
   scrollWidth,
@@ -356,10 +357,10 @@ const moveLeftRight = (
   );
 };
 
-export const scrollStretcher = [
-  changeWidth,
-  changeHeight,
-  changeSize,
-  moveUpDown,
-  moveLeftRight,
-];
+// export const scrollStretcher = [
+//   changeWidth,
+//   changeHeight,
+//   changeSize,
+//   moveUpDown,
+//   moveLeftRight,
+// ];

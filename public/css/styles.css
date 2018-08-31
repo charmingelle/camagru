@@ -495,7 +495,7 @@ img {
   margin: 30px;
 }
 
-#resize-scroll {
+/* #resize-scroll {
   width: 50%;
   height: 50px;
   overflow-x: scroll;
@@ -516,6 +516,34 @@ img {
 }
 
 #scroll-content {
+  width: 500%;
+  height: 100%;
+} */
+
+#change-scrolls {
+  width: 50%;
+}
+
+.scroll {
+  height: 50px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  border: 1px solid #dbdbdb;
+  margin: 10px;
+}
+
+.scroll::-webkit-scrollbar {
+  height: 49px;
+  background-color: #F5F5F5;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #262626;
+  left: 50%;
+}
+
+.scroll-content {
   width: 500%;
   height: 100%;
 }

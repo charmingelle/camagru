@@ -69,6 +69,7 @@ TODO
 + check what happens with spaces in email, login and password
 + make sure that two logins cannot be equal
 + replace all object['property'] with object.property
++ think about not changing element while moving scroll when buttons are switched
 
 
 
@@ -88,7 +89,6 @@ TODO
 - style reset password page
 - style home message container
 - choose good limits for sticker change functions, make sure that element moves smoothly
-- think about not changing element while moving scroll when buttons are switched
 
 
 

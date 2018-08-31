@@ -9,7 +9,8 @@ import {
   onsubmitHandler,
 } from '/js/utils.js';
 
-import { stretcher, scrollStretcher } from '/js/stretcher.js';
+// import { stretcher, scrollStretcher } from '/js/stretcher.js';
+import { stretcher, changeWidth, changeHeight, changeSize, moveUpDown, moveLeftRight } from '/js/stretcher.js';
 
 const hello = document.getElementById('hello');
 let isContainerStickable = true;
@@ -32,12 +33,50 @@ let notificationStatus = document.getElementById('notification-status');
 const changeButtons = Array.from(
   document.getElementsByClassName('change-button')
 );
-const resizeScroll = document.getElementById('resize-scroll');
+// const resizeScroll = document.getElementById('resize-scroll');
+
+const changeScrolls = document.getElementById('change-scrolls');
+
 const changeWidthButton = document.getElementById('change-width-button');
 const changeHeightButton = document.getElementById('change-height-button');
 const changeSizeButton = document.getElementById('change-size-button');
 const moveUpDownButton = document.getElementById('move-up-down');
 const moveLeftRightButton = document.getElementById('move-left-right');
+
+
+
+const changeWidthScroll = document.createElement('div');
+changeWidthScroll.id = 'change-width-scroll';
+changeWidthScroll.classList.add('scroll');
+changeWidthScroll.innerHTML = `<div class='scroll-content'></div>`;
+let changeWidthScrollLeft = null;
+
+const changeHeightScroll = document.createElement('div');
+changeHeightScroll.id = 'change-height-scroll';
+changeHeightScroll.classList.add('scroll');
+changeHeightScroll.innerHTML = `<div class='scroll-content'></div>`;
+let changeHeightScrollLeft = null;
+
+const changeSizeScroll = document.createElement('div');
+changeSizeScroll.id = 'change-size-scroll';
+changeSizeScroll.classList.add('scroll');
+changeSizeScroll.innerHTML = `<div class='scroll-content'></div>`;
+let changeSizeScrollLeft = null;
+
+const moveUpDownScroll = document.createElement('div');
+moveUpDownScroll.id = 'move-up-down-scroll';
+moveUpDownScroll.classList.add('scroll');
+moveUpDownScroll.innerHTML = `<div class='scroll-content'></div>`;
+let moveUpDownScrollLeft = null;
+
+const moveLeftRightScroll = document.createElement('div');
+moveLeftRightScroll.id = 'move-left-right-scroll';
+moveLeftRightScroll.classList.add('scroll');
+moveLeftRightScroll.innerHTML = `<div class='scroll-content'></div>`;
+let moveLeftRightScrollLeft = null;
+
+
+
 const deleteStickerButton = document.getElementById('delete-sticker');
 let changeFunctionNumber = -1;
 let stickerToEdit = null;
@@ -698,6 +737,15 @@ const deleteSticker = () => {
   });
 };
 
+const renderScroll = (scroll, scrollLeft) => {
+  changeScrolls.append(scroll);
+  if (scrollLeft !== null) {
+    scroll.scrollLeft = scrollLeft;
+  } else {
+    scroll.scrollLeft = scroll.scrollWidth * 0.4;
+  }
+}
+
 const render = () => {
   renderHello();
   renderCamera();
@@ -733,23 +781,91 @@ const render = () => {
     );
   renderNotificationStatus();
 
-  resizeScroll.scrollLeft = resizeScroll.scrollWidth * 0.4;
-
-  resizeScroll.addEventListener('scroll', () => {
-    if (stickerToEdit !== null && changeFunctionNumber !== -1) {
-      scrollStretcher[changeFunctionNumber](
+  changeWidthButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    clear(changeScrolls);
+    renderScroll(changeWidthScroll, changeWidthScrollLeft);
+  });
+  changeWidthScroll.addEventListener('scroll', () => {
+    if (stickerToEdit !== null) {
+      changeWidthScrollLeft = changeWidthScroll.scrollLeft;
+      changeSizeScrollLeft = changeWidthScroll.scrollLeft;
+      changeWidth(
         stickerToEdit,
-        resizeScroll.scrollLeft > resizeScroll.scrollWidth * 0.4,
-        resizeScroll.scrollWidth,
-        resizeScroll.scrollLeft
+        changeWidthScroll.scrollLeft > changeWidthScroll.scrollWidth * 0.4,
+        changeWidthScroll.scrollWidth,
+        changeWidthScroll.scrollLeft
+      );
+    }
+  });
+  
+  changeHeightButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    clear(changeScrolls);
+    renderScroll(changeHeightScroll, changeHeightScrollLeft);
+  });
+  changeHeightScroll.addEventListener('scroll', () => {
+    if (stickerToEdit !== null) {
+      changeHeightScrollLeft = changeHeightScroll.scrollLeft;
+      changeHeight(
+        stickerToEdit,
+        changeHeightScroll.scrollLeft > changeHeightScroll.scrollWidth * 0.4,
+        changeHeightScroll.scrollWidth,
+        changeHeightScroll.scrollLeft
       );
     }
   });
 
-  changeButtons.forEach((changeButton, number) => {
-    changeButton.addEventListener('click', event =>
-      changeButtonLisener(event, number)
-    );
+  changeSizeButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    clear(changeScrolls);
+    renderScroll(changeSizeScroll, changeSizeScrollLeft);
+  });
+  changeSizeScroll.addEventListener('scroll', () => {
+    if (stickerToEdit !== null) {
+      changeWidthScrollLeft = changeSizeScroll.scrollLeft;
+      changeSizeScrollLeft = changeSizeScroll.scrollLeft;
+      changeSize(
+        stickerToEdit,
+        changeSizeScroll.scrollLeft > changeSizeScroll.scrollWidth * 0.4,
+        changeSizeScroll.scrollWidth,
+        changeSizeScroll.scrollLeft
+      );
+    }
+  });
+
+  moveUpDownButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    clear(changeScrolls);
+    renderScroll(moveUpDownScroll, moveUpDownScrollLeft);
+  });
+  moveUpDownScroll.addEventListener('scroll', () => {
+    if (stickerToEdit !== null) {
+      moveUpDownScrollLeft = moveUpDownScroll.scrollLeft;
+      moveUpDown(
+        stickerToEdit,
+        moveUpDownScroll.scrollLeft > moveUpDownScroll.scrollWidth * 0.4,
+        moveUpDownScroll.scrollWidth,
+        moveUpDownScroll.scrollLeft
+      );
+    }
+  });
+
+  moveLeftRightButton.addEventListener('click', () => {
+    toggleChangeButton(event.target);
+    clear(changeScrolls);
+    renderScroll(moveLeftRightScroll, moveLeftRightScrollLeft);
+  });
+  moveLeftRightScroll.addEventListener('scroll', () => {
+    if (stickerToEdit !== null) {
+      moveLeftRightScrollLeft = moveLeftRightScroll.scrollLeft;
+      moveLeftRight(
+        stickerToEdit,
+        moveLeftRightScroll.scrollLeft > moveLeftRightScroll.scrollWidth * 0.4,
+        moveLeftRightScroll.scrollWidth,
+        moveLeftRightScroll.scrollLeft
+      );
+    }
   });
 
   deleteStickerButton.addEventListener('click', deleteSticker);
