@@ -215,172 +215,44 @@ export const convertIntervalToInterval = (t, a, b, c, d) => {
   return c + ((d - c) / (b - a)) * (t - a);
 };
 
-const convertScrollStartToInterval = (
-  scrollLeft,
-  scrollWidth,
-  bottomLimit,
-  original
-) => {
-  return convertIntervalToInterval(
-    scrollLeft,
-    0,
-    scrollWidth / 2,
-    bottomLimit,
-    original
-  );
-};
-
-const convertScrollEndToInterval = (
-  scrollLeft,
-  scrollWidth,
-  original,
-  topLimit
-) => {
-  return convertIntervalToInterval(
-    scrollLeft,
-    scrollWidth / 2,
-    scrollWidth,
-    original,
-    topLimit
-  );
-};
-
-const convertScrollToInterval = (
-  sticker,
-  shouldIncrease,
-  scrollWidth,
-  scrollLeft,
-  bottomLimit,
-  original,
-  topLimit,
-  property
-) => {
-  if (shouldIncrease) {
-    sticker.style[property] =
-      convertScrollEndToInterval(scrollLeft, scrollWidth, original, topLimit) +
-      'px';
-  } else {
-    sticker.style[property] =
-      convertScrollStartToInterval(
-        scrollLeft,
-        scrollWidth,
-        bottomLimit,
-        original
-      ) + 'px';
-  }
-};
-
 export const changeWidth = (
   sticker,
-  stickerInitialWidth,
   maxStickerWidth,
-  shouldIncrease,
   scroll
 ) => {
-  convertScrollToInterval(
-    sticker,
-    shouldIncrease,
-    scroll.scrollWidth,
-    scroll.scrollLeft,
-    0,
-    stickerInitialWidth,
-    maxStickerWidth,
-    'width'
-  );
+  sticker.style['width'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerWidth) + 'px';
 };
 
 export const changeHeight = (
   sticker,
-  stickerInitialHeight,
   maxStickerHeight,
-  shouldIncrease,
   scroll
 ) => {
-  convertScrollToInterval(
-    sticker,
-    shouldIncrease,
-    scroll.scrollWidth,
-    scroll.scrollLeft,
-    0,
-    stickerInitialHeight,
-    maxStickerHeight,
-    'height'
-  );
+  sticker.style['height'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerHeight) + 'px';
 };
 
 export const changeSize = (
   sticker,
-  stickerInitialWidth,
-  stickerInitialHeight,
   maxStickerWidth,
   maxStickerHeight,
-  shouldIncrease,
   scroll
 ) => {
-  convertScrollToInterval(
-    sticker,
-    shouldIncrease,
-    scroll.scrollWidth,
-    scroll.scrollLeft,
-    0,
-    stickerInitialWidth,
-    maxStickerWidth,
-    'width'
-  );
-  convertScrollToInterval(
-    sticker,
-    shouldIncrease,
-    scroll.scrollWidth,
-    scroll.scrollLeft,
-    0,
-    stickerInitialHeight,
-    maxStickerHeight,
-    'height'
-  );
+  sticker.style['width'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerWidth) + 'px';
+  sticker.style['height'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerHeight) + 'px';
 };
 
 export const moveUpDown = (
   sticker,
-  stickerInitialTop,
   maxStickerTop,
-  shouldIncrease,
   scroll
 ) => {
-  convertScrollToInterval(
-    sticker,
-    shouldIncrease,
-    scroll.scrollWidth,
-    scroll.scrollLeft,
-    0,
-    stickerInitialTop,
-    maxStickerTop,
-    'top'
-  );
+  sticker.style['top'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerTop) + 'px';
 };
 
 export const moveLeftRight = (
   sticker,
-  stickerInitialLeft,
   maxStickerLeft,
-  shouldIncrease,
   scroll
 ) => {
-  convertScrollToInterval(
-    sticker,
-    shouldIncrease,
-    scroll.scrollWidth,
-    scroll.scrollLeft,
-    0,
-    stickerInitialLeft,
-    maxStickerLeft,
-    'left'
-  );
+  sticker.style['left'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerLeft) + 'px';
 };
-
-// export const scrollStretcher = [
-//   changeWidth,
-//   changeHeight,
-//   changeSize,
-//   moveUpDown,
-//   moveLeftRight,
-// ];

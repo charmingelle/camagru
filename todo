@@ -70,6 +70,7 @@ TODO
 + make sure that two logins cannot be equal
 + replace all object['property'] with object.property
 + think about not changing element while moving scroll when buttons are switched
++ make sure that you hide change sticker section when clear button is clicked or when all stickers are deleted one by one
 
 
 
@@ -89,7 +90,6 @@ TODO
 - style reset password page
 - style home message container
 - choose good limits for sticker change functions, make sure that element moves smoothly
-- make sure that you hide change sticker section when clear button is clicked or when all stickers are deleted one by one
 
 
 

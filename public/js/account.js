@@ -36,22 +36,32 @@ const email = document.getElementById('email');
 const login = document.getElementById('login');
 const password = document.getElementById('password');
 let notificationStatus = document.getElementById('notification-status');
+const accountMain = document.getElementById('account-main');
 
-// let selectedScroll = null;
-// let selectedSticker = null;
-// let selectedStickerInitial = null;
-// let selectedStickerData = null;
+let maxStickerWidth = 1200;
+let maxStickerHeight = 600;
+let maxStickerLeft = 1200;
+let maxStickerTop = 600;
 
-const deleteStickerButton = document.getElementById('delete-sticker');
+// let maxStickerWidth = null;
+// let maxStickerHeight = null;
+// let maxStickerLeft = null;
+// let maxStickerTop = null;
 
-// ---
+// const setMaxLimits = (sticker) => {
+//   const stickerRect = sticker.getBoundingClientRect();
 
-const maxStickerWidth = 1200;
-const maxStickerHeight = 600;
-const maxStickerTop = 600;
-const maxStickerLeft = 1200;
+//   maxStickerWidth = window.innerWidth;
+//   maxStickerHeight = window.innerHeight;
+//   // maxStickerLeft = parseInt(window.getComputedStyle(container).width);
+//   // maxStickerTop = parseInt(window.getComputedStyle(container).height);
+//   maxStickerLeft = container.getBoundingClientRect().width;
+//   maxStickerTop = container.getBoundingClientRect().height;
+//   console.log(`maxStickerLeft = ${maxStickerLeft}`);
+//   console.log(`maxStickerTop = ${maxStickerTop}`);
+// }
 
-const createScroll = (scrollId) => {
+const createScroll = scrollId => {
   const scroll = document.createElement('div');
 
   scroll.id = scrollId;
@@ -61,132 +71,116 @@ const createScroll = (scrollId) => {
 };
 
 const shiftScroll = (scroll, stickerParam, maxStickerParam) => {
-  console.log('shift scroll is called');
-  console.log(`stickerParam = ${stickerParam}`);
-  const scrollWidth = parseInt(window.getComputedStyle(scroll).width);
   const percent = convertIntervalToInterval(
     stickerParam,
     0,
     maxStickerParam,
     0,
-    scrollWidth
+    scroll.scrollWidth
   );
 
-  scroll.scrollLeft = scroll.scrollWidth * (percent / scrollWidth);
-  console.log(`scroll.scrollLeft should be = ${scroll.scrollWidth * (percent / scrollWidth)}`);
-  console.log(`scroll.scrollLeft = ${scroll.scrollLeft}`);
-}
+  scroll.scrollLeft = percent;
+};
 
-const renderWidthScroll = (changeScrolls) => {
+const renderWidthScroll = changeScrolls => {
   const widthScroll = createScroll('change-width-scroll');
-  const selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
-  const selectedStickerInitialWidth = parseInt(window.getComputedStyle(selectedSticker).width);
+  const selectedSticker = document.getElementsByClassName(
+    'selected-sticked-sticker'
+  )[0];
 
   widthScroll.addEventListener('scroll', () => {
-    changeWidth(
-      selectedSticker,
-      selectedStickerInitialWidth,
-      maxStickerWidth,
-      widthScroll.scrollLeft > widthScroll.scrollWidth * 0.4,
-      widthScroll
-    );
+    console.log(`widthScroll.scrollLeft = ${widthScroll.scrollLeft}`);
+    changeWidth(selectedSticker, maxStickerWidth, widthScroll);
+    console.log(`selectedSticker.width = ${parseInt(window.getComputedStyle(selectedSticker).width)}`);
   });
   clear(changeScrolls);
   changeScrolls.append(widthScroll);
-  shiftScroll(widthScroll, selectedStickerInitialWidth, maxStickerWidth);
-}
+  shiftScroll(
+    widthScroll,
+    parseInt(window.getComputedStyle(selectedSticker).width),
+    maxStickerWidth
+  );
+};
 
-const renderHeightScroll = (changeScrolls) => {
+const renderHeightScroll = changeScrolls => {
   const heightScroll = createScroll('change-height-scroll');
-  const selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
-  const selectedStickerInitialHeight = parseInt(window.getComputedStyle(selectedSticker).height);
+  const selectedSticker = document.getElementsByClassName(
+    'selected-sticked-sticker'
+  )[0];
 
   heightScroll.addEventListener('scroll', () => {
-    changeHeight(
-      selectedSticker,
-      selectedStickerInitialHeight,
-      maxStickerHeight,
-      heightScroll.scrollLeft > heightScroll.scrollWidth * 0.4,
-      heightScroll
-    );
+    changeHeight(selectedSticker, maxStickerHeight, heightScroll);
   });
   clear(changeScrolls);
   changeScrolls.append(heightScroll);
-  shiftScroll(heightScroll, selectedStickerInitialHeight, maxStickerHeight);
-}
+  shiftScroll(
+    heightScroll,
+    parseInt(window.getComputedStyle(selectedSticker).height),
+    maxStickerHeight
+  );
+};
 
-const renderSizeScroll = (changeScrolls) => {
-  const sizeScroll =  createScroll('change-size-scroll');
-  const selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
-  const selectedStickerStyle = window.getComputedStyle(selectedSticker);
-  const selectedStickerInitialWidth = parseInt(selectedStickerStyle.width);
-  const selectedStickerInitialHeight = parseInt(selectedStickerStyle.height);
+const renderSizeScroll = changeScrolls => {
+  const sizeScroll = createScroll('change-size-scroll');
+  const selectedSticker = document.getElementsByClassName(
+    'selected-sticked-sticker'
+  )[0];
 
   sizeScroll.addEventListener('scroll', () => {
-    changeSize(
-      selectedSticker,
-      selectedStickerInitialWidth,
-      selectedStickerInitialHeight,
-      maxStickerWidth,
-      maxStickerHeight,
-      sizeScroll.scrollLeft > sizeScroll.scrollWidth * 0.4,
-      sizeScroll
-    );
+    changeSize(selectedSticker, maxStickerWidth, maxStickerHeight, sizeScroll);
   });
   clear(changeScrolls);
   changeScrolls.append(sizeScroll);
-  shiftScroll(sizeScroll, selectedStickerInitialWidth, maxStickerWidth);
-}
+  shiftScroll(
+    sizeScroll,
+    parseInt(window.getComputedStyle(selectedSticker).width),
+    maxStickerWidth
+  );
+};
 
-const renderUpDownScroll = (changeScrolls) => {
+const renderUpDownScroll = changeScrolls => {
   const upDownScroll = createScroll('move-up-down-scroll');
-  const selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
-  const selectedStickerStyle = window.getComputedStyle(selectedSticker);
-  const selectedStickerInitialHeight = parseInt(selectedStickerStyle.height);
-  const selectedStickerInitialTop = parseInt(selectedStickerStyle.top);
+  const selectedSticker = document.getElementsByClassName(
+    'selected-sticked-sticker'
+  )[0];
 
   upDownScroll.addEventListener('scroll', () => {
-    moveUpDown(
-      selectedSticker,
-      selectedStickerInitialTop,
-      maxStickerTop,
-      upDownScroll.scrollLeft > upDownScroll.scrollWidth * 0.4,
-      upDownScroll
-    );
+    moveUpDown(selectedSticker, maxStickerTop, upDownScroll);
   });
   clear(changeScrolls);
   changeScrolls.append(upDownScroll);
-  shiftScroll(upDownScroll, selectedStickerInitialTop, maxStickerTop);
-}
+  shiftScroll(
+    upDownScroll,
+    parseInt(window.getComputedStyle(selectedSticker).top),
+    maxStickerTop
+  );
+};
 
-const renderLeftRightScroll = (changeScrolls) => {
-  const leftRightScroll =  createScroll('move-left-right-scroll');
-  const selectedSticker = document.getElementsByClassName('selected-sticked-sticker')[0];
-  const selectedStickerStyle = window.getComputedStyle(selectedSticker);
-  const selectedStickerInitialWidth = parseInt(selectedStickerStyle.width);
-  const selectedStickerInitialLeft = parseInt(selectedStickerStyle.left);
+const renderLeftRightScroll = changeScrolls => {
+  const leftRightScroll = createScroll('move-left-right-scroll');
+  const selectedSticker = document.getElementsByClassName(
+    'selected-sticked-sticker'
+  )[0];
 
   leftRightScroll.addEventListener('scroll', () => {
-    moveLeftRight(
-      selectedSticker,
-      selectedStickerInitialLeft,
-      maxStickerLeft,
-      leftRightScroll.scrollLeft > leftRightScroll.scrollWidth * 0.4,
-      leftRightScroll
-    );
+    moveLeftRight(selectedSticker, maxStickerLeft, leftRightScroll);
   });
   clear(changeScrolls);
   changeScrolls.append(leftRightScroll);
-  shiftScroll(leftRightScroll, selectedStickerInitialLeft, maxStickerLeft);
-}
+  shiftScroll(
+    leftRightScroll,
+    parseInt(window.getComputedStyle(selectedSticker).left),
+    maxStickerLeft
+  );
+};
 
-const renderChangeScrolls = (changeStickerSection) => {
+const renderChangeScrolls = changeStickerSection => {
   const changeScrolls = document.createElement('div');
 
   changeScrolls.id = 'change-scrolls';
   changeStickerSection.append(changeScrolls);
   return changeScrolls;
-}
+};
 
 const toggleChangeButton = selectedButton => {
   const changeButtons = Array.from(
@@ -212,7 +206,7 @@ const createChangeButton = (id, innerHTML) => {
 
 const renderWidthButton = (changeStickerSection, changeScrolls) => {
   const widthButton = createChangeButton('change-width-button', 'Change width');
-  
+
   widthButton.addEventListener('click', () => {
     toggleChangeButton(event.target);
     renderWidthScroll(changeScrolls);
@@ -261,13 +255,29 @@ const renderLeftRightButton = (changeStickerSection, changeScrolls) => {
     renderLeftRightScroll(changeScrolls);
   });
   changeStickerSection.append(leftRightButton);
-}
+};
 
-const renderDeleteStickerButton = (changeStickerSection) => {
+const deleteSticker = () => {
+  const stickedStickers = Array.from(
+    document.getElementsByClassName('mobile-sticked-sticker')
+  );
+
+  stickedStickers.forEach(sticker => {
+    if (sticker.classList.contains('selected-sticked-sticker')) {
+      container.removeChild(sticker);
+    }
+  });
+  if (stickedStickers.length === 1) {
+    deleteChangeStickerSection();
+  }
+};
+
+const renderDeleteStickerButton = changeStickerSection => {
   const button = document.createElement('button');
 
   button.id = 'delete-sticker';
   button.innerHTML = 'Delete sticker';
+  button.addEventListener('click', deleteSticker);
   changeStickerSection.append(button);
 };
 
@@ -277,39 +287,36 @@ const renderChangeButtonsSection = (changeStickerSection, changeScrolls) => {
   const heighthButton = renderHeightButton(changeButtonsSection, changeScrolls);
   const sizehButton = renderSizeButton(changeButtonsSection, changeScrolls);
   const upDownButton = renderUpDownButton(changeButtonsSection, changeScrolls);
-  const leftRightButton = renderLeftRightButton(changeButtonsSection, changeScrolls);
+  const leftRightButton = renderLeftRightButton(
+    changeButtonsSection,
+    changeScrolls
+  );
   const deleteButton = renderDeleteStickerButton(changeButtonsSection);
 
   changeButtonsSection.id = 'change-buttons';
-  // changeButtonsSection.append(
-  //   widthButton,
-  //   heighthButton,
-  //   sizehButton,
-  //   upDownButton,
-  //   leftRightButton,
-  //   deleteButton
-  // );
   changeStickerSection.append(changeButtonsSection);
 };
+
+const deleteChangeStickerSection = () => {
+  const changeStickerSection = document.getElementById('change-sticker-section');
+
+  if (changeStickerSection) {
+    accountMain.removeChild(changeStickerSection);
+  }
+}
 
 const renderChangeStickerSection = () => {
   const changeStickerSection = document.createElement('div');
   const changeScrolls = renderChangeScrolls(changeStickerSection);
+
   renderChangeButtonsSection(changeStickerSection, changeScrolls);
-
   changeStickerSection.id = 'change-sticker-section';
-
-  if (document.getElementById('change-sticker-section') === null) {
-    document
-      .getElementById('account-main')
-      .insertBefore(
-        changeStickerSection,
-        document.getElementById('stickers-container')
-      );
-  }
+  deleteChangeStickerSection();
+  accountMain.insertBefore(
+    changeStickerSection,
+    document.getElementById('stickers-container')
+  );
 };
-
-// ---
 
 const getCoords = elem => {
   const box = elem.getBoundingClientRect();
@@ -479,6 +486,10 @@ const getStickerData = sticker => {
   let source = sticker.src;
   let type = 'file';
 
+  if (sticker.classList.contains('mobile-sticked-sticker')) {
+    left -= width / 2;
+    top -= height / 2;
+  }
   return {
     source,
     type,
@@ -727,10 +738,13 @@ const toggleSelectedStickedSticker = selectedSticker => {
 
 const selectStickerToEdit = event => {
   toggleSelectedStickedSticker(event.target);
+  // setMaxLimits(event.target);
   renderChangeStickerSection();
 };
 
 const stickStickerOnMobile = event => {
+  console.log(`FROM stickStickerOnMobile: container.width = ${container.getBoundingClientRect().width}`);
+  
   if (isContainerStickable) {
     let sticked = event.target.cloneNode(true);
     let stickerStyle = window.getComputedStyle(event.target);
@@ -799,6 +813,7 @@ const clearPhoto = () => {
   stickedStickers.forEach(elem => {
     container.removeChild(elem);
   });
+  deleteChangeStickerSection();
   canSavePhoto()
     ? (captureButton.disabled = '')
     : (captureButton.disabled = 'disabled');
@@ -821,7 +836,9 @@ const uploadPhoto = () => {
   uploadedImage = document.createElement('img');
   uploadedImage.id = 'uploaded-image';
   uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
+  // console.log(`container.height = ${document.getElementById('container').getBoundingClientRect().height}`);
   container.insertBefore(uploadedImage, container.firstChild);
+  // console.log(`container.height = ${document.getElementById('container').getBoundingClientRect().height}`);
   isContainerStickable = true;
   renderBackToCameraButton();
   canSavePhoto()
@@ -920,38 +937,6 @@ const renderNotificationStatus = () => {
   }, console.error);
 };
 
-const deleteSticker = () => {
-  const stickedStickers = Array.from(
-    document.getElementsByClassName('mobile-sticked-sticker')
-  );
-
-  stickedStickers.forEach(sticker => {
-    if (sticker.classList.contains('selected-sticked-sticker')) {
-      container.removeChild(sticker);
-    }
-  });
-};
-
-const initiateScroll = (scroll, scrollId) => {
-  scroll.id = scrollId;
-  scroll.classList.add('scroll');
-  scroll.innerHTML = `<div class='scroll-content'></div>`;
-};
-
-// const renderScroll = (scroll, scrollLeft) => {
-//   changeScrolls.append(scroll);
-//   if (scrollLeft !== null) {
-//     scroll.scrollLeft = scrollLeft;
-//   } else {
-//     scroll.scrollLeft = scroll.scrollWidth * 0.4;
-//   }
-// }
-
-const renderScroll = (scroll, selectedStickerScrollPos) => {
-  changeScrolls.append(scroll);
-  scroll.scrollLeft = selectedSticker.selectedStickerScrollPos;
-};
-
 const render = () => {
   renderHello();
   renderCamera();
@@ -986,134 +971,6 @@ const render = () => {
       okCallbackForChangePasswordHandler
     );
   renderNotificationStatus();
-
-  // ---
-
-  // const changeWidthButton = document.getElementById('change-width-button');
-
-  // const changeScrolls = document.getElementById('change-scrolls');
-
-  // const changeWidthScroll = document.createElement('div');
-  // let changeWidthScrollLeft = null;
-
-  // const changeHeightScroll = document.createElement('div');
-  // let changeHeightScrollLeft = null;
-
-  // const changeSizeScroll = document.createElement('div');
-  // let changeSizeScrollLeft = null;
-
-  // const moveUpDownScroll = document.createElement('div');
-  // let moveUpDownScrollLeft = null;
-
-  // const moveLeftRightScroll = document.createElement('div');
-  // let moveLeftRightScrollLeft = null;
-
-  // // ---
-
-  // initiateScroll(changeWidthScroll, 'change-width-scroll');
-  // initiateScroll(changeHeightScroll, 'change-height-scroll');
-  // initiateScroll(changeSizeScroll, 'change-size-scroll');
-  // initiateScroll(moveUpDownScroll, 'move-up-down-scroll');
-  // initiateScroll(moveLeftRightScroll, 'move-left-right-scroll');
-
-  // changeWidthButton.addEventListener('click', () => {
-  //   toggleChangeButton(event.target);
-  //   clear(changeScrolls);
-  //   changeSelectedStickerData();
-  //   renderScroll(changeWidthScroll, changeWidthScrollLeft);
-  //   selectedScroll = changeWidthScroll;
-  // });
-  // changeWidthScroll.addEventListener('scroll', () => {
-  //   if (selectedStickerData !== null) {
-  //     changeWidthScrollLeft = changeWidthScroll.scrollLeft;
-  //     changeSizeScrollLeft = changeWidthScroll.scrollLeft;
-  //     changeWidth(
-  //       selectedStickerData,
-  //       changeWidthScroll.scrollLeft > changeWidthScroll.scrollWidth * 0.4,
-  //       changeWidthScroll.scrollWidth,
-  //       changeWidthScroll.scrollLeft
-  //     );
-  //   }
-  // });
-
-  // changeHeightButton.addEventListener('click', () => {
-  //   toggleChangeButton(event.target);
-  //   clear(changeScrolls);
-  //   renderScroll(changeHeightScroll, changeHeightScrollLeft);
-  //   changeSelectedStickerData();
-  //   selectedScroll = changeHeightScroll;
-  // });
-  // changeHeightScroll.addEventListener('scroll', () => {
-  //   if (selectedStickerData !== null) {
-  //     changeHeightScrollLeft = changeHeightScroll.scrollLeft;
-  //     changeHeight(
-  //       selectedStickerData,
-  //       changeHeightScroll.scrollLeft > changeHeightScroll.scrollWidth * 0.4,
-  //       changeHeightScroll.scrollWidth,
-  //       changeHeightScroll.scrollLeft
-  //     );
-  //   }
-  // });
-
-  // changeSizeButton.addEventListener('click', () => {
-  //   toggleChangeButton(event.target);
-  //   clear(changeScrolls);
-  //   renderScroll(changeSizeScroll, changeSizeScrollLeft);
-  //   changeSelectedStickerData();
-  //   selectedScroll = changeSizeScroll;
-  // });
-  // changeSizeScroll.addEventListener('scroll', () => {
-  //   if (selectedStickerData !== null) {
-  //     changeWidthScrollLeft = changeSizeScroll.scrollLeft;
-  //     changeSizeScrollLeft = changeSizeScroll.scrollLeft;
-  //     changeSize(
-  //       selectedStickerData,
-  //       changeSizeScroll.scrollLeft > changeSizeScroll.scrollWidth * 0.4,
-  //       changeSizeScroll.scrollWidth,
-  //       changeSizeScroll.scrollLeft
-  //     );
-  //   }
-  // });
-
-  // moveUpDownButton.addEventListener('click', () => {
-  //   toggleChangeButton(event.target);
-  //   clear(changeScrolls);
-  //   renderScroll(moveUpDownScroll, moveUpDownScrollLeft);
-  //   changeSelectedStickerData();
-  //   selectedScroll = moveUpDownScroll;
-  // });
-  // moveUpDownScroll.addEventListener('scroll', () => {
-  //   if (selectedStickerData !== null) {
-  //     moveUpDownScrollLeft = moveUpDownScroll.scrollLeft;
-  //     moveUpDown(
-  //       selectedStickerData,
-  //       moveUpDownScroll.scrollLeft > moveUpDownScroll.scrollWidth * 0.4,
-  //       moveUpDownScroll.scrollWidth,
-  //       moveUpDownScroll.scrollLeft
-  //     );
-  //   }
-  // });
-
-  // moveLeftRightButton.addEventListener('click', () => {
-  //   toggleChangeButton(event.target);
-  //   clear(changeScrolls);
-  //   renderScroll(moveLeftRightScroll, moveLeftRightScrollLeft);
-  //   changeSelectedStickerData();
-  //   selectedScroll = moveLeftRightScroll;
-  // });
-  // moveLeftRightScroll.addEventListener('scroll', () => {
-  //   if (selectedStickerData !== null) {
-  //     moveLeftRightScrollLeft = moveLeftRightScroll.scrollLeft;
-  //     moveLeftRight(
-  //       selectedStickerData,
-  //       moveLeftRightScroll.scrollLeft > moveLeftRightScroll.scrollWidth * 0.4,
-  //       moveLeftRightScroll.scrollWidth,
-  //       moveLeftRightScroll.scrollLeft
-  //     );
-  //   }
-  // });
-
-  // deleteStickerButton.addEventListener('click', deleteSticker);
 };
 
 render();
