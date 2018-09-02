@@ -90,6 +90,11 @@ TODO
 - style reset password page
 - style home message container
 - choose good limits for sticker change functions, make sure that element moves smoothly
+- think what to do with element being resized when change size sticker is selected
+- think what to do when resized element covers scrolls (limits issue)
+- check why photos cannot be saved on remote hosting
+- consider removing change size button and all code related to it
+- consider moving sticker on mobile the way it doesn't cover change section
 
 
 

@@ -21,7 +21,7 @@ import {
 
 const hello = document.getElementById('hello');
 let isContainerStickable = true;
-const container = document.getElementById('container');
+export const container = document.getElementById('container');
 const stickersContainer = document.getElementById('stickers');
 const photosContainer = document.getElementById('user-photos');
 const buttonBlock = document.getElementById('photo-buttons');
@@ -48,18 +48,15 @@ let maxStickerTop = 600;
 // let maxStickerLeft = null;
 // let maxStickerTop = null;
 
-// const setMaxLimits = (sticker) => {
-//   const stickerRect = sticker.getBoundingClientRect();
+const setMaxLimits = () => {
+  const style = container.getBoundingClientRect();
 
-//   maxStickerWidth = window.innerWidth;
-//   maxStickerHeight = window.innerHeight;
-//   // maxStickerLeft = parseInt(window.getComputedStyle(container).width);
-//   // maxStickerTop = parseInt(window.getComputedStyle(container).height);
-//   maxStickerLeft = container.getBoundingClientRect().width;
-//   maxStickerTop = container.getBoundingClientRect().height;
-//   console.log(`maxStickerLeft = ${maxStickerLeft}`);
-//   console.log(`maxStickerTop = ${maxStickerTop}`);
-// }
+  maxStickerWidth = style.width * 2;
+  maxStickerHeight = style.height * 2;
+  maxStickerLeft = style.left;
+  maxStickerTop = style.top;
+  // console.log(`maxStickerWidth = ${maxStickerWidth}, maxStickerHeight = ${maxStickerHeight}, maxStickerLeft = ${maxStickerLeft}, maxStickerTop = ${maxStickerTop}`);
+};
 
 const createScroll = scrollId => {
   const scroll = document.createElement('div');
@@ -89,9 +86,7 @@ const renderWidthScroll = changeScrolls => {
   )[0];
 
   widthScroll.addEventListener('scroll', () => {
-    console.log(`widthScroll.scrollLeft = ${widthScroll.scrollLeft}`);
     changeWidth(selectedSticker, maxStickerWidth, widthScroll);
-    console.log(`selectedSticker.width = ${parseInt(window.getComputedStyle(selectedSticker).width)}`);
   });
   clear(changeScrolls);
   changeScrolls.append(widthScroll);
@@ -285,7 +280,7 @@ const renderChangeButtonsSection = (changeStickerSection, changeScrolls) => {
   const changeButtonsSection = document.createElement('div');
   const widthButton = renderWidthButton(changeButtonsSection, changeScrolls);
   const heighthButton = renderHeightButton(changeButtonsSection, changeScrolls);
-  const sizehButton = renderSizeButton(changeButtonsSection, changeScrolls);
+  // const sizehButton = renderSizeButton(changeButtonsSection, changeScrolls);
   const upDownButton = renderUpDownButton(changeButtonsSection, changeScrolls);
   const leftRightButton = renderLeftRightButton(
     changeButtonsSection,
@@ -297,13 +292,15 @@ const renderChangeButtonsSection = (changeStickerSection, changeScrolls) => {
   changeStickerSection.append(changeButtonsSection);
 };
 
-const deleteChangeStickerSection = () => {
-  const changeStickerSection = document.getElementById('change-sticker-section');
+export const deleteChangeStickerSection = () => {
+  const changeStickerSection = document.getElementById(
+    'change-sticker-section'
+  );
 
   if (changeStickerSection) {
     accountMain.removeChild(changeStickerSection);
   }
-}
+};
 
 const renderChangeStickerSection = () => {
   const changeStickerSection = document.createElement('div');
@@ -564,7 +561,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
     })
   ) {
     changeCursorClass(mouseMoveEvent.target, 'slash-cursor', cursorClasses);
-    stretcher.stretchRightUp(mouseMoveEvent.target);
+    stretcher.stretchRightUp(mouseMoveEvent.target, container);
   } else if (
     isPointInside({
       left: left,
@@ -639,21 +636,47 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
   }
 };
 
-const isElementInsideContainer = element => {
-  let elementCoords = element.getBoundingClientRect();
-  const containerRect = container.getBoundingClientRect();
+// export const isElementInsideContainer = element => {
+//   const elementCoords = element.getBoundingClientRect();
+//   const containerRect = container.getBoundingClientRect();
 
-  // TODO: Consider using of currying
-  // const isPointInsideRect = isPointInsideRect(elementCoords.left, elementCoords.top)
+//   // TODO: Consider using of currying
+//   // const isPointInsideRect = isPointInsideRect(elementCoords.left, elementCoords.top)
 
-  return (
-    isPointInsideRect(elementCoords.left, elementCoords.top)(containerRect) ||
-    isPointInsideRect(elementCoords.right, elementCoords.top)(containerRect) ||
-    isPointInsideRect(elementCoords.left, elementCoords.bottom)(
-      containerRect
-    ) ||
-    isPointInsideRect(elementCoords.right, elementCoords.bottom)(containerRect)
-  );
+//   return (
+//     isPointInsideRect(elementCoords.left, elementCoords.top)(containerRect) ||
+//     isPointInsideRect(elementCoords.right, elementCoords.top)(containerRect) ||
+//     isPointInsideRect(elementCoords.left, elementCoords.bottom)(
+//       containerRect
+//     ) ||
+//     isPointInsideRect(elementCoords.right, elementCoords.bottom)(containerRect)
+//   );
+// };
+
+// export const isElementInsideContainer = element => {
+//   const elementCoords = element.getBoundingClientRect();
+//   const containerRect = container.getBoundingClientRect();
+
+//   return (
+//     elementCoords.left < containerRect.right &&
+//     elementCoords.right > containerRect.left &&
+//     elementCoords.top > containerRect.bottom &&
+//     elementCoords.bottom < containerRect.top
+//   );
+// };
+
+const valueInRange = (value, min, max) => {
+  return (value >= min) && (value <= max);
+}
+
+export const isElementInsideContainer = element => {
+  const A = element.getBoundingClientRect();
+  const B = container.getBoundingClientRect();
+  const xOverlap = valueInRange(A.left, B.left, B.left + B.width) || valueInRange(B.left, A.left, A.left + A.width);
+  const yOverlap = valueInRange(A.top, B.top, B.top + B.height) || valueInRange(B.top, A.top, A.top + A.height);
+
+  console.log(`isElementInsideContainer = ${xOverlap && yOverlap}`);
+  return xOverlap && yOverlap;
 };
 
 const canSavePhoto = () => {
@@ -743,8 +766,6 @@ const selectStickerToEdit = event => {
 };
 
 const stickStickerOnMobile = event => {
-  console.log(`FROM stickStickerOnMobile: container.width = ${container.getBoundingClientRect().width}`);
-  
   if (isContainerStickable) {
     let sticked = event.target.cloneNode(true);
     let stickerStyle = window.getComputedStyle(event.target);
@@ -771,8 +792,8 @@ const renderSticker = sources => {
       imageDiv.classList.add('image-div');
       image.src = source.url;
       image.classList.add('sticker');
-      // image.addEventListener('touchend', stickStickerOnMobile);
       image.addEventListener('click', stickStickerOnMobile);
+      // image.addEventListener('touchend', stickStickerOnMobile);
       // dragAndDropInsideContainer(image, true);
       imageDiv.append(image);
       return imageDiv;
@@ -836,9 +857,19 @@ const uploadPhoto = () => {
   uploadedImage = document.createElement('img');
   uploadedImage.id = 'uploaded-image';
   uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
-  // console.log(`container.height = ${document.getElementById('container').getBoundingClientRect().height}`);
+
+  uploadedImage = document.createElement('img');
+  uploadedImage.id = 'uploaded-image';
+
+  const downloadingImage = new Image();
+  downloadingImage.onload = function() {
+    uploadedImage.src = this.src;
+    // setMaxLimits();
+  };
+  downloadingImage.src = window.URL.createObjectURL(upload.files[0]);
+
   container.insertBefore(uploadedImage, container.firstChild);
-  // console.log(`container.height = ${document.getElementById('container').getBoundingClientRect().height}`);
+
   isContainerStickable = true;
   renderBackToCameraButton();
   canSavePhoto()

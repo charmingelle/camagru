@@ -1,4 +1,5 @@
 import { dragAndDrop } from '/js/utils.js';
+import { container, isElementInsideContainer, deleteChangeStickerSection } from '/js/account.js'
 
 // TODO: Consider creating of separate module - Stretcher
 // TODO: Consider using of named arguments
@@ -28,7 +29,12 @@ export const stretcher = {
             element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
         }
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 
@@ -42,7 +48,12 @@ export const stretcher = {
         element.style.width =
           element.getBoundingClientRect().width + diff + 'px';
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 
@@ -67,7 +78,12 @@ export const stretcher = {
             element.getBoundingClientRect().height - currTop + prevTop + 'px';
         }
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 
@@ -81,7 +97,12 @@ export const stretcher = {
         element.style.height =
           element.getBoundingClientRect().height + diff + 'px';
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 
@@ -120,11 +141,16 @@ export const stretcher = {
           element.style.height = prevHeight - currTop + prevTop + 'px';
         }
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 
-  stretchRightUp(element) {
+  stretchRightUp(element, container) {
     dragAndDrop(
       element,
       () => {},
@@ -151,7 +177,12 @@ export const stretcher = {
           element.style.width = prevWidth * (currHeight / prevHeight) + 'px';
         }
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 
@@ -185,7 +216,12 @@ export const stretcher = {
           element.style.height = prevHeight * (currWidth / prevWidth) + 'px';
         }
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 
@@ -206,7 +242,12 @@ export const stretcher = {
         let currWidth = element.getBoundingClientRect().width;
         element.style.height = prevHeight * (currWidth / prevWidth) + 'px';
       },
-      () => {}
+      // () => {}
+      () => {
+        if (!isElementInsideContainer(element)) {
+          container.removeChild(element);
+        }
+      }
     );
   },
 };
@@ -221,6 +262,10 @@ export const changeWidth = (
   scroll
 ) => {
   sticker.style['width'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerWidth) + 'px';
+  if (!isElementInsideContainer(sticker)) {
+    container.removeChild(sticker);
+    deleteChangeStickerSection();
+  }
 };
 
 export const changeHeight = (
@@ -229,6 +274,10 @@ export const changeHeight = (
   scroll
 ) => {
   sticker.style['height'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerHeight) + 'px';
+  if (!isElementInsideContainer(sticker)) {
+    container.removeChild(sticker);
+    deleteChangeStickerSection();
+  }
 };
 
 export const changeSize = (
@@ -239,6 +288,10 @@ export const changeSize = (
 ) => {
   sticker.style['width'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerWidth) + 'px';
   sticker.style['height'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerHeight) + 'px';
+  if (!isElementInsideContainer(sticker)) {
+    container.removeChild(sticker);
+    deleteChangeStickerSection();
+  }
 };
 
 export const moveUpDown = (
@@ -247,6 +300,10 @@ export const moveUpDown = (
   scroll
 ) => {
   sticker.style['top'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerTop) + 'px';
+  if (!isElementInsideContainer(sticker)) {
+    container.removeChild(sticker);
+    deleteChangeStickerSection();
+  }
 };
 
 export const moveLeftRight = (
@@ -255,4 +312,8 @@ export const moveLeftRight = (
   scroll
 ) => {
   sticker.style['left'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerLeft) + 'px';
+  if (!isElementInsideContainer(sticker)) {
+    container.removeChild(sticker);
+    deleteChangeStickerSection();
+  }
 };
