@@ -76,25 +76,25 @@ TODO
 + consider removing change size button and all code related to it
 + make sure that added sticker is being selected at once
 + check why photos cannot be saved on remote hosting
++ fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
++ find out why though min width is there, elements go crazy
++ move hostname and port to separate variable for emails to contain valid links
 
 
 
-- move hostname to separate variable for emails to contain valid links
 - create account page layout
 - think about what happens with fetch when DB error happens
 - make sure that layout is responsive
-- find out why though min width is there, elements go crazy
 - move website to free hosting
-- fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
 - test everything
 - include media queries for responsive layout
-- check what happens with drag and drop on mobile device
 - prettify everything
 - check if I need to use https://css-tricks.com/almanac/properties/t/text-transform/ anywhere
 - replace let with const where possible
 - style reset password page
 - style home message container
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
+- make Account::_prepareAndSendMain private
 
 
 

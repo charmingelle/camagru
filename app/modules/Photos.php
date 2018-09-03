@@ -129,7 +129,7 @@ class Photos {
 	}
 	
 	public static function getAuthor($id) {
-		return DBConnect::sendQuery('SELECT Login FROM photo WHERE id = :id',
+		return DBConnect::sendQuery('SELECT login FROM photo WHERE id = :id',
 										['id' => $id])->fetchAll()[0]['login'];
 	}
 

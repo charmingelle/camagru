@@ -21,6 +21,24 @@ class Account {
 		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE email = :email', ['hash' => NULL, 'email' => $email]);
 	}
 
+	public static function _prepareAndSendMain($email, $subject, $message) {
+		$encoding = "utf-8";
+		$subject_preferences = array(
+			"input-charset" => $encoding,
+			"output-charset" => $encoding,
+			"line-length" => 76,
+			"line-break-chars" => "\r\n"
+		);
+		$header = "Content-type: text/html; charset=" . $encoding . " \r\n";
+		$header .= "From: grevenko@student.unit.ua \r\n";
+		$header .= "MIME-Version: 1.0 \r\n";
+		$header .= "Content-Transfer-Encoding: 8bit \r\n";
+		$header .= "Date: " . date("r (T)") . " \r\n";
+		$header .= iconv_mime_encode("Subject", $subject, $subject_preferences);
+
+		mail($email, $subject, $message, $header);
+	}
+
 	public static function sendSignupEmail($email, $login, $password) {
 		if (self::_busyLogin($login)) {
 			echo json_encode(['status' => FALSE, 'message' => Message::$busyLogin]);
@@ -28,24 +46,11 @@ class Account {
 			DBConnect::sendQuery('INSERT INTO account(email, login, password) VALUES (:email, :login, :password)',
 			['email' => $email, 'login' => $login, 'password' => $password]);
 			$hash = self::_renewHash($email);
-			$link = 'http://localhost:7777/signup?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash);
+			$link = HOST_PORT . '/signup?email=' . urlencode($email) . '&login=' . urlencode($login) . '&hash=' . urlencode($hash);
+			$subject = 'Confirm your signing up to Camagru website';
 			$message = 'Thanks for signing up to Camagru website! Please click this <a href=' . $link . '>link</a> to activate your account:';
-			$encoding = "utf-8";
-			$mail_subject = 'Confirm your signing up to Camagru website';
-			$subject_preferences = array(
-				"input-charset" => $encoding,
-				"output-charset" => $encoding,
-				"line-length" => 76,
-				"line-break-chars" => "\r\n"
-			);
-			$header = "Content-type: text/html; charset=" . $encoding . " \r\n";
-			$header .= "From: grevenko@student.unit.ua \r\n";
-			$header .= "MIME-Version: 1.0 \r\n";
-			$header .= "Content-Transfer-Encoding: 8bit \r\n";
-			$header .= "Date: " . date("r (T)") . " \r\n";
-			$header .= iconv_mime_encode("Subject", $mail_subject, $subject_preferences);
 
-			mail($email, $mail_subject, $message, $header);
+			self::_prepareAndSendMain($email, $subject, $message);
 			echo json_encode(['status' => TRUE, 'message' => Message::$verificationEmail]);
 		}
 	}
@@ -110,24 +115,11 @@ class Account {
 			echo json_encode(Message::$invalidEmail);
 		} else {
 			$hash = self::_renewHash($email);
-			$link = 'http://localhost:7777/changePassword?email=' . urlencode($email) . '&hash=' . urlencode($hash);
+			$link = HOST_PORT . '/changePassword?email=' . urlencode($email) . '&hash=' . urlencode($hash);
+			$subject = 'Reset your Camagru website password';
 			$message = 'Thanks for signing up to Camagru website! Please click this <a href=' . $link . '>link</a> to activate your account:';
-			$encoding = "utf-8";
-			$mail_subject = 'Reset your Camagru website password';
-			$subject_preferences = array(
-				"input-charset" => $encoding,
-				"output-charset" => $encoding,
-				"line-length" => 76,
-				"line-break-chars" => "\r\n"
-			);
-			$header = "Content-type: text/html; charset=" . $encoding . " \r\n";
-			$header .= "From: grevenko@student.unit.ua \r\n";
-			$header .= "MIME-Version: 1.0 \r\n";
-			$header .= "Content-Transfer-Encoding: 8bit \r\n";
-			$header .= "Date: " . date("r (T)") . " \r\n";
-			$header .= iconv_mime_encode("Subject", $mail_subject, $subject_preferences);
 
-			mail($email, $mail_subject, $message, $header);
+			self::_prepareAndSendMain($email, $subject, $message);
 			echo json_encode(Message::$resetPasswordEmailSent);
 		}
 	}
@@ -156,8 +148,9 @@ class Account {
 	
 	public static function notify($login, $comment, $author) {
 		$email = Account::_getEmail($login);
-		$message = '$author commented your photo: "$comment"';
-		
-		mail($email, 'Your photo received a new comment!', $message, 'From:noreply@camagru.com\r\n');
+		$subject = 'Your Camagru photo received a new comment!';
+		$message = $author . ' commented your photo: "' . $comment . '"';
+
+		self::_prepareAndSendMain($email, $subject, $message);
 	}
 }

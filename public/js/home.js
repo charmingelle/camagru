@@ -283,7 +283,7 @@ const addCommentHandler = (
   if (addCommentEl.value) {
     postNoResponse('/addComment', {
       comment: addCommentEl.value,
-      'photo-id': photoId,
+      photoId: photoId,
     }).then(() => {
       post('/increaseCommentCount', { id: photoId }).then(commentAmount => {
         commentAmountEl.innerHTML = commentAmount;

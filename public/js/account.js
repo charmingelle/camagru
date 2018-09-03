@@ -758,9 +758,9 @@ const renderSticker = sources => {
       imageDiv.classList.add('image-div');
       image.src = source.url;
       image.classList.add('sticker');
-      image.addEventListener('click', stickStickerOnMobile);
-      // image.addEventListener('touchend', stickStickerOnMobile);
-      // dragAndDropInsideContainer(image, true);
+      // image.addEventListener('click', stickStickerOnMobile);
+      image.addEventListener('touchend', stickStickerOnMobile);
+      dragAndDropInsideContainer(image, true);
       imageDiv.append(image);
       return imageDiv;
     });

@@ -51,10 +51,10 @@ class DataController {
 
 	public static function addComment() {
 		$body = Utils::getBodyFromJson();
-		$login = Photos::getAuthor($body['photo-id']);
+		$login = Photos::getAuthor($body['photoId']);
 
-		Photos::addComment($body['comment'], $body['photo-id']);
-		if (Account::getNotification($body['login'])) {
+		Photos::addComment($body['comment'], $body['photoId']);
+		if (Account::getNotificationStatus($login)) {
 			Account::notify($login, $body['comment'], $_SESSION['auth-data']['login']);
 		}
 	}
