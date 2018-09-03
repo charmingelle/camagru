@@ -14,7 +14,6 @@ import {
   convertIntervalToInterval,
   changeWidth,
   changeHeight,
-  changeSize,
   moveUpDown,
   moveLeftRight,
 } from '/js/stretcher.js';
@@ -38,23 +37,20 @@ const password = document.getElementById('password');
 let notificationStatus = document.getElementById('notification-status');
 const accountMain = document.getElementById('account-main');
 
-let maxStickerWidth = 1200;
-let maxStickerHeight = 600;
-let maxStickerLeft = 1200;
-let maxStickerTop = 600;
+let maxStickerWidth = null;
+let maxStickerHeight = null;
+let maxStickerLeft = null;
+let maxStickerTop = null;
 
-// let maxStickerWidth = null;
-// let maxStickerHeight = null;
-// let maxStickerLeft = null;
-// let maxStickerTop = null;
+const setMaxLimits = (sticker) => {
+  // console.log('setMaxLimits is called');
+  const containerParams = container.getBoundingClientRect();
+  const stickerParams = sticker.getBoundingClientRect();
 
-const setMaxLimits = () => {
-  const style = container.getBoundingClientRect();
-
-  maxStickerWidth = style.width * 2;
-  maxStickerHeight = style.height * 2;
-  maxStickerLeft = style.left;
-  maxStickerTop = style.top;
+  maxStickerWidth = containerParams.width * 1.25;
+  maxStickerHeight = containerParams.height * 1.25;
+  maxStickerLeft = containerParams.width;
+  maxStickerTop = containerParams.height;
   // console.log(`maxStickerWidth = ${maxStickerWidth}, maxStickerHeight = ${maxStickerHeight}, maxStickerLeft = ${maxStickerLeft}, maxStickerTop = ${maxStickerTop}`);
 };
 
@@ -112,24 +108,6 @@ const renderHeightScroll = changeScrolls => {
     heightScroll,
     parseInt(window.getComputedStyle(selectedSticker).height),
     maxStickerHeight
-  );
-};
-
-const renderSizeScroll = changeScrolls => {
-  const sizeScroll = createScroll('change-size-scroll');
-  const selectedSticker = document.getElementsByClassName(
-    'selected-sticked-sticker'
-  )[0];
-
-  sizeScroll.addEventListener('scroll', () => {
-    changeSize(selectedSticker, maxStickerWidth, maxStickerHeight, sizeScroll);
-  });
-  clear(changeScrolls);
-  changeScrolls.append(sizeScroll);
-  shiftScroll(
-    sizeScroll,
-    parseInt(window.getComputedStyle(selectedSticker).width),
-    maxStickerWidth
   );
 };
 
@@ -222,16 +200,6 @@ const renderHeightButton = (changeStickerSection, changeScrolls) => {
   changeStickerSection.append(heighthButton);
 };
 
-const renderSizeButton = (changeStickerSection, changeScrolls) => {
-  const sizehButton = createChangeButton('change-size-button', 'Change size');
-
-  sizehButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
-    renderSizeScroll(changeScrolls);
-  });
-  changeStickerSection.append(sizehButton);
-};
-
 const renderUpDownButton = (changeStickerSection, changeScrolls) => {
   const upDownButton = createChangeButton('move-up-down', 'Up - Down');
 
@@ -280,7 +248,6 @@ const renderChangeButtonsSection = (changeStickerSection, changeScrolls) => {
   const changeButtonsSection = document.createElement('div');
   const widthButton = renderWidthButton(changeButtonsSection, changeScrolls);
   const heighthButton = renderHeightButton(changeButtonsSection, changeScrolls);
-  // const sizehButton = renderSizeButton(changeButtonsSection, changeScrolls);
   const upDownButton = renderUpDownButton(changeButtonsSection, changeScrolls);
   const leftRightButton = renderLeftRightButton(
     changeButtonsSection,
@@ -483,10 +450,6 @@ const getStickerData = sticker => {
   let source = sticker.src;
   let type = 'file';
 
-  if (sticker.classList.contains('mobile-sticked-sticker')) {
-    left -= width / 2;
-    top -= height / 2;
-  }
   return {
     source,
     type,
@@ -675,7 +638,6 @@ export const isElementInsideContainer = element => {
   const xOverlap = valueInRange(A.left, B.left, B.left + B.width) || valueInRange(B.left, A.left, A.left + A.width);
   const yOverlap = valueInRange(A.top, B.top, B.top + B.height) || valueInRange(B.top, A.top, A.top + A.height);
 
-  console.log(`isElementInsideContainer = ${xOverlap && yOverlap}`);
   return xOverlap && yOverlap;
 };
 
@@ -761,19 +723,21 @@ const toggleSelectedStickedSticker = selectedSticker => {
 
 const selectStickerToEdit = event => {
   toggleSelectedStickedSticker(event.target);
-  // setMaxLimits(event.target);
+  setMaxLimits(event.target);
   renderChangeStickerSection();
 };
 
 const stickStickerOnMobile = event => {
   if (isContainerStickable) {
-    let sticked = event.target.cloneNode(true);
-    let stickerStyle = window.getComputedStyle(event.target);
+    const sticked = event.target.cloneNode(true);
+    const stickerStyle = event.target.getBoundingClientRect();
+    const containerParams = container.getBoundingClientRect();
 
     sticked.classList.remove('sticker');
     sticked.classList.add('mobile-sticked-sticker');
-    sticked.style.width = stickerStyle.width;
-    sticked.style.height = stickerStyle.height;
+    sticked.style.width = stickerStyle.width + 'px';
+    sticked.style.height = stickerStyle.height + 'px';
+
     sticked.addEventListener('click', selectStickerToEdit);
     container.append(sticked);
     canSavePhoto()
@@ -864,7 +828,6 @@ const uploadPhoto = () => {
   const downloadingImage = new Image();
   downloadingImage.onload = function() {
     uploadedImage.src = this.src;
-    // setMaxLimits();
   };
   downloadingImage.src = window.URL.createObjectURL(upload.files[0]);
 

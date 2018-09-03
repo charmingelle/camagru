@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 06, 2018 at 03:15 AM
+-- Generation Time: Sep 03, 2018 at 04:32 AM
 -- Server version: 5.7.21
 -- PHP Version: 7.1.15
 
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `camagru`
 --
+CREATE DATABASE IF NOT EXISTS `camagru` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `camagru`;
 
 -- --------------------------------------------------------
 
@@ -43,12 +45,12 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`id`, `email`, `login`, `password`, `hash`, `active`, `notification`) VALUES
-(15, 'vasya@gmail.com', 'vasya', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 1),
+(15, 'vasya123@gmail.com', 'vasya', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 1),
 (16, 'kolya@gmail.com', 'kolya', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 1),
 (17, 'sasha@gmail.com', 'sasha', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 1),
-(18, 'pavel777@gmail.com', 'olya', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 0),
 (19, 'liza@gmail.com', 'liza', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 1),
-(32, 'annar703unit@gmail.com', 'anna', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 0);
+(32, 'annar703unit@gmail.com', 'anna', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', '6cdd60ea0045eb7a6ec44c54d29ed402', 1, 1),
+(37, 'olya@gmail.com', 'olya', 'fd9d94340dbd72c11b37ebb0d2a19b4d05e00fd78e4e2ce8923b9ea3a54e900df181cfb112a8a73228d1f3551680e2ad9701a4fcfb248fa7fa77b95180628bb2', NULL, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -62,15 +64,6 @@ CREATE TABLE `comment` (
   `photo_id` int(11) UNSIGNED NOT NULL,
   `login` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `comment`
---
-
-INSERT INTO `comment` (`id`, `comment`, `photo_id`, `login`) VALUES
-(5, 'xvvxcv', 18, 'anna'),
-(7, 'dgfsg', 17, 'anna'),
-(8, 'sfgsfgfsg', 17, 'anna');
 
 -- --------------------------------------------------------
 
@@ -94,7 +87,11 @@ INSERT INTO `likes` (`id`, `photo_id`, `login`) VALUES
 (17, 11, 'anna'),
 (22, 12, 'anna'),
 (24, 18, 'anna'),
-(26, 17, 'anna');
+(26, 17, 'anna'),
+(51, 28, 'anna'),
+(52, 28, 'maksim'),
+(55, 28, 'vasya'),
+(60, 2, 'anna');
 
 -- --------------------------------------------------------
 
@@ -116,9 +113,7 @@ CREATE TABLE `photo` (
 --
 
 INSERT INTO `photo` (`id`, `url`, `likes`, `comments`, `login`, `private`) VALUES
-(16, 'photo/bb11fb97512f74eb.png', 0, 0, 'anna', 1),
-(17, 'photo/661c4ce9697ec789.png', 1, 2, 'anna', 0),
-(18, 'photo/a8c1bcdc4e26d680.png', 1, 1, 'anna', 0);
+(1, 'photo/870258fd4d0ade11.png', 0, 0, 'anna', 0);
 
 -- --------------------------------------------------------
 
@@ -194,25 +189,25 @@ ALTER TABLE `sticker`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `photo`
 --
 ALTER TABLE `photo`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sticker`

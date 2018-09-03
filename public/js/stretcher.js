@@ -29,7 +29,6 @@ export const stretcher = {
             element.getBoundingClientRect().width - currLeft + prevLeft + 'px';
         }
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -48,7 +47,6 @@ export const stretcher = {
         element.style.width =
           element.getBoundingClientRect().width + diff + 'px';
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -78,7 +76,6 @@ export const stretcher = {
             element.getBoundingClientRect().height - currTop + prevTop + 'px';
         }
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -97,7 +94,6 @@ export const stretcher = {
         element.style.height =
           element.getBoundingClientRect().height + diff + 'px';
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -141,7 +137,6 @@ export const stretcher = {
           element.style.height = prevHeight - currTop + prevTop + 'px';
         }
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -177,7 +172,6 @@ export const stretcher = {
           element.style.width = prevWidth * (currHeight / prevHeight) + 'px';
         }
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -216,7 +210,6 @@ export const stretcher = {
           element.style.height = prevHeight * (currWidth / prevWidth) + 'px';
         }
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -242,7 +235,6 @@ export const stretcher = {
         let currWidth = element.getBoundingClientRect().width;
         element.style.height = prevHeight * (currWidth / prevWidth) + 'px';
       },
-      // () => {}
       () => {
         if (!isElementInsideContainer(element)) {
           container.removeChild(element);
@@ -273,20 +265,6 @@ export const changeHeight = (
   maxStickerHeight,
   scroll
 ) => {
-  sticker.style['height'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerHeight) + 'px';
-  if (!isElementInsideContainer(sticker)) {
-    container.removeChild(sticker);
-    deleteChangeStickerSection();
-  }
-};
-
-export const changeSize = (
-  sticker,
-  maxStickerWidth,
-  maxStickerHeight,
-  scroll
-) => {
-  sticker.style['width'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerWidth) + 'px';
   sticker.style['height'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerHeight) + 'px';
   if (!isElementInsideContainer(sticker)) {
     container.removeChild(sticker);
