@@ -74,6 +74,8 @@ TODO
 + consider moving sticker on mobile the way it doesn't cover change section
 + think what to do when resized element covers scrolls (limits issue)
 + consider removing change size button and all code related to it
++ make sure that added sticker is being selected at once
++ check why photos cannot be saved on remote hosting
 
 
 
@@ -92,7 +94,7 @@ TODO
 - replace let with const where possible
 - style reset password page
 - style home message container
-- check why photos cannot be saved on remote hosting
+- think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
 
 
 

@@ -43,15 +43,13 @@ let maxStickerLeft = null;
 let maxStickerTop = null;
 
 const setMaxLimits = (sticker) => {
-  // console.log('setMaxLimits is called');
   const containerParams = container.getBoundingClientRect();
   const stickerParams = sticker.getBoundingClientRect();
 
-  maxStickerWidth = containerParams.width * 1.25;
-  maxStickerHeight = containerParams.height * 1.25;
-  maxStickerLeft = containerParams.width;
-  maxStickerTop = containerParams.height;
-  // console.log(`maxStickerWidth = ${maxStickerWidth}, maxStickerHeight = ${maxStickerHeight}, maxStickerLeft = ${maxStickerLeft}, maxStickerTop = ${maxStickerTop}`);
+  maxStickerWidth = (containerParams.width - stickerParams.left + containerParams.left) * 1.25;
+  maxStickerHeight = (containerParams.height - stickerParams.top + containerParams.top) * 1.25;
+  maxStickerLeft = (containerParams.width - stickerParams.width) * 1.25;
+  maxStickerTop = (containerParams.height - stickerParams.height) * 1.25;
 };
 
 const createScroll = scrollId => {
@@ -81,6 +79,7 @@ const renderWidthScroll = changeScrolls => {
     'selected-sticked-sticker'
   )[0];
 
+  setMaxLimits(selectedSticker);
   widthScroll.addEventListener('scroll', () => {
     changeWidth(selectedSticker, maxStickerWidth, widthScroll);
   });
@@ -99,6 +98,7 @@ const renderHeightScroll = changeScrolls => {
     'selected-sticked-sticker'
   )[0];
 
+  setMaxLimits(selectedSticker);
   heightScroll.addEventListener('scroll', () => {
     changeHeight(selectedSticker, maxStickerHeight, heightScroll);
   });
@@ -117,6 +117,7 @@ const renderUpDownScroll = changeScrolls => {
     'selected-sticked-sticker'
   )[0];
 
+  setMaxLimits(selectedSticker);
   upDownScroll.addEventListener('scroll', () => {
     moveUpDown(selectedSticker, maxStickerTop, upDownScroll);
   });
@@ -135,6 +136,7 @@ const renderLeftRightScroll = changeScrolls => {
     'selected-sticked-sticker'
   )[0];
 
+  setMaxLimits(selectedSticker);
   leftRightScroll.addEventListener('scroll', () => {
     moveLeftRight(selectedSticker, maxStickerLeft, leftRightScroll);
   });
@@ -709,6 +711,7 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 };
 
 const toggleSelectedStickedSticker = selectedSticker => {
+  // console.log('toggle selected sticked sticker is called');
   const stickedStickers = Array.from(
     document.getElementsByClassName('mobile-sticked-sticker')
   );
@@ -721,9 +724,8 @@ const toggleSelectedStickedSticker = selectedSticker => {
   selectedSticker.classList.add('selected-sticked-sticker');
 };
 
-const selectStickerToEdit = event => {
-  toggleSelectedStickedSticker(event.target);
-  setMaxLimits(event.target);
+const selectStickerToEdit = sticker => {
+  toggleSelectedStickedSticker(sticker);
   renderChangeStickerSection();
 };
 
@@ -737,8 +739,8 @@ const stickStickerOnMobile = event => {
     sticked.classList.add('mobile-sticked-sticker');
     sticked.style.width = stickerStyle.width + 'px';
     sticked.style.height = stickerStyle.height + 'px';
-
-    sticked.addEventListener('click', selectStickerToEdit);
+    selectStickerToEdit(sticked);
+    sticked.addEventListener('click', () => selectStickerToEdit(sticked));
     container.append(sticked);
     canSavePhoto()
       ? (captureButton.disabled = '')
