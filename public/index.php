@@ -6,8 +6,6 @@
 		return (__DIR__ . $sys_path);
 	}
 
-	// echo parse_url($_SERVER['REQUEST_URI'])['path'];
-
 	require_once(getRoot() . 'app/configs/database.php');
 	require_once(getRoot() . 'app/controllers/AuthController.php');
 	require_once(getRoot() . 'app/controllers/DataController.php');

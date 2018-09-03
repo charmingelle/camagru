@@ -21,7 +21,7 @@ class Account {
 		DBConnect::sendQuery('UPDATE account SET hash = :hash WHERE email = :email', ['hash' => NULL, 'email' => $email]);
 	}
 
-	public static function _prepareAndSendMain($email, $subject, $message) {
+	private static function _prepareAndSendMain($email, $subject, $message) {
 		$encoding = "utf-8";
 		$subject_preferences = array(
 			"input-charset" => $encoding,

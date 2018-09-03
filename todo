@@ -79,6 +79,8 @@ TODO
 + fix bug with empty fields not being empty during sign in from mobile device and from PC sometimes
 + find out why though min width is there, elements go crazy
 + move hostname and port to separate variable for emails to contain valid links
++ make Account::_prepareAndSendMain private
++ style reset password page
 
 
 
@@ -91,10 +93,9 @@ TODO
 - prettify everything
 - check if I need to use https://css-tricks.com/almanac/properties/t/text-transform/ anywhere
 - replace let with const where possible
-- style reset password page
+- style 404 page
 - style home message container
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
-- make Account::_prepareAndSendMain private
 
 
 
