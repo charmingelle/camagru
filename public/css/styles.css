@@ -22,6 +22,20 @@
 	src: url("../fonts/well-bred/Well Bred Font by Situjuh (7NTypes).otf") format("opentype");
 } */
 
+
+
+@media only screen and (min-width: 1px) {
+  button, a, p, input, div, .custom-file-upload {
+    font-size: 1.5em;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  button, a, p, input, div, .custom-file-upload {
+    font-size: 1em;
+  }
+}
+
 @font-face {
   font-family: 'Shefilla';
   src: url('../fonts/shefilla/Shefilla TTF.ttf') format('opentype');
@@ -37,7 +51,8 @@ body {
   min-width: 800px;
   margin: 0;
   font-family: open sans;
-  background-color: #fafafa;
+  /* background-color: #fafafa; */
+  background-color: red;
 }
 
 header {
@@ -99,6 +114,7 @@ button:focus {
 }
 
 input {
+  background-color: transparent;
   box-sizing: border-box;
   padding: 5px;
   color: #717171;
@@ -191,10 +207,6 @@ input:focus {
   padding: 1%;
   text-align: center;
 }
-
-/* #reset-password-message-container {
-  padding: 1%;
-} */
 
 #form-container {
   position: fixed;
@@ -411,9 +423,6 @@ input:focus {
   position: absolute;
   top: 0;
   left: 0;
-  /* left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%); */
 }
 
 .sticked-sticker:hover {
@@ -479,8 +488,6 @@ img {
   cursor: nwse-resize;
 }
 
-
-
 #change-sticker-section {
   display: flex;
   flex-direction: column;
@@ -496,31 +503,6 @@ img {
   height: 50px;
   margin: 30px;
 }
-
-/* #resize-scroll {
-  width: 50%;
-  height: 50px;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  border: 1px solid #dbdbdb;
-  margin: 10px;
-}
-
-#resize-scroll::-webkit-scrollbar {
-  height: 49px;
-  background-color: #F5F5F5;
-}
-
-#resize-scroll::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #262626;
-  left: 50%;
-}
-
-#scroll-content {
-  width: 500%;
-  height: 100%;
-} */
 
 #change-scrolls {
   width: 50%;
@@ -572,6 +554,23 @@ img {
   border-radius: 4px;
 }
 
-#go-home-link {
+#reset-password-home-link {
   margin: 10px;
+}
+
+#page-not-found-content {
+  margin: 5px;
+}
+
+#page-not-found-home-link {
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #262626;
+  background-color: transparent;
 }
