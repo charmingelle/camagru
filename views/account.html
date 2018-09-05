@@ -4,37 +4,27 @@
 		<title>My account</title>
 		<link rel='stylesheet' href='css/styles.css'>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<body>
 		<header>
-			<div id='hello'></div>
-			<div id='photo-buttons'>
-				<label for='file-upload' class='custom-file-upload'>Upload a file</label>
-				<input id='file-upload' id='upload' accept='.jpg, .jpeg, .png' type='file'/>
-				<button id='capture-button' disabled>Take a picture</button>
-				<button id='clear-button'>Clear</button>
-			</div>
-			<div>
+			<h1 id='hello'></h1>
+			<div id='account-links'>
 				<a id='home-button' href='/'>Home</a>
 				<a id='signout-button' href='/signout'>Sign out</a>
 			</div>
 		</header>
+		<div id='photo-buttons'>
+			<label for='file-upload' class='custom-file-upload'>Upload a file</label>
+			<input id='file-upload' id='upload' accept='.jpg, .jpeg, .png' type='file'/>
+			<button id='capture-button' disabled>Take a picture</button>
+			<button id='clear-button'>Clear</button>
+		</div>
 		<div id='content'>
 			<main id='account-main'>
 				<div id='photo-section'>
 					<div id='container'></div>
 				</div>
-				<!-- <div id='change-sticker-section'>
-					<div id='change-buttons'>
-						<button id='change-width-button' class='change-button'>Change width</button>
-						<button id='change-height-button' class='change-button'>Change height</button>
-						<button id='change-size-button' class='change-button'>Change size</button>
-						<button id='move-up-down' class='change-button'>Up - Down</button>
-						<button id='move-left-right' class='change-button'>Left - Right</button>
-						<button id='delete-sticker'>Delete sticker</button>
-					</div>
-					<div id='change-scrolls'></div>
-				</div> -->
 				<div id='stickers-container'>
 					<div id='stickers-carousel-buttons'>
 						<button id='stickers-back'><i class="fas fa-angle-left"></i></button>

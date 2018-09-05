@@ -1,49 +1,35 @@
-/* @font-face {
-	font-family: "Harabara Bold";
-	src: url("css/fonts/Harabara.eot");
-	src: 
-	url("css/fonts/Harabara.woff") format("woff"),
-	url("css/fonts/Harabara.otf") format("opentype"),
-	url("css/fonts/Harabara.svg#filename") format("svg");
-} */
-
-/* @font-face {
+@font-face {
 	font-family: "Harabara Bold";
 	src: url("../fonts/chalala/chalala.otf") format("opentype");
-} */
-
-/* @font-face {
-	font-family: "Youthness";
-	src: url("../fonts/effort/Effort TTF.ttf") format("opentype");
-} */
-
-/* @font-face {
-	font-family: "Well Bred";
-	src: url("../fonts/well-bred/Well Bred Font by Situjuh (7NTypes).otf") format("opentype");
-} */
-
-
-
-@media only screen and (min-width: 1px) {
-  button, a, p, input, div, .custom-file-upload {
-    font-size: 1.5em;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  button, a, p, input, div, .custom-file-upload {
-    font-size: 1em;
-  }
 }
 
 @font-face {
-  font-family: 'Shefilla';
-  src: url('../fonts/shefilla/Shefilla TTF.ttf') format('opentype');
+	font-family: "Youthness";
+	src: url("../fonts/effort/Effort TTF.ttf") format("opentype");
 }
 
-#website-title {
-  font-family: 'Shefilla';
-  font-size: 3em;
+@font-face {
+	font-family: "Well Bred";
+	src: url("../fonts/well-bred/Well Bred Font by Situjuh (7NTypes).otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Shefilla";
+  src: url("../fonts/shefilla/Shefilla TTF.ttf") format("opentype");
+}
+
+* {
+  font-family: "open sans";
+}
+
+label, header a, input {
+  font-size: 11px;
+}
+
+#website-title, #hello {
+  font-family: "Shefilla";
+  font-weight: normal;
+  font-size: 2em;
 }
 
 body {
@@ -51,8 +37,7 @@ body {
   min-width: 800px;
   margin: 0;
   font-family: open sans;
-  /* background-color: #fafafa; */
-  background-color: red;
+  background-color: #fafafa;
 }
 
 header {
@@ -66,8 +51,6 @@ header {
   min-width: 800px;
   width: 100%;
   height: 77px;
-  padding-left: 5px;
-  padding-right: 5px;
   background-color: #ffffff;
   resize: both;
 }
@@ -114,10 +97,10 @@ button:focus {
 }
 
 input {
-  background-color: transparent;
   box-sizing: border-box;
-  padding: 5px;
+  padding: 10px;
   color: #717171;
+  background-color: #ffffff;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
 }
@@ -159,7 +142,7 @@ input:focus {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
-  padding: 1%;
+  padding: 25px;
   background-color: #fafafa;
   border-radius: 4px;
   box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
@@ -179,6 +162,10 @@ input:focus {
   display: none;
 }
 
+#header-buttons-div {
+  margin: 5px;
+}
+
 #header-buttons-div button {
   margin: 10px;
 }
@@ -192,15 +179,9 @@ input:focus {
   top: 123px;
   right: 0;
   padding: 0.5%;
-  text-align: right;
   background-color: #ffffff;
   border: 1px solid #e6e6e6;
   border-radius: 4px;
-}
-
-#hello {
-  font-family: 'Shefilla';
-  font-size: 3em;
 }
 
 #account-message-container {
@@ -267,8 +248,10 @@ input:focus {
 
 .comment-container {
   display: flex;
+  align-items: center;
   margin-top: 5px;
   margin-bottom: 5px;
+  line-height: 22px;
 }
 
 .delete-comment-button {
@@ -293,8 +276,25 @@ input:focus {
   width: 100%;
 }
 
+#account-links {
+  margin: 5px;
+}
+
+#photo-buttons {
+  position: relative;
+  top: 77px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #dbdbdb;
+}
+
 #content {
-  padding-top: 77px;
+  position: relative;
+  top: 77px;
+  width: 100%;
 }
 
 .custom-file-upload {
@@ -315,10 +315,6 @@ input:focus {
 
 #capture-button:disabled {
   cursor: auto;
-}
-
-#palette {
-  box-sizing: initial;
 }
 
 #photo-section {
@@ -362,7 +358,9 @@ input:focus {
 
 #change-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  padding: 10px;
   align-items: center;
   border: 1px solid #dbdbdb;
 }
@@ -375,6 +373,7 @@ input:focus {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 10px;
   background-color: #ffffff;
 }
 
@@ -384,10 +383,11 @@ input:focus {
 }
 
 #stickers-container button {
-  margin: 1%;
-  padding: 1%;
-  width: 50px;
-  height: 50px;
+  padding: 30px;
+}
+
+#stickers-back {
+  margin-right: 30px;
 }
 
 #stickers {
@@ -441,7 +441,11 @@ input:focus {
 }
 
 .user-photo-container {
+  max-width: 614px;
   margin: 1%;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 
 .user-photo {
@@ -456,7 +460,7 @@ input:focus {
   width: 50%;
 }
 
-input[type='file'] {
+input[type="file"] {
   display: none;
 }
 
@@ -500,16 +504,16 @@ img {
 }
 
 #change-buttons button {
-  height: 50px;
   margin: 30px;
+  padding: 30px;
 }
 
 #change-scrolls {
-  width: 50%;
+  width: 100%;
 }
 
 .scroll {
-  height: 50px;
+  height: 100px;
   overflow-x: scroll;
   overflow-y: hidden;
   border: 1px solid #dbdbdb;
@@ -517,8 +521,8 @@ img {
 }
 
 .scroll::-webkit-scrollbar {
-  height: 49px;
-  background-color: #F5F5F5;
+  height: 99px;
+  background-color: #f5f5f5;
 }
 
 .scroll::-webkit-scrollbar-thumb {
@@ -548,7 +552,6 @@ img {
   top: 77px;
   left: 0;
   padding: 0.5%;
-  text-align: right;
   background-color: #ffffff;
   border: 1px solid #e6e6e6;
   border-radius: 4px;
@@ -573,4 +576,74 @@ img {
   text-decoration: none;
   color: #262626;
   background-color: transparent;
+}
+
+@media only screen and (max-width: 768px) {
+  /*button, a, p, input, div, .custom-file-upload {*/
+  /*  font-size: 1.5em;*/
+  /*}*/
+  * {
+    font-size: 24px;
+  }
+
+  #website-title, #hello {
+    margin: 5px;
+    font-size: 2em;
+  }
+
+  label, header a, input {
+    font-size: 24px;
+  }
+
+  button,
+  header a,
+  input[type="submit"],
+  input,
+  .custom-file-upload {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  header {
+    height: 137px;
+  }
+
+  #home-main {
+    padding-top: 137px;
+  }
+
+  #form-container {
+    top: 137px;
+  }
+
+  #photo-buttons {
+    top: 137px;
+    height: 80px;
+  }
+  
+  #content {
+    top: 137px;
+  }
+
+  #home-message-container,
+  #reset-password-message-container {
+    top: 220px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  #account-message-container {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .comment-container {
+    line-height: 48px;
+  }
 }

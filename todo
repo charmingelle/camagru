@@ -97,6 +97,9 @@ TODO
 - style home message container
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
 
-
+- check if I can support emojy
+- check why mobile photos are small
+- make inactive buttons grey
+- increase the size of like button
 
 // error_log("message");

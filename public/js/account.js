@@ -180,10 +180,10 @@ const createChangeButton = (id, innerHTML) => {
 };
 
 const renderWidthButton = (changeStickerSection, changeScrolls) => {
-  const widthButton = createChangeButton('change-width-button', 'Change width');
+  const widthButton = createChangeButton('change-width-button', '<i class="fas fa-arrows-alt-h"></i>');
 
   widthButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
+    toggleChangeButton(widthButton);
     renderWidthScroll(changeScrolls);
   });
   changeStickerSection.append(widthButton);
@@ -192,31 +192,31 @@ const renderWidthButton = (changeStickerSection, changeScrolls) => {
 const renderHeightButton = (changeStickerSection, changeScrolls) => {
   const heighthButton = createChangeButton(
     'change-height-button',
-    'Change height'
+    '<i class="fas fa-arrows-alt-v"></i>'
   );
 
   heighthButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
+    toggleChangeButton(heighthButton);
     renderHeightScroll(changeScrolls);
   });
   changeStickerSection.append(heighthButton);
 };
 
 const renderUpDownButton = (changeStickerSection, changeScrolls) => {
-  const upDownButton = createChangeButton('move-up-down', 'Up - Down');
+  const upDownButton = createChangeButton('move-up-down', '<i class="fas fa-arrow-down"></i>');
 
   upDownButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
+    toggleChangeButton(upDownButton);
     renderUpDownScroll(changeScrolls);
   });
   changeStickerSection.append(upDownButton);
 };
 
 const renderLeftRightButton = (changeStickerSection, changeScrolls) => {
-  const leftRightButton = createChangeButton('move-left-right', 'Left - Right');
+  const leftRightButton = createChangeButton('move-left-right', '<i class="fas fa-arrow-right"></i>');
 
   leftRightButton.addEventListener('click', () => {
-    toggleChangeButton(event.target);
+    toggleChangeButton(leftRightButton);
     renderLeftRightScroll(changeScrolls);
   });
   changeStickerSection.append(leftRightButton);
@@ -241,7 +241,7 @@ const renderDeleteStickerButton = changeStickerSection => {
   const button = document.createElement('button');
 
   button.id = 'delete-sticker';
-  button.innerHTML = 'Delete sticker';
+  button.innerHTML = '<i class="far fa-trash-alt"></i>';
   button.addEventListener('click', deleteSticker);
   changeStickerSection.append(button);
 };
