@@ -23,7 +23,7 @@
 }
 
 label, header a, input {
-  font-size: 11px;
+  font-size: 14px;
 }
 
 #website-title, #hello {
@@ -242,7 +242,7 @@ input:focus {
 }
 
 .like {
-  margin-right: 1%;
+  margin-right: 10px;
 }
 
 .comment-container {
@@ -578,9 +578,6 @@ img {
 }
 
 @media only screen and (max-width: 768px) {
-  /*button, a, p, input, div, .custom-file-upload {*/
-  /*  font-size: 1.5em;*/
-  /*}*/
   * {
     font-size: 24px;
   }
