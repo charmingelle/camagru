@@ -37,10 +37,15 @@ const password = document.getElementById('password');
 let notificationStatus = document.getElementById('notification-status');
 const accountMain = document.getElementById('account-main');
 
-let maxStickerWidth = null;
-let maxStickerHeight = null;
-let maxStickerLeft = null;
-let maxStickerTop = null;
+let maxStickerWidth;
+let maxStickerHeight;
+let maxStickerLeft;
+let maxStickerTop;
+
+let uploadedPhotoWidth;
+let uploadedPhotoHeight;
+let widthCoef = 1;
+let heightCoef = 1;
 
 const setMaxLimits = (sticker) => {
   const containerParams = container.getBoundingClientRect();
@@ -389,6 +394,8 @@ const createVideoElement = stream => {
   video.srcObject = stream;
   container.insertBefore(video, container.firstChild);
   isContainerStickable = true;
+  widthCoef = 1;
+  heightCoef = 1;
   canSavePhoto()
     ? (captureButton.disabled = '')
     : (captureButton.disabled = 'disabled');
@@ -419,6 +426,7 @@ const renderCamera = () => {
 };
 
 const getBaseData = base => {
+  console.log(base);
   let canvas = document.createElement('canvas');
   let style = getComputedStyle(base);
   let left = parseInt(style.left);
@@ -426,21 +434,34 @@ const getBaseData = base => {
   let width = parseInt(style.width);
   let height = parseInt(style.height);
   let type = 'string';
+  let widthCoef = 1;
+  let heightCoef = 1;
 
-  canvas.width = parseInt(getComputedStyle(container).width);
-  canvas.height = parseInt(getComputedStyle(container).height);
-  canvas.getContext('2d').drawImage(base, left, top, width, height);
-
-  let source = canvas.toDataURL();
-
-  return {
-    source,
-    type,
-    left,
-    top,
-    width,
-    height,
-  };
+  if (base.id === 'video') {
+    canvas.width = parseInt(getComputedStyle(container).width);
+    canvas.height = parseInt(getComputedStyle(container).height);
+    canvas.getContext('2d').drawImage(base, left, top, width, height);
+    return {
+      source: canvas.toDataURL(),
+      type,
+      left,
+      top,
+      width,
+      height
+    };
+  } else if (base.id === 'uploaded-image') {
+    canvas.width = uploadedPhotoWidth;
+    canvas.height = uploadedPhotoHeight;
+    canvas.getContext('2d').drawImage(base, 0, 0, uploadedPhotoWidth, uploadedPhotoHeight);
+    return {
+      source: canvas.toDataURL(),
+      type,
+      left: 0,
+      top: 0,
+      width: uploadedPhotoWidth,
+      height: uploadedPhotoHeight
+    };
+  }
 };
 
 const getStickerData = sticker => {
@@ -455,10 +476,10 @@ const getStickerData = sticker => {
   return {
     source,
     type,
-    left,
-    top,
-    width,
-    height,
+    left: left * widthCoef,
+    top: top * heightCoef,
+    width: width * widthCoef,
+    height: height * heightCoef,
   };
 };
 
@@ -809,7 +830,7 @@ const clearPhoto = () => {
 const uploadPhoto = () => {
   let video = document.getElementById('video');
   let videoError = document.getElementById('video-error');
-  let uploadedImage = document.getElementById('uploaded-image');
+  let uploadedPhoto = document.getElementById('uploaded-image');
 
   if (video) {
     container.removeChild(video);
@@ -817,24 +838,28 @@ const uploadPhoto = () => {
   if (videoError) {
     container.removeChild(videoError);
   }
-  if (uploadedImage) {
+  if (uploadedPhoto) {
     container.removeChild(uploadedImage);
   }
-  uploadedImage = document.createElement('img');
-  uploadedImage.id = 'uploaded-image';
-  uploadedImage.src = window.URL.createObjectURL(upload.files[0]);
 
-  uploadedImage = document.createElement('img');
-  uploadedImage.id = 'uploaded-image';
+  uploadedPhoto = document.createElement('img');
+  uploadedPhoto.id = 'uploaded-image';
 
-  const downloadingImage = new Image();
-  downloadingImage.onload = function() {
-    uploadedImage.src = this.src;
+  const uploadedPhotoCover = new Image();
+
+  uploadedPhotoCover.onload = function() {
+    uploadedPhoto.src = this.src;
+    uploadedPhotoWidth = uploadedPhoto.width;
+    uploadedPhotoHeight = uploadedPhoto.height;
+    
+    container.insertBefore(uploadedPhoto, container.firstChild);
+    
+    const containerParams = container.getBoundingClientRect();
+
+    widthCoef = uploadedPhotoWidth / containerParams.width;
+    heightCoef = uploadedPhotoHeight / containerParams.height;
   };
-  downloadingImage.src = window.URL.createObjectURL(upload.files[0]);
-
-  container.insertBefore(uploadedImage, container.firstChild);
-
+  uploadedPhotoCover.src = window.URL.createObjectURL(upload.files[0]);
   isContainerStickable = true;
   renderBackToCameraButton();
   canSavePhoto()
