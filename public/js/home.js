@@ -302,7 +302,7 @@ const setSignedInAddComment = (
   commentAmountEl
 ) => {
   addCommentEl.placeholder = 'Add a comment...';
-  addCommentEl.maxLength = '8000';
+  addCommentEl.maxLength = '255';
 };
 
 const setNotSignedInAddComment = addCommentEl => {
