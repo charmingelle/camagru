@@ -175,9 +175,6 @@ input:focus {
 }
 
 #home-message-container {
-  position: fixed;
-  top: 123px;
-  right: 0;
   padding: 0.5%;
   background-color: #ffffff;
   border: 1px solid #e6e6e6;
@@ -190,6 +187,8 @@ input:focus {
 }
 
 #form-container {
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: 77px;
   right: 0;

@@ -65,10 +65,10 @@ const renderSigninForm = () => {
 
   clear(formContainer);
   formContainer.append(
+    messageContainer,
     loginInput,
     passwordInput,
-    submitButton,
-    messageContainer
+    submitButton
   );
 };
 
@@ -108,11 +108,11 @@ const renderSignupForm = () => {
 
   clear(formContainer);
   formContainer.append(
+    messageContainer,
     emailInput,
     loginInput,
     passwordInput,
-    submitButton,
-    messageContainer
+    submitButton
   );
 };
 
@@ -134,7 +134,7 @@ const renderResetPasswordForm = () => {
   );
 
   clear(formContainer);
-  formContainer.append(emailInput, submitButton, messageContainer);
+  formContainer.append(messageContainer, emailInput, submitButton);
 };
 
 const renderFormContainer = formName => {
