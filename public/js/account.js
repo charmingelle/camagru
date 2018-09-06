@@ -426,7 +426,6 @@ const renderCamera = () => {
 };
 
 const getBaseData = base => {
-  console.log(base);
   let canvas = document.createElement('canvas');
   let style = getComputedStyle(base);
   let left = parseInt(style.left);
@@ -473,6 +472,7 @@ const getStickerData = sticker => {
   let source = sticker.src;
   let type = 'file';
 
+  console.log(`widthCoef = ${widthCoef}, heightCoef = ${heightCoef}`);
   return {
     source,
     type,
@@ -732,7 +732,6 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
 };
 
 const toggleSelectedStickedSticker = selectedSticker => {
-  // console.log('toggle selected sticked sticker is called');
   const stickedStickers = Array.from(
     document.getElementsByClassName('mobile-sticked-sticker')
   );
@@ -839,7 +838,7 @@ const uploadPhoto = () => {
     container.removeChild(videoError);
   }
   if (uploadedPhoto) {
-    container.removeChild(uploadedImage);
+    container.removeChild(uploadedPhoto);
   }
 
   uploadedPhoto = document.createElement('img');
