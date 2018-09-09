@@ -6,19 +6,19 @@ import {
   customConfirm,
   post,
   postNoResponse,
-  onsubmitHandler,
-} from '/js/utils.js';
+  onsubmitHandler
+} from "/js/utils.js";
 
 let isSignedIn = false;
-let gallery = document.getElementById('gallery');
-let formContainer = document.getElementById('form-container');
-let headerButtonsDiv = document.getElementById('header-buttons-div');
-let messageContainer = document.getElementById('home-message-container');
+let gallery = document.getElementById("gallery");
+let formContainer = document.getElementById("form-container");
+let headerButtonsDiv = document.getElementById("header-buttons-div");
+let messageContainer = document.getElementById("home-message-container");
 let lastPhotoId = 0;
 let isLoading = false;
 
 const createInput = (placeholder, type, value) => {
-  let input = document.createElement('input');
+  let input = document.createElement("input");
 
   input.placeholder = placeholder;
   input.type = type;
@@ -27,9 +27,9 @@ const createInput = (placeholder, type, value) => {
 };
 
 const createSubmit = (text, clickHandler, ...params) => {
-  let submit = document.createElement('input');
+  let submit = document.createElement("input");
 
-  submit.type = 'submit';
+  submit.type = "submit";
   submit.value = text;
   formContainer.onsubmit = event =>
     onsubmitHandler(event, clickHandler, ...params);
@@ -37,13 +37,13 @@ const createSubmit = (text, clickHandler, ...params) => {
 };
 
 const signinFormHandler = (loginInput, passwordInput) => {
-  if (loginInput.value !== '' && passwordInput.value != '') {
-    post('/signin', {
+  if (loginInput.value !== "" && passwordInput.value != "") {
+    post("/signin", {
       login: loginInput.value,
-      password: passwordInput.value,
+      password: passwordInput.value
     }).then(data => {
       // TODO: Read about using of status codes instead of string response body
-      if (data !== 'OK') {
+      if (data !== "OK") {
         renderMessageContainer(messageContainer, data);
       } else {
         // TODO: Boolean arguments are VERY BAD!!!!
@@ -54,10 +54,10 @@ const signinFormHandler = (loginInput, passwordInput) => {
 };
 
 const renderSigninForm = () => {
-  let loginInput = createInput('Login', 'text', '');
-  let passwordInput = createInput('Password', 'password', '');
+  let loginInput = createInput("Login", "text", "");
+  let passwordInput = createInput("Password", "password", "");
   let submitButton = createSubmit(
-    'Sign in',
+    "Sign in",
     signinFormHandler,
     loginInput,
     passwordInput
@@ -74,32 +74,32 @@ const renderSigninForm = () => {
 
 const signupFormHandler = (emailInput, loginInput, passwordInput) => {
   if (
-    emailInput.value !== '' &&
-    loginInput.value !== '' &&
-    passwordInput.value !== ''
+    emailInput.value !== "" &&
+    loginInput.value !== "" &&
+    passwordInput.value !== ""
   ) {
     // TODO: Read about REST API
-    post('/signup', {
+    post("/signup", {
       email: emailInput.value,
       login: loginInput.value,
-      password: passwordInput.value,
+      password: passwordInput.value
     }).then(data => {
       renderMessageContainer(messageContainer, data.message);
       if (data.status === true) {
-        emailInput.value = '';
-        loginInput.value = '';
-        passwordInput.value = '';
+        emailInput.value = "";
+        loginInput.value = "";
+        passwordInput.value = "";
       }
     }, console.error);
   }
 };
 
 const renderSignupForm = () => {
-  let emailInput = createInput('Email', 'text', '');
-  let loginInput = createInput('Login', 'text', '');
-  let passwordInput = createInput('Password', 'password', '');
+  let emailInput = createInput("Email", "text", "");
+  let loginInput = createInput("Login", "text", "");
+  let passwordInput = createInput("Password", "password", "");
   let submitButton = createSubmit(
-    'Sign up',
+    "Sign up",
     signupFormHandler,
     emailInput,
     loginInput,
@@ -117,18 +117,18 @@ const renderSignupForm = () => {
 };
 
 const resetPasswordFormHandler = emailInput => {
-  if (emailInput.value !== '') {
-    post('/forgotPassword', { email: emailInput.value }).then(data => {
+  if (emailInput.value !== "") {
+    post("/forgotPassword", { email: emailInput.value }).then(data => {
       renderMessageContainer(messageContainer, data);
-      emailInput.value = '';
+      emailInput.value = "";
     }, console.error);
   }
 };
 
 const renderResetPasswordForm = () => {
-  let emailInput = createInput('Email', 'text', '');
+  let emailInput = createInput("Email", "text", "");
   let submitButton = createSubmit(
-    'Get reset password link',
+    "Get reset password link",
     resetPasswordFormHandler,
     emailInput
   );
@@ -141,47 +141,47 @@ const renderFormContainer = formName => {
   clear(formContainer);
   clear(messageContainer);
   if (!formName) {
-    formContainer.classList.add('invisible');
+    formContainer.classList.add("invisible");
   } else {
-    formContainer.classList.remove('invisible');
-    if (formName === 'signin-form') renderSigninForm();
-    else if (formName === 'signup-form') renderSignupForm();
-    else if (formName === 'reset-password-form') renderResetPasswordForm();
+    formContainer.classList.remove("invisible");
+    if (formName === "signin-form") renderSigninForm();
+    else if (formName === "signup-form") renderSignupForm();
+    else if (formName === "reset-password-form") renderResetPasswordForm();
   }
 };
 
 const renderSignedInHeader = () => {
-  let myAccountButton = document.createElement('a');
-  let signoutButton = document.createElement('a');
+  let myAccountButton = document.createElement("a");
+  let signoutButton = document.createElement("a");
 
-  myAccountButton.id = 'my-account-button';
-  myAccountButton.href = '/account';
-  myAccountButton.innerHTML = 'My account';
-  signoutButton.id = 'signout-button';
-  signoutButton.href = '/signout';
-  signoutButton.innerHTML = 'Sign out';
+  myAccountButton.id = "my-account-button";
+  myAccountButton.href = "/account";
+  myAccountButton.innerHTML = "My account";
+  signoutButton.id = "signout-button";
+  signoutButton.href = "/signout";
+  signoutButton.innerHTML = "Sign out";
   headerButtonsDiv.append(myAccountButton, signoutButton);
 };
 
 const renderNotSignedInHeader = () => {
-  let signinButton = document.createElement('button');
-  let signupButton = document.createElement('button');
-  let resetPasswordButton = document.createElement('button');
+  let signinButton = document.createElement("button");
+  let signupButton = document.createElement("button");
+  let resetPasswordButton = document.createElement("button");
 
-  signinButton.id = 'signin-button';
-  signinButton.innerHTML = 'Sign in';
-  signinButton.addEventListener('click', () =>
-    renderFormContainer('signin-form')
+  signinButton.id = "signin-button";
+  signinButton.innerHTML = "Sign in";
+  signinButton.addEventListener("click", () =>
+    renderFormContainer("signin-form")
   );
-  signupButton.id = 'signup-button';
-  signupButton.innerHTML = 'Sign up';
-  signupButton.addEventListener('click', () =>
-    renderFormContainer('signup-form')
+  signupButton.id = "signup-button";
+  signupButton.innerHTML = "Sign up";
+  signupButton.addEventListener("click", () =>
+    renderFormContainer("signup-form")
   );
-  resetPasswordButton.id = 'reset-password-button';
-  resetPasswordButton.innerHTML = 'Forgot password?';
-  resetPasswordButton.addEventListener('click', () =>
-    renderFormContainer('reset-password-form')
+  resetPasswordButton.id = "reset-password-button";
+  resetPasswordButton.innerHTML = "Forgot password?";
+  resetPasswordButton.addEventListener("click", () =>
+    renderFormContainer("reset-password-form")
   );
   headerButtonsDiv.append(signinButton, signupButton, resetPasswordButton);
 };
@@ -202,17 +202,17 @@ const okCallbacForDeleteComment = (
   commentEl,
   commentAmountEl
 ) => {
-  postNoResponse('/deleteComment', { id: id })
+  postNoResponse("/deleteComment", { id: id })
     .then(commentsEl.removeChild(commentEl))
     .then(() => {
-      post('/decreaseCommentCount', { id: photoId }).then(commentAmount => {
+      post("/decreaseCommentCount", { id: photoId }).then(commentAmount => {
         commentAmountEl.innerHTML = commentAmount;
       }, console.error);
     });
 };
 
 const deleteComment = (id, photoId, commentsEl, commentEl, commentAmountEl) => {
-  customConfirm('Are you sure you would like to delete this photo?', () =>
+  customConfirm("Are you sure you would like to delete this photo?", () =>
     okCallbacForDeleteComment(
       id,
       photoId,
@@ -224,23 +224,23 @@ const deleteComment = (id, photoId, commentsEl, commentEl, commentAmountEl) => {
 };
 
 const renderComment = (comment, login, commentsEl, commentAmountEl) => {
-  let commentEl = document.createElement('div');
-  let loginDiv = document.createElement('div');
-  let commentDiv = document.createElement('div');
+  let commentEl = document.createElement("div");
+  let loginDiv = document.createElement("div");
+  let commentDiv = document.createElement("div");
 
-  commentEl.classList.add('comment-container');
+  commentEl.classList.add("comment-container");
   loginDiv.innerHTML = `${comment.login}:`;
-  loginDiv.classList.add('login-div');
+  loginDiv.classList.add("login-div");
   commentDiv.innerHTML = comment.comment;
-  commentDiv.classList.add('comment-div');
+  commentDiv.classList.add("comment-div");
   commentEl.append(loginDiv, commentDiv);
   if (comment.login === login) {
-    let deleteDiv = document.createElement('button');
+    let deleteDiv = document.createElement("button");
 
-    deleteDiv.innerHTML = '&#10005;';
-    deleteDiv.title = 'Delete';
-    deleteDiv.classList.add('delete-comment-button');
-    deleteDiv.addEventListener('click', () =>
+    deleteDiv.innerHTML = "&#10005;";
+    deleteDiv.title = "Delete";
+    deleteDiv.classList.add("delete-comment-button");
+    deleteDiv.addEventListener("click", () =>
       deleteComment(
         comment.id,
         comment.photo_id,
@@ -257,12 +257,12 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
 const fillComments = (commentsEl, photoId, commentAmountEl) => {
   let login;
 
-  post('/getLogin', {})
+  post("/getLogin", {})
     .then(data => {
       login = data;
     })
     .then(() => {
-      post('/getComments', { id: photoId }).then(comments => {
+      post("/getComments", { id: photoId }).then(comments => {
         if (comments) {
           const commentDivs = comments.map(comment =>
             renderComment(comment, login, commentsEl, commentAmountEl)
@@ -277,19 +277,22 @@ const fillComments = (commentsEl, photoId, commentAmountEl) => {
 const addCommentHandler = (
   commentsEl,
   addCommentEl,
+  coolInput,
   commentAmountEl,
   photoId
 ) => {
-  if (addCommentEl.value) {
-    postNoResponse('/addComment', {
+  if (coolInput.value !== "") {
+    addCommentEl.value = coolInput.value;
+    coolInput.value = '';
+    postNoResponse("/addComment", {
       comment: addCommentEl.value,
-      photoId: photoId,
+      photoId: photoId
     }).then(() => {
-      post('/increaseCommentCount', { id: photoId }).then(commentAmount => {
+      post("/increaseCommentCount", { id: photoId }).then(commentAmount => {
         commentAmountEl.innerHTML = commentAmount;
       }, console.error);
     });
-    addCommentEl.value = '';
+    addCommentEl.value = "";
     clear(commentsEl);
     fillComments(commentsEl, photoId, commentAmountEl);
   }
@@ -301,13 +304,13 @@ const setSignedInAddComment = (
   photoId,
   commentAmountEl
 ) => {
-  addCommentEl.placeholder = 'Add a comment...';
-  addCommentEl.maxLength = '255';
+  addCommentEl.placeholder = "Add a comment...";
+  addCommentEl.maxLength = "255";
 };
 
 const setNotSignedInAddComment = addCommentEl => {
-  addCommentEl.placeholder = 'Sign in to like photos and add comments';
-  addCommentEl.disabled = 'disabled';
+  addCommentEl.placeholder = "Sign in to like photos and add comments";
+  addCommentEl.disabled = "disabled";
 };
 
 const setAddCommentEl = (
@@ -324,59 +327,59 @@ const setAddCommentEl = (
 };
 
 const renderLoginEl = source => {
-  let loginEl = document.createElement('div');
+  let loginEl = document.createElement("div");
 
   loginEl.innerHTML = source.login;
-  loginEl.classList.add('login');
+  loginEl.classList.add("login");
   return loginEl;
 };
 
 const renderImageEl = source => {
-  let imageEl = document.createElement('img');
+  let imageEl = document.createElement("img");
 
   imageEl.src = source.url;
-  imageEl.classList.add('photo');
+  imageEl.classList.add("photo");
   return imageEl;
 };
 
 const rerenderLikeEl = (likeEl, photoId) => {
-  post('/getLikes', { id: photoId }).then(data => {
+  post("/getLikes", { id: photoId }).then(data => {
     likeEl.innerHTML = data;
   }, console.error);
 };
 
 const renderLikeEl = source => {
-  let likeEl = document.createElement('div');
+  let likeEl = document.createElement("div");
 
   likeEl.innerHTML = source.likes;
-  likeEl.classList.add('like');
+  likeEl.classList.add("like");
   return likeEl;
 };
 
 const rerenderLikeIcon = (likeIcon, photoId) => {
-  post('/getLikeStatus', { id: photoId }).then(data => {
+  post("/getLikeStatus", { id: photoId }).then(data => {
     // TODO: Consider using of classList.toggle
     data
-      ? likeIcon.classList.add('like-symbol-liked')
-      : likeIcon.classList.remove('like-symbol-liked');
+      ? likeIcon.classList.add("like-symbol-liked")
+      : likeIcon.classList.remove("like-symbol-liked");
   });
 };
 
 const likeDislikeHandler = (likeIcon, likeEl, photoId) => {
-  postNoResponse('/likeDislike', { id: photoId }).then(() => {
+  postNoResponse("/likeDislike", { id: photoId }).then(() => {
     rerenderLikeIcon(likeIcon, photoId);
     rerenderLikeEl(likeEl, photoId);
   });
 };
 
 const renderLikeIcon = (likeEl, source) => {
-  let likeIcon = document.createElement('div');
+  let likeIcon = document.createElement("div");
 
   likeIcon.innerHTML = '<i class="far fa-heart"></i>';
   if (isSignedIn) {
-    likeIcon.classList.add('like-symbol-active');
+    likeIcon.classList.add("like-symbol-active");
     rerenderLikeIcon(likeIcon, source.id);
-    likeIcon.addEventListener('click', () =>
+    likeIcon.addEventListener("click", () =>
       likeDislikeHandler(likeIcon, likeEl, source.id)
     );
   }
@@ -384,36 +387,67 @@ const renderLikeIcon = (likeEl, source) => {
 };
 
 const renderCommentAmountEl = source => {
-  let commentAmountEl = document.createElement('div');
+  let commentAmountEl = document.createElement("div");
 
   commentAmountEl.innerHTML = source.comments;
-  commentAmountEl.classList.add('comment');
+  commentAmountEl.classList.add("comment");
   return commentAmountEl;
 };
 
 const renderCommentAmountIcon = () => {
-  let commentAmountIcon = document.createElement('div');
+  let commentAmountIcon = document.createElement("div");
 
   commentAmountIcon.innerHTML = '<i class="far fa-comment"></i>';
-  commentAmountIcon.classList.add('comment-symbol');
+  commentAmountIcon.classList.add("comment-symbol");
   return commentAmountIcon;
 };
 
 const renderCommentsEl = (source, commentAmountEl) => {
-  let commentsEl = document.createElement('div');
+  let commentsEl = document.createElement("div");
 
-  commentsEl.classList.add('comments');
+  commentsEl.classList.add("comments");
   fillComments(commentsEl, source.id, commentAmountEl);
   return commentsEl;
 };
 
 const renderAddCommentEl = (commentsEl, source, commentAmountEl) => {
-  let addCommentEl = document.createElement('input');
+  let addCommentEl = document.createElement("input");
 
-  addCommentEl.type = 'text';
-  addCommentEl.classList.add('add-comment-input');
+  addCommentEl.type = "hidden";
+  addCommentEl.classList.add("add-comment-input");
   setAddCommentEl(addCommentEl, commentsEl, source.id, commentAmountEl);
   return addCommentEl;
+};
+
+const renderCoolInput = (
+  commentsEl,
+  addCommentEl,
+  commentAmountEl,
+  photoId
+) => {
+  let coolInput = document.createElement("textarea");
+
+  coolInput.placeholder = "Add a comment...";
+  coolInput.maxLength = "255";
+  coolInput.classList.add("cool-input");
+  coolInput.addEventListener("input", event => {
+    coolInput.style.height = '';
+    coolInput.style.height = Math.min(coolInput.scrollHeight) + "px";
+  });
+  coolInput.addEventListener("keypress", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addCommentHandler(
+        commentsEl,
+        addCommentEl,
+        coolInput,
+        commentAmountEl,
+        photoId
+      ); 
+      coolInput.value = '';
+    }
+  });
+  return coolInput;
 };
 
 const renderAddCommentButton = (
@@ -422,19 +456,25 @@ const renderAddCommentButton = (
   commentAmountEl,
   photoId
 ) => {
-  let addCommentButton = document.createElement('input');
+  let addCommentButton = document.createElement("input");
 
-  addCommentButton.type = 'submit';
-  addCommentButton.value = 'Publish';
-  addCommentButton.classList.add('add-comment-button');
+  addCommentButton.type = "submit";
+  addCommentButton.value = "Publish";
+  addCommentButton.classList.add("add-comment-button");
   return addCommentButton;
 };
 
 const renderAddCommentForm = (commentsEl, source, commentAmountEl) => {
-  const form = document.createElement('form');
+  const form = document.createElement("form");
   const addCommentEl = renderAddCommentEl(commentsEl, source, commentAmountEl);
+  const coolInput = renderCoolInput(
+    commentsEl,
+    addCommentEl,
+    commentAmountEl,
+    source.id
+  );
 
-  form.append(addCommentEl);
+  form.append(coolInput, addCommentEl);
   if (isSignedIn) {
     const addCommentButton = renderAddCommentButton(
       commentsEl,
@@ -450,6 +490,7 @@ const renderAddCommentForm = (commentsEl, source, commentAmountEl) => {
         addCommentHandler,
         commentsEl,
         addCommentEl,
+        coolInput,
         commentAmountEl,
         source.id
       );
@@ -460,10 +501,10 @@ const renderAddCommentForm = (commentsEl, source, commentAmountEl) => {
 const renderPhoto = sources => {
   if (sources) {
     const images = sources.map(source => {
-      let containerEl = document.createElement('div');
+      let containerEl = document.createElement("div");
       let loginEl = renderLoginEl(source);
       let imageEl = renderImageEl(source);
-      let likeCommentEl = document.createElement('div');
+      let likeCommentEl = document.createElement("div");
       let likeEl = renderLikeEl(source);
       let likeIcon = renderLikeIcon(likeEl, source);
       let commentAmountEl = renderCommentAmountEl(source);
@@ -479,8 +520,8 @@ const renderPhoto = sources => {
         commentAmountEl
       );
 
-      containerEl.classList.add('photo-container');
-      likeCommentEl.classList.add('like-comment');
+      containerEl.classList.add("photo-container");
+      likeCommentEl.classList.add("like-comment");
       likeCommentEl.append(
         likeIcon,
         likeEl,
@@ -502,7 +543,7 @@ const renderPhoto = sources => {
 
 const renderGallery = () => {
   isLoading = true;
-  post('/photos', { lastId: lastPhotoId }).then(data => {
+  post("/photos", { lastId: lastPhotoId }).then(data => {
     if (data.length > 0) {
       lastPhotoId = parseInt(data[data.length - 1].id) - 1;
       renderPhoto(data);
@@ -513,7 +554,7 @@ const renderGallery = () => {
 
 const getLastPhotoId = () => {
   clear(gallery);
-  post('/getLastPublicPhotoId', {}).then(data => {
+  post("/getLastPublicPhotoId", {}).then(data => {
     lastPhotoId = parseInt(data);
     renderGallery();
   }, console.error);
@@ -526,7 +567,7 @@ const loadNewPhotos = () => {
         renderGallery();
       }
     } else {
-      window.removeEventListener('scroll', loadNewPhotos);
+      window.removeEventListener("scroll", loadNewPhotos);
     }
   }
 };
@@ -537,14 +578,14 @@ const renderSignedInOrAnonymousPage = signInStatus => {
   renderMessageContainer(messageContainer);
   renderFormContainer();
   getLastPhotoId();
-  window.addEventListener('scroll', loadNewPhotos);
-  gallery.addEventListener('click', () =>
-    formContainer.classList.add('invisible')
+  window.addEventListener("scroll", loadNewPhotos);
+  gallery.addEventListener("click", () =>
+    formContainer.classList.add("invisible")
   );
 };
 
 const render = () => {
-  post('/isSignedIn', {}).then(renderSignedInOrAnonymousPage, console.error);
+  post("/isSignedIn", {}).then(renderSignedInOrAnonymousPage, console.error);
 };
 
 render();

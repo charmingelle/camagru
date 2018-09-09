@@ -278,9 +278,16 @@ input[type="text"]:disabled {
   color: #262626;
 }
 
-.add-comment-input {
+.cool-input {
   width: 100%;
   margin-top: 1%;
+  box-sizing: border-box;
+  padding: 10px;
+  color: #717171;
+  background-color: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 .add-comment-button {
@@ -582,7 +589,6 @@ img {
   font-weight: bold;
   text-decoration: none;
   color: #262626;
-  /* background-color: transparent */;
 }
 
 @media only screen and (max-width: 768px) {
