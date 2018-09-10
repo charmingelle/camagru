@@ -20,9 +20,10 @@
 
 * {
   font-family: "open sans";
+  font-size: 14px;
 }
 
-label, header a, input {
+label, header a, input, button {
   font-size: 14px;
 }
 

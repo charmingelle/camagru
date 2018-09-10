@@ -90,6 +90,7 @@ TODO
 + make sure that comments go to new lines when they don't fit into photo containers
 + increase the size of like button
 + make all account buttons to become active and inactive when needed both on desktop and mobile
++ check why window scale increases at once on mobile
 
 
 
@@ -105,5 +106,4 @@ TODO
 - style home message container
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
 
-- check why window scale increases at once on mobile
 - check why picture isn't being saved on mobile
