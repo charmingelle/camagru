@@ -87,6 +87,7 @@ TODO
 + check why mobile photos are small
 + make inactive buttons grey
 + make comment input height increase when comment text overflows it
++ make sure that comments go to new lines when they don't fit into photo containers
 
 
 
@@ -103,4 +104,3 @@ TODO
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
 
 - increase the size of like button
-- make sure that comments go to new lines when they don't fit into photo containers

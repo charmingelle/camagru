@@ -474,8 +474,8 @@ const renderAddCommentForm = (commentsEl, source, commentAmountEl) => {
     source.id
   );
 
-  form.append(coolInput, addCommentEl);
   if (isSignedIn) {
+    form.append(coolInput, addCommentEl);
     const addCommentButton = renderAddCommentButton(
       commentsEl,
       addCommentEl,
@@ -494,6 +494,10 @@ const renderAddCommentForm = (commentsEl, source, commentAmountEl) => {
         commentAmountEl,
         source.id
       );
+  } else {
+    addCommentEl.type = 'text';
+    addCommentEl.disabled = 'disabled';
+    form.append(addCommentEl);
   }
   return form;
 };
@@ -504,6 +508,7 @@ const renderPhoto = sources => {
       let containerEl = document.createElement("div");
       let loginEl = renderLoginEl(source);
       let imageEl = renderImageEl(source);
+      let likeCommentELAndCommentsElContainer = document.createElement('div');
       let likeCommentEl = document.createElement("div");
       let likeEl = renderLikeEl(source);
       let likeIcon = renderLikeIcon(likeEl, source);
@@ -528,11 +533,12 @@ const renderPhoto = sources => {
         commentAmountIcon,
         commentAmountEl
       );
+      likeCommentELAndCommentsElContainer.classList.add('like-comment-and-comments-container');
+      likeCommentELAndCommentsElContainer.append(likeCommentEl, commentsEl);
       containerEl.append(
         loginEl,
         imageEl,
-        likeCommentEl,
-        commentsEl,
+        likeCommentELAndCommentsElContainer,
         addCommentForm
       );
       return containerEl;
