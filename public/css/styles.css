@@ -117,9 +117,9 @@ input[type="submit"]:hover {
   cursor: pointer;
 }
 
-input[type="text"]:disabled {
+/* input[type="text"]:disabled {
   background-color: #dbdbdb;
-}
+} */
 
 ::placeholder {
   /* Firefox */
@@ -633,6 +633,11 @@ img {
     padding-top: 20px;
     padding-bottom: 20px;
     background-color: transparent;
+  }
+
+  button:disabled {
+    cursor: auto;
+    background-color: #dbdbdb;
   }
 
   header {

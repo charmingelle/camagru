@@ -6,7 +6,7 @@ import {
   isLeftButton,
   post,
   postNoResponse,
-  onsubmitHandler,
+  onsubmitHandler
 } from '/js/utils.js';
 
 import {
@@ -15,7 +15,7 @@ import {
   changeWidth,
   changeHeight,
   moveUpDown,
-  moveLeftRight,
+  moveLeftRight
 } from '/js/stretcher.js';
 
 const hello = document.getElementById('hello');
@@ -47,12 +47,14 @@ let uploadedPhotoHeight;
 let widthCoef = 1;
 let heightCoef = 1;
 
-const setMaxLimits = (sticker) => {
+const setMaxLimits = sticker => {
   const containerParams = container.getBoundingClientRect();
   const stickerParams = sticker.getBoundingClientRect();
 
-  maxStickerWidth = (containerParams.width - stickerParams.left + containerParams.left) * 1.25;
-  maxStickerHeight = (containerParams.height - stickerParams.top + containerParams.top) * 1.25;
+  maxStickerWidth =
+    (containerParams.width - stickerParams.left + containerParams.left) * 1.25;
+  maxStickerHeight =
+    (containerParams.height - stickerParams.top + containerParams.top) * 1.25;
   maxStickerLeft = (containerParams.width - stickerParams.width) * 1.25;
   maxStickerTop = (containerParams.height - stickerParams.height) * 1.25;
 };
@@ -185,7 +187,10 @@ const createChangeButton = (id, innerHTML) => {
 };
 
 const renderWidthButton = (changeStickerSection, changeScrolls) => {
-  const widthButton = createChangeButton('change-width-button', '<i class="fas fa-arrows-alt-h"></i>');
+  const widthButton = createChangeButton(
+    'change-width-button',
+    '<i class="fas fa-arrows-alt-h"></i>'
+  );
 
   widthButton.addEventListener('click', () => {
     toggleChangeButton(widthButton);
@@ -208,7 +213,10 @@ const renderHeightButton = (changeStickerSection, changeScrolls) => {
 };
 
 const renderUpDownButton = (changeStickerSection, changeScrolls) => {
-  const upDownButton = createChangeButton('move-up-down', '<i class="fas fa-arrow-down"></i>');
+  const upDownButton = createChangeButton(
+    'move-up-down',
+    '<i class="fas fa-arrow-down"></i>'
+  );
 
   upDownButton.addEventListener('click', () => {
     toggleChangeButton(upDownButton);
@@ -218,7 +226,10 @@ const renderUpDownButton = (changeStickerSection, changeScrolls) => {
 };
 
 const renderLeftRightButton = (changeStickerSection, changeScrolls) => {
-  const leftRightButton = createChangeButton('move-left-right', '<i class="fas fa-arrow-right"></i>');
+  const leftRightButton = createChangeButton(
+    'move-left-right',
+    '<i class="fas fa-arrow-right"></i>'
+  );
 
   leftRightButton.addEventListener('click', () => {
     toggleChangeButton(leftRightButton);
@@ -240,6 +251,7 @@ const deleteSticker = () => {
   if (stickedStickers.length === 1) {
     deleteChangeStickerSection();
   }
+  toggleCaptureAndClearButtons();
 };
 
 const renderDeleteStickerButton = changeStickerSection => {
@@ -294,7 +306,7 @@ const getCoords = elem => {
 
   return {
     top: box.top + pageYOffset,
-    left: box.left + pageXOffset,
+    left: box.left + pageXOffset
   };
 };
 
@@ -396,9 +408,7 @@ const createVideoElement = stream => {
   isContainerStickable = true;
   widthCoef = 1;
   heightCoef = 1;
-  canSavePhoto()
-    ? (captureButton.disabled = '')
-    : (captureButton.disabled = 'disabled');
+  toggleCaptureAndClearButtons();
 };
 
 const createVideoErrorElement = error => {
@@ -410,9 +420,7 @@ const createVideoErrorElement = error => {
     errorMessage.id = 'video-error';
     container.insertBefore(errorMessage, container.firstChild);
     isContainerStickable = false;
-    canSavePhoto()
-      ? (captureButton.disabled = '')
-      : (captureButton.disabled = 'disabled');
+    toggleCaptureAndClearButtons();
   }
 };
 
@@ -451,7 +459,9 @@ const getBaseData = base => {
   } else if (base.id === 'uploaded-image') {
     canvas.width = uploadedPhotoWidth;
     canvas.height = uploadedPhotoHeight;
-    canvas.getContext('2d').drawImage(base, 0, 0, uploadedPhotoWidth, uploadedPhotoHeight);
+    canvas
+      .getContext('2d')
+      .drawImage(base, 0, 0, uploadedPhotoWidth, uploadedPhotoHeight);
     return {
       source: canvas.toDataURL(),
       type,
@@ -479,7 +489,7 @@ const getStickerData = sticker => {
     left: left * widthCoef,
     top: top * heightCoef,
     width: width * widthCoef,
-    height: height * heightCoef,
+    height: height * heightCoef
   };
 };
 
@@ -487,7 +497,7 @@ const savePhoto = () => {
   let [base, ...stickers] = Array.from(container.children);
   let layers = [
     getBaseData(base),
-    ...stickers.map(sticker => getStickerData(sticker)),
+    ...stickers.map(sticker => getStickerData(sticker))
   ];
 
   postNoResponse('/savePhoto', { layers }).then(renderPhotos, console.error);
@@ -514,7 +524,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
     left,
     top,
     right,
-    bottom,
+    bottom
   } = mouseMoveEvent.target.getBoundingClientRect();
   let shift = 5; // px
   const isPointInside = isPointInsideRect(
@@ -525,14 +535,14 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
     left,
     right: left + shift,
     top,
-    bottom: top + shift,
+    bottom: top + shift
   };
   const cursorClasses = [
     'hand-cursor',
     'horizontal-cursor',
     'vertical-cursor',
     'slash-cursor',
-    'backslash-cursor',
+    'backslash-cursor'
   ];
 
   if (isPointInside(leftUpRect)) {
@@ -543,7 +553,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       left: right - shift,
       right: right,
       top: top,
-      bottom: top + shift,
+      bottom: top + shift
     })
   ) {
     changeCursorClass(mouseMoveEvent.target, 'slash-cursor', cursorClasses);
@@ -553,7 +563,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       left: left,
       right: left + shift,
       top: bottom - shift,
-      bottom: bottom,
+      bottom: bottom
     })
   ) {
     changeCursorClass(mouseMoveEvent.target, 'slash-cursor', cursorClasses);
@@ -563,7 +573,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       left: right - shift,
       right: right,
       top: bottom - shift,
-      bottom: bottom,
+      bottom: bottom
     })
   ) {
     changeCursorClass(mouseMoveEvent.target, 'backslash-cursor', cursorClasses);
@@ -573,7 +583,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       left: left,
       right: right,
       top: top,
-      bottom: top + shift,
+      bottom: top + shift
     })
   ) {
     changeCursorClass(mouseMoveEvent.target, 'vertical-cursor', cursorClasses);
@@ -583,7 +593,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       left: left,
       right: right,
       top: bottom - shift,
-      bottom: bottom,
+      bottom: bottom
     })
   ) {
     changeCursorClass(mouseMoveEvent.target, 'vertical-cursor', cursorClasses);
@@ -593,7 +603,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       left: left,
       right: left + shift,
       top: top,
-      bottom: bottom,
+      bottom: bottom
     })
   ) {
     changeCursorClass(
@@ -607,7 +617,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
       left: right - shift,
       right: right,
       top: top,
-      bottom: bottom,
+      bottom: bottom
     })
   ) {
     changeCursorClass(
@@ -652,14 +662,18 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
 // };
 
 const valueInRange = (value, min, max) => {
-  return (value >= min) && (value <= max);
-}
+  return value >= min && value <= max;
+};
 
 export const isElementInsideContainer = element => {
   const A = element.getBoundingClientRect();
   const B = container.getBoundingClientRect();
-  const xOverlap = valueInRange(A.left, B.left, B.left + B.width) || valueInRange(B.left, A.left, A.left + A.width);
-  const yOverlap = valueInRange(A.top, B.top, B.top + B.height) || valueInRange(B.top, A.top, A.top + A.height);
+  const xOverlap =
+    valueInRange(A.left, B.left, B.left + B.width) ||
+    valueInRange(B.left, A.left, A.left + A.width);
+  const yOverlap =
+    valueInRange(A.top, B.top, B.top + B.height) ||
+    valueInRange(B.top, A.top, A.top + A.height);
 
   return xOverlap && yOverlap;
 };
@@ -668,6 +682,16 @@ const canSavePhoto = () => {
   return (
     container.children.length > 1 && !document.getElementById('video-error')
   );
+};
+
+const toggleCaptureAndClearButtons = () => {
+  if (canSavePhoto()) {
+    captureButton.disabled = '';
+    clearButton.disabled = '';
+  } else {
+    captureButton.disabled = 'disabled';
+    clearButton.disabled = 'disabled';
+  }
 };
 
 const dragAndDropInsideContainer = (element, shouldCopy) => {
@@ -722,9 +746,7 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
           } else {
             document.body.removeChild(toMove);
           }
-          canSavePhoto()
-            ? (captureButton.disabled = '')
-            : (captureButton.disabled = 'disabled');
+          toggleCaptureAndClearButtons();
         }
       };
     }
@@ -762,9 +784,7 @@ const stickStickerOnMobile = event => {
     selectStickerToEdit(sticked);
     sticked.addEventListener('click', () => selectStickerToEdit(sticked));
     container.append(sticked);
-    canSavePhoto()
-      ? (captureButton.disabled = '')
-      : (captureButton.disabled = 'disabled');
+    toggleCaptureAndClearButtons();
   }
 };
 
@@ -821,9 +841,7 @@ const clearPhoto = () => {
     container.removeChild(elem);
   });
   deleteChangeStickerSection();
-  canSavePhoto()
-    ? (captureButton.disabled = '')
-    : (captureButton.disabled = 'disabled');
+  toggleCaptureAndClearButtons();
 };
 
 const uploadPhoto = () => {
@@ -850,9 +868,9 @@ const uploadPhoto = () => {
     uploadedPhoto.src = this.src;
     uploadedPhotoWidth = uploadedPhoto.width;
     uploadedPhotoHeight = uploadedPhoto.height;
-    
+
     container.insertBefore(uploadedPhoto, container.firstChild);
-    
+
     const containerParams = container.getBoundingClientRect();
 
     widthCoef = uploadedPhotoWidth / containerParams.width;
@@ -861,9 +879,7 @@ const uploadPhoto = () => {
   uploadedPhotoCover.src = window.URL.createObjectURL(upload.files[0]);
   isContainerStickable = true;
   renderBackToCameraButton();
-  canSavePhoto()
-    ? (captureButton.disabled = '')
-    : (captureButton.disabled = 'disabled');
+  toggleCaptureAndClearButtons();
   clearPhoto();
 };
 
