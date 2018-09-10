@@ -1,5 +1,3 @@
-export const ENTER = 13;
-
 export const clear = elem => {
   while (elem.firstChild) {
     elem.removeChild(elem.firstChild);
@@ -34,7 +32,6 @@ export const dragAndDrop = (
   mouseMoveHandler,
   mouseUpHandler
 ) => {
-  // console.log('dragAndDrop happened');
   let drag = false;
 
   element.onmousedown = downEvent => {

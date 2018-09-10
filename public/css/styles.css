@@ -240,13 +240,14 @@ input[type="text"]:disabled {
 }
 
 .like-comment-and-comments-container {
-  padding: 5px;
+  padding: 10px;
 }
 
 .like-comment {
   display: flex;
   flex-direction: row;
   margin: 5px;
+  font-size: 20px;
 }
 
 .like-symbol-active:hover {
@@ -342,7 +343,6 @@ input[type="text"]:disabled {
   border-radius: 4px;
   font-weight: bold;
   color: #262626;
-  /* background-color: transparent */;
 }
 
 .custom-file-upload:hover {
@@ -619,7 +619,7 @@ img {
     font-size: 2em;
   }
 
-  label, header a, input {
+  label, header a, input, .cool-input {
     font-size: 24px;
   }
 
@@ -632,6 +632,7 @@ img {
     padding-right: 10px;
     padding-top: 20px;
     padding-bottom: 20px;
+    background-color: transparent;
   }
 
   header {
@@ -673,5 +674,9 @@ img {
 
   .comment-container {
     line-height: 48px;
+  }
+
+  .fa-heart, .like, .fa-comment, .comment {
+    font-size: 34px;
   }
 }

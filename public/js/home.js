@@ -1,5 +1,4 @@
 import {
-  ENTER,
   clear,
   renderMessageContainer,
   isScrolledToBottom,
