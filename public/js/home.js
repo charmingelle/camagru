@@ -143,6 +143,7 @@ const renderFormContainer = formName => {
     formContainer.classList.add("invisible");
   } else {
     formContainer.classList.remove("invisible");
+    renderMessageContainer(messageContainer);
     if (formName === "signin-form") renderSigninForm();
     else if (formName === "signup-form") renderSignupForm();
     else if (formName === "reset-password-form") renderResetPasswordForm();
