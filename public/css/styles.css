@@ -23,11 +23,12 @@
   font-size: 14px;
 }
 
-label, header a, input, button {
+label, header a, input, .cool-input, button {
   font-size: 14px;
 }
 
 #website-title, #hello {
+  margin: 5px;
   font-family: "Shefilla";
   font-weight: normal;
   font-size: 2em;
@@ -243,6 +244,9 @@ input[type="submit"]:hover {
   display: flex;
   flex-direction: row;
   margin: 5px;
+}
+
+.fa-heart, .like, .fa-comment, .comment {
   font-size: 20px;
 }
 
@@ -290,7 +294,6 @@ input[type="submit"]:hover {
   padding: 10px;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
-  font-size: 14px;
 }
 
 .cool-input {
@@ -302,7 +305,6 @@ input[type="submit"]:hover {
   background-color: #ffffff;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
-  font-size: 14px;
 }
 
 .add-comment-button {
@@ -606,7 +608,7 @@ img {
     font-size: 2em;
   }
 
-  label, header a, input, .cool-input {
+  label, header a, input, .cool-input, button {
     font-size: 24px;
   }
 
