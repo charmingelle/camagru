@@ -106,3 +106,4 @@ TODO
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
 
 - check why window scale increases at once on mobile
+- check why picture isn't being saved on mobile

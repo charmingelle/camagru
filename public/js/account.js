@@ -482,7 +482,6 @@ const getStickerData = sticker => {
   let source = sticker.src;
   let type = 'file';
 
-  console.log(`widthCoef = ${widthCoef}, heightCoef = ${heightCoef}`);
   return {
     source,
     type,
@@ -632,35 +631,6 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
   }
 };
 
-// export const isElementInsideContainer = element => {
-//   const elementCoords = element.getBoundingClientRect();
-//   const containerRect = container.getBoundingClientRect();
-
-//   // TODO: Consider using of currying
-//   // const isPointInsideRect = isPointInsideRect(elementCoords.left, elementCoords.top)
-
-//   return (
-//     isPointInsideRect(elementCoords.left, elementCoords.top)(containerRect) ||
-//     isPointInsideRect(elementCoords.right, elementCoords.top)(containerRect) ||
-//     isPointInsideRect(elementCoords.left, elementCoords.bottom)(
-//       containerRect
-//     ) ||
-//     isPointInsideRect(elementCoords.right, elementCoords.bottom)(containerRect)
-//   );
-// };
-
-// export const isElementInsideContainer = element => {
-//   const elementCoords = element.getBoundingClientRect();
-//   const containerRect = container.getBoundingClientRect();
-
-//   return (
-//     elementCoords.left < containerRect.right &&
-//     elementCoords.right > containerRect.left &&
-//     elementCoords.top > containerRect.bottom &&
-//     elementCoords.bottom < containerRect.top
-//   );
-// };
-
 const valueInRange = (value, min, max) => {
   return value >= min && value <= max;
 };
@@ -772,6 +742,8 @@ const selectStickerToEdit = sticker => {
 };
 
 const stickStickerOnMobile = event => {
+  event.preventDefault();
+  event.stopPropagation();
   if (isContainerStickable) {
     const sticked = event.target.cloneNode(true);
     const stickerStyle = event.target.getBoundingClientRect();
@@ -786,6 +758,7 @@ const stickStickerOnMobile = event => {
     container.append(sticked);
     toggleCaptureAndClearButtons();
   }
+  return false;
 };
 
 const renderSticker = sources => {
@@ -799,7 +772,7 @@ const renderSticker = sources => {
       image.src = source.url;
       image.classList.add('sticker');
       // image.addEventListener('click', stickStickerOnMobile);
-      image.addEventListener('touchend', stickStickerOnMobile);
+      image.addEventListener('contextmenu', stickStickerOnMobile);
       dragAndDropInsideContainer(image, true);
       imageDiv.append(image);
       return imageDiv;
@@ -808,7 +781,7 @@ const renderSticker = sources => {
   }
 };
 
-const stickersForwardHander = () => {
+const stickersForwardHander = () => {3
   stickersContainer.scrollLeft += 300;
 };
 
@@ -818,12 +791,6 @@ const stickerBackHandler = () => {
 
 const renderStickers = () => {
   post('/stickers', {}).then(renderSticker, console.error);
-  document
-    .getElementById('stickers-forward')
-    .addEventListener('click', stickersForwardHander);
-  document
-    .getElementById('stickers-back')
-    .addEventListener('click', stickerBackHandler);
 };
 
 const clearPhoto = () => {

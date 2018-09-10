@@ -84,7 +84,6 @@ button {
   border-radius: 4px;
   font-weight: bold;
   color: #262626;
-  /* background-color: transparent */;
 }
 
 button:hover {
@@ -116,10 +115,6 @@ input:focus {
 input[type="submit"]:hover {
   cursor: pointer;
 }
-
-/* input[type="text"]:disabled {
-  background-color: #dbdbdb;
-} */
 
 ::placeholder {
   /* Firefox */
@@ -409,17 +404,8 @@ input[type="submit"]:hover {
   background-color: #ffffff;
 }
 
-#stickers-carousel-buttons {
-  display: flex;
-  justify-content: center;
-}
-
 #stickers-container button {
   padding: 30px;
-}
-
-#stickers-back {
-  margin-right: 30px;
 }
 
 #stickers {
