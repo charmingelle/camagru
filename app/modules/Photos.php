@@ -8,12 +8,12 @@ class Photos {
 									['lastId' => $lastId, 'limit' => $limit])->fetchAll();
 	}
 
-	private static function getUrl() {
-		return 'photo/' . substr(hash("whirlpool", uniqid() . time()), 0, 16) . '.png';
+	private static function _getUrl() {
+		return 'photo/' . substr(hash("whirlpool", uniqid() . time()), 0, 16) . '.jpeg';
 	}
 
 	public static function savePhoto($layers) {
-		$url = self::getUrl();
+		$url = self::_getUrl();
 		$photo = imagecreatefromstring(base64_decode(explode(';base64,', $layers[0]['source'])[1]));
 
 		array_shift($layers);
