@@ -95,15 +95,10 @@ TODO
 
 
 - create account page layout
-- think about what happens with fetch when DB error happens
-- make sure that layout is responsive
 - move website to free hosting
 - test everything
-- include media queries for responsive layout
 - prettify everything
-- check if I need to use https://css-tricks.com/almanac/properties/t/text-transform/ anywhere
 - replace let with const where possible
-- style home message container
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
 
 - check why picture isn't being saved on mobile
