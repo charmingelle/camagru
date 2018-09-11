@@ -25,11 +25,12 @@ const createInput = (placeholder, type, value) => {
   return input;
 };
 
-const createSubmit = (text, clickHandler, ...params) => {
+const createSubmit = (text, id, clickHandler, ...params) => {
   let submit = document.createElement('input');
 
   submit.type = 'submit';
   submit.value = text;
+  submit.id = id;
   formContainer.onsubmit = event =>
     onsubmitHandler(event, clickHandler, ...params);
   return submit;
@@ -57,6 +58,7 @@ const renderSigninForm = () => {
   let passwordInput = createInput('Password', 'password', '');
   let submitButton = createSubmit(
     'Sign in',
+    'sign-in-form-button',
     signinFormHandler,
     loginInput,
     passwordInput
@@ -99,6 +101,7 @@ const renderSignupForm = () => {
   let passwordInput = createInput('Password', 'password', '');
   let submitButton = createSubmit(
     'Sign up',
+    'sign-up-form-button',
     signupFormHandler,
     emailInput,
     loginInput,
@@ -128,6 +131,7 @@ const renderResetPasswordForm = () => {
   let emailInput = createInput('Email', 'text', '');
   let submitButton = createSubmit(
     'Get reset password link',
+    'get-reset-password-link-form-button',
     resetPasswordFormHandler,
     emailInput
   );
