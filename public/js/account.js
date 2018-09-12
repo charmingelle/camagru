@@ -457,6 +457,7 @@ const getBaseData = base => {
       height
     };
   } else if (base.id === 'uploaded-image') {
+    
     canvas.width = uploadedPhotoWidth;
     canvas.height = uploadedPhotoHeight;
     canvas

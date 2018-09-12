@@ -91,6 +91,8 @@ TODO
 + increase the size of like button
 + make all account buttons to become active and inactive when needed both on desktop and mobile
 + check why window scale increases at once on mobile
++ remove squares around buttons on mobile
++ style inactive buttons
 
 
 
@@ -103,3 +105,5 @@ TODO
 
 - check why everything is slow
 - remove all unnecessary fonts
+- make sure that you've styled 404 and resetPassword pages
+- see Pasha's notes

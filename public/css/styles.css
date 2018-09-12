@@ -8,6 +8,14 @@
   font-size: 14px;
 }
 
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 label,
 header a,
 input,
@@ -61,13 +69,17 @@ header a {
   color: white;
   background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
   box-shadow: 0 3px 15px #808080;
-  transition: top 10s;
+  transition: top 0.1s;
 }
 
 header a:hover {
   cursor: pointer;
   position: relative;
   top: 1px;
+}
+
+header a:active {
+  top: 2px;
 }
 
 header a:visited {
@@ -85,7 +97,7 @@ button {
   color: white;
   background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
   box-shadow: 0 3px 15px #808080;
-  transition: top 10s;
+  transition: top 0.1s;
 }
 
 button:hover {
@@ -98,9 +110,19 @@ button:focus {
   outline: 0;
 }
 
+button:active {
+  outline: none;
+  top: 2px;
+}
+
 button:disabled {
   cursor: auto;
+  background-image: none;
   background-color: #dbdbdb;
+}
+
+button:disabled:hover {
+  top: 0;
 }
 
 input {
@@ -123,7 +145,7 @@ input[type='submit'] {
   color: white;
   background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
   box-shadow: 0 3px 15px #808080;
-  transition: top 10s;
+  transition: top 0.1s;
 }
 
 input[type='submit']:hover {
@@ -135,6 +157,10 @@ input[type='submit']:hover {
 input[type='submit']:focus {
   outline: none;
 }
+
+/* input[type='submit']:active {
+  top: 2px;
+} */
 
 .light-submit {
   border: 1px solid #792df3a8;
@@ -265,6 +291,15 @@ input[type='password']:focus {
   top: 0;
 }
 
+#sign-in-form-button:active,
+#sign-up-form-button:active,
+#get-reset-password-link-form-button:active,
+#change-email-button:active,
+#change-login-button:active,
+#change-password-button:active {
+  top: 2px;
+}
+
 #gallery {
   display: flex;
   flex-direction: column;
@@ -314,7 +349,12 @@ input[type='password']:focus {
 }
 
 .like {
-  margin-right: 10px;
+  margin-left: 2px;
+  margin-right: 15px;
+}
+
+.comment-symbol {
+  margin-right: 2px;
 }
 
 .comment-container {
@@ -416,13 +456,17 @@ input[type='password']:focus {
   color: white;
   background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
   box-shadow: 0 3px 15px #808080;
-  transition: top 10s;
+  transition: top 0.1s;
 }
 
 #custom-file-upload:hover {
   cursor: pointer;
   position: relative;
   top: 1px;
+}
+
+#custom-file-upload:active {
+  top: 2px;
 }
 
 #capture-button {
@@ -717,11 +761,6 @@ img {
   input[type='submit'],
   #custom-file-upload {
     border-radius: 40px;
-  }
-
-  button:disabled {
-    cursor: auto;
-    background-color: #dbdbdb;
   }
 
   header {
