@@ -8,6 +8,10 @@
   font-size: 14px;
 }
 
+h1 {
+  font-size: initial;
+}
+
 input,
 textarea,
 button,
@@ -230,7 +234,7 @@ input[type='password']:focus {
   margin: 10px;
 }
 
-#home-main {
+#home-main, #reset-password-main {
   padding-top: 77px;
 }
 
@@ -255,9 +259,9 @@ input[type='password']:focus {
   border-radius: 4px;
 }
 
-#form-container span {
+/* #form-container span {
   margin: 1px;
-}
+} */
 
 #form-container input {
   margin: 1px;
@@ -275,7 +279,8 @@ input[type='password']:focus {
 #get-reset-password-link-form-button,
 #change-email-button,
 #change-login-button,
-#change-password-button {
+#change-password-button,
+#reset-password-page-button {
   color: #1807f3;
   border: 1px solid #782bf1;
   background-image: none;
@@ -287,7 +292,8 @@ input[type='password']:focus {
 #get-reset-password-link-form-button:hover,
 #change-email-button:hover,
 #change-login-button:hover,
-#change-password-button:hover {
+#change-password-button:hover,
+#reset-password-page-button:hover {
   top: 0;
 }
 
@@ -296,7 +302,8 @@ input[type='password']:focus {
 #get-reset-password-link-form-button:active,
 #change-email-button:active,
 #change-login-button:active,
-#change-password-button:active {
+#change-password-button:active,
+#reset-password-page-button:active {
   top: 2px;
 }
 
@@ -688,33 +695,46 @@ img {
   border: 1px solid green;
 }
 
+#reset-password-header {
+  justify-content: flex-end;
+}
+
+#reset-password-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #reset-password-form {
-  padding: 0.5%;
-  background-color: #ffffff;
-  border: 1px solid #e6e6e6;
-  border-radius: 4px;
+  padding: 10px;
+}
+
+#reset-password-form input {
+  margin: 5px;
 }
 
 #reset-password-message-container {
-  position: fixed;
-  top: 77px;
-  left: 0;
-  padding: 0.5%;
-  background-color: #ffffff;
-  border: 1px solid #e6e6e6;
-  border-radius: 4px;
+  padding: 1%;
 }
 
 #reset-password-home-link {
   margin: 10px;
 }
 
+#page-not-found-body {
+  display: flex;
+  justify-content: center;
+}
+
 #page-not-found-content {
-  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
 }
 
 #page-not-found-home-link {
-  padding-left: 25px;
+  /* padding-left: 25px;
   padding-right: 25px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -722,12 +742,31 @@ img {
   border-radius: 4px;
   font-weight: bold;
   text-decoration: none;
-  color: #262626;
+  color: #262626; */
+
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
+  box-shadow: 0 3px 15px #808080;
+  transition: top 0.1s;
 }
 
 @media only screen and (max-width: 768px) {
   * {
     font-size: 24px;
+  }
+
+  h1 {
+    font-size: 32px;
   }
 
   #website-title,
@@ -767,7 +806,7 @@ img {
     height: 137px;
   }
 
-  #home-main {
+  #home-main, #reset-password-main {
     padding-top: 137px;
   }
 

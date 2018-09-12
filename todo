@@ -93,6 +93,7 @@ TODO
 + check why window scale increases at once on mobile
 + remove squares around buttons on mobile
 + style inactive buttons
++ style 404 and resetPassword pages
 
 
 
@@ -103,7 +104,5 @@ TODO
 - replace let with const where possible
 - think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
 
-- check why everything is slow
 - remove all unnecessary fonts
-- make sure that you've styled 404 and resetPassword pages
 - see Pasha's notes
