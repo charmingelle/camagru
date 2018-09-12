@@ -71,8 +71,8 @@ header a {
   font-weight: bold;
   text-decoration: none;
   color: white;
-  background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
-  box-shadow: 0 3px 15px #808080;
+  background-image: linear-gradient(to right, #cd9e51, #8d642c);
+  box-shadow: 0 3px 15px #3b2209;
   transition: top 0.1s;
 }
 
@@ -99,8 +99,8 @@ button {
   border-radius: 20px;
   font-weight: bold;
   color: white;
-  background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
-  box-shadow: 0 3px 15px #808080;
+  background-image: linear-gradient(to right, #cd9e51, #8d642c);
+  box-shadow: 0 3px 15px #3b2209;
   transition: top 0.1s;
 }
 
@@ -147,8 +147,8 @@ input[type='submit'] {
   border-radius: 20px;
   font-weight: bold;
   color: white;
-  background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
-  box-shadow: 0 3px 15px #808080;
+  background-image: linear-gradient(to right, #cd9e51, #8d642c);
+  box-shadow: 0 3px 15px #3b2209;
   transition: top 0.1s;
 }
 
@@ -167,20 +167,20 @@ input[type='submit']:focus {
 } */
 
 .light-submit {
-  border: 1px solid #792df3a8;
+  border: 1px solid #cd9e51;
   border-radius: 20px;
   font-weight: bold;
-  color: #0d00ffb3;
+  color: #8d642c;
 }
 
 input[type='text']:focus {
   outline: none;
-  border: 1px solid #792df3a8;
+  border: 1px solid #cd9e51;
 }
 
 input[type='password']:focus {
   outline: none;
-  border: 1px solid #792df3a8;
+  border: 1px solid #cd9e51;
 }
 
 ::placeholder {
@@ -268,10 +268,10 @@ input[type='password']:focus {
 }
 
 #form-container input[type='submot'] {
-  border: 1px solid #792df3a8;
+  border: 1px solid #cd9e51;
   border-radius: 20px;
   font-weight: bold;
-  color: #0d00ffb3;
+  color: #8d642c;
 }
 
 #sign-in-form-button,
@@ -281,8 +281,8 @@ input[type='password']:focus {
 #change-login-button,
 #change-password-button,
 #reset-password-page-button {
-  color: #1807f3;
-  border: 1px solid #782bf1;
+  color: #8d642c;
+  border: 1px solid #cd9e51;
   background-image: none;
   box-shadow: none;
 }
@@ -418,7 +418,7 @@ input[type='password']:focus {
 
 .cool-input:focus {
   outline: none;
-  border: 1px solid #792df3a8;
+  border: 1px solid #cd9e51;
 }
 
 .add-comment-button {
@@ -461,8 +461,8 @@ input[type='password']:focus {
   border-radius: 20px;
   font-weight: bold;
   color: white;
-  background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
-  box-shadow: 0 3px 15px #808080;
+  background-image: linear-gradient(to right, #cd9e51, #8d642c);
+  box-shadow: 0 3px 15px #3b2209;
   transition: top 0.1s;
 }
 
@@ -661,6 +661,7 @@ img {
 #change-buttons button {
   margin: 30px;
   padding: 30px;
+  border-radius: 100%;
 }
 
 #change-scrolls {
@@ -682,7 +683,7 @@ img {
 
 .scroll::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
+  background-image: linear-gradient(to right, #cd9e51, #8d642c);
   left: 50%;
 }
 
@@ -755,8 +756,8 @@ img {
   font-weight: bold;
   text-decoration: none;
   color: white;
-  background-image: linear-gradient(to right, #792df3a8, #0d00ffb3);
-  box-shadow: 0 3px 15px #808080;
+  background-image: linear-gradient(to right, #cd9e51, #8d642c);
+  box-shadow: 0 3px 15px #3b2209;
   transition: top 0.1s;
 }
 
