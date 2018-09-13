@@ -7,6 +7,7 @@ class DBConnect {
 		if (self::$_pdo === NULL) {
 			try {
 				self::$_pdo = new PDO('mysql:dbname=' . DB_NAME . ';host='. DB_HOST, DB_USER, DB_PASSWORD);
+				self::$_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				self::$_pdo->exec('SET NAMES utf8mb4');
 			} catch (Exception $e) {
 				exit($e->getMessage());

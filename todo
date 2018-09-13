@@ -97,9 +97,10 @@ TODO
 
 
 
-- create account page layout
 - move website to free hosting
 - test everything
 - prettify everything
 - replace let with const where possible
-- think if you should consider stickers with 0 width or height to be absent on photo in order not to be able to save it
+- remove all comments from the code
+- remove camagru.sql?
+- remove TODO
