@@ -869,7 +869,7 @@ const renderBackToCameraButton = () => {
     let button = document.createElement('button');
 
     button.id = 'back-to-camera-button';
-    button.innerHTML = '<i class="fas fa-arrow-left"></i><br>Back to Camera';
+    button.innerHTML = '<i class="fas fa-arrow-left"></i><br>Back to camera';
     button.addEventListener('click', backToCameraHandler);
     buttonBlock.insertBefore(button, buttonBlock.firstChild);
   }

@@ -239,7 +239,7 @@ const renderComment = (comment, login, commentsEl, commentAmountEl) => {
   commentDiv.classList.add('comment-div');
   commentEl.append(loginDiv, commentDiv);
   if (comment.login === login) {
-    let deleteDiv = document.createElement('button');
+    let deleteDiv = document.createElement('div');
 
     deleteDiv.innerHTML = '&#10005;';
     deleteDiv.title = 'Delete';
@@ -351,7 +351,7 @@ const likeDislikeHandler = (likeIcon, likeEl, photoId) => {
 const renderLikeIcon = (likeEl, source) => {
   let likeIcon = document.createElement('div');
 
-  likeIcon.innerHTML = '<i class="far fa-heart"></i>';
+  likeIcon.innerHTML = '<i class="fas fa-heart"></i>';
   if (isSignedIn) {
     likeIcon.classList.add('like-symbol-active');
     rerenderLikeIcon(likeIcon, source.id);
@@ -373,7 +373,7 @@ const renderCommentAmountEl = source => {
 const renderCommentAmountIcon = () => {
   let commentAmountIcon = document.createElement('div');
 
-  commentAmountIcon.innerHTML = '<i class="far fa-comment"></i>';
+  commentAmountIcon.innerHTML = '<i class="fas fa-comment"></i>';
   commentAmountIcon.classList.add('comment-symbol');
   return commentAmountIcon;
 };

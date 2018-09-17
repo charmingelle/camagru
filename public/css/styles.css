@@ -1,10 +1,8 @@
 * {
-  font-family: Roboto, sans-serif;
-  font-size: 14px;
-}
-
-h1 {
-  font-size: initial;
+  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  color: #676A6C;
+  box-sizing: border-box;
 }
 
 input,
@@ -12,28 +10,21 @@ textarea,
 button,
 select,
 a {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-label,
-header a,
-input,
-.cool-input,
-button {
-  font-size: 14px;
-}
-
+#website-title,
 #hello {
-  margin: 5px;
-  font-weight: normal;
+  margin: 20px;
   font-size: 1.5em;
+  font-weight: normal;
+  color: #ffffff;
 }
 
 body {
-  box-sizing: border-box;
   min-width: 800px;
   margin: 0;
-  background-color: #fff7ee;
+  background-color: #f3f3f4;
 }
 
 header {
@@ -46,12 +37,17 @@ header {
   z-index: 1;
   min-width: 800px;
   width: 100%;
-  height: 77px;
-  background-color: #ffffff;
+  height: 50px;
+  background-color: #2f4050;
   resize: both;
 }
 
-header a {
+#signin-button,
+#signup-button,
+#reset-password-button,
+#home-button,
+#signout-button,
+#my-account-button {
   margin-left: 5px;
   margin-right: 5px;
   padding-left: 25px;
@@ -60,105 +56,46 @@ header a {
   padding-bottom: 5px;
   border: none;
   text-decoration: none;
-  color: white;
-  background-image: linear-gradient(to right, #cd9e51, #8d642c);
-  box-shadow: 0 1px 5px #522800;
-  transition: top 0.1s;
+  color: #ffffff;
+  background-color: #1ab394;
 }
 
-header a:hover {
+#signin-button:hover,
+#signup-button:hover,
+#reset-password-button:hover,
+#home-button:hover,
+#signout-button:hover,
+#my-account-button:hover {
   cursor: pointer;
-  position: relative;
-  top: 1px;
+  background-color: #18a689;
 }
 
-header a:active {
-  top: 2px;
+#signin-button:active,
+#signup-button:active,
+#reset-password-button:active,
+#home-button:active,
+#signout-button:active,
+#my-account-button:active {
+  background-color: #18a689;
 }
 
-header a:visited {
+#signin-button:visited,
+#signup-button:visited,
+#reset-password-button:visited,
+#home-button:visited,
+#signout-button:visited,
+#my-account-button:visited {
   text-decoration: none;
 }
 
-button {
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border: none;
-  color: white;
-  background-image: linear-gradient(to right, #cd9e51, #8d642c);
-  box-shadow: 0 1px 5px #522800;
-  transition: top 0.1s;
-}
-
-button:hover {
-  cursor: pointer;
-  position: relative;
-  top: 1px;
-}
-
-button:focus {
-  outline: 0;
-}
-
-button:active {
-  outline: none;
-  top: 2px;
-}
-
-button:disabled {
-  cursor: auto;
-  background-image: none;
-  background-color: #e6ca9d;
-}
-
-button:disabled:hover {
-  top: 0;
-}
-
-input {
-  box-sizing: border-box;
+input[type='text'],
+input[type='password'] {
   padding: 10px;
-  color: #717171;
-  background-color: #ffffff;
-  border: 1px solid #dbdbdb;
 }
 
-input[type='submit'] {
-  padding-left: 25px;
-  padding-right: 25px;
-  border: none;
-  color: white;
-  background-image: linear-gradient(to right, #cd9e51, #8d642c);
-  box-shadow: 0 1px 5px #522800;
-  transition: top 0.1s;
-}
-
-input[type='submit']:hover {
-  cursor: pointer;
-  position: relative;
-  top: 1px;
-}
-
-input[type='submit']:focus {
-  outline: none;
-}
-
-.light-submit {
-  border: 1px solid #cd9e51;
-  border-radius: 20px;
-  color: #8d642c;
-}
-
-input[type='text']:focus {
-  outline: none;
-  border: 1px solid #cd9e51;
-}
-
+input[type='text']:focus,
 input[type='password']:focus {
   outline: none;
-  border: 1px solid #cd9e51;
 }
 
 #overlay {
@@ -167,7 +104,7 @@ input[type='password']:focus {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #c1bdba;
+  background-color: #f3f3f4;
   z-index: 2;
   opacity: 0.6;
 }
@@ -179,14 +116,27 @@ input[type='password']:focus {
   transform: translate(-50%, -50%);
   z-index: 3;
   padding: 25px;
-  background-color: #fafafa;
-  box-shadow: 0 4px 30px 4px #8d642c;
-  opacity: 1;
+  background-color: #ffffff;
 }
 
 #custom-confirm button {
   width: 48%;
   margin: 1%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: none;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #1ab394;
+}
+
+#custom-confirm button:hover {
+  cursor: pointer;
+  background-color: #18a689;
+}
+
+#custom-confirm button:active {
+  background-color: #18a689;
 }
 
 .no-scroll {
@@ -205,16 +155,13 @@ input[type='password']:focus {
   margin: 10px;
 }
 
-#home-main, #reset-password-main {
-  padding-top: 77px;
-}
-
-#home-message-container {
-  padding: 10px;
+#home-main,
+#reset-password-main {
+  padding-top: 50px;
 }
 
 #account-message-container {
-  padding: 1%;
+  margin: 15px;
   text-align: center;
 }
 
@@ -222,19 +169,10 @@ input[type='password']:focus {
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 77px;
+  top: 50px;
   right: 0;
   padding: 0.5%;
   background-color: #ffffff;
-}
-
-#form-container input {
-  margin: 1px;
-}
-
-#form-container input[type='submot'] {
-  border: 1px solid #cd9e51;
-  color: #8d642c;
 }
 
 #sign-in-form-button,
@@ -243,11 +181,16 @@ input[type='password']:focus {
 #change-email-button,
 #change-login-button,
 #change-password-button,
-#reset-password-page-button {
-  color: #8d642c;
-  border: 1px solid #cd9e51;
-  background-image: none;
-  box-shadow: none;
+#reset-password-page-button,
+#notification-status {
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border: none;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #1ab394;
 }
 
 #sign-in-form-button:hover,
@@ -256,8 +199,10 @@ input[type='password']:focus {
 #change-email-button:hover,
 #change-login-button:hover,
 #change-password-button:hover,
-#reset-password-page-button:hover {
-  top: 0;
+#reset-password-page-button:hover,
+#notification-status:hover {
+  cursor: pointer;
+  background-color: #18a689;
 }
 
 #sign-in-form-button:active,
@@ -266,8 +211,9 @@ input[type='password']:focus {
 #change-email-button:active,
 #change-login-button:active,
 #change-password-button:active,
-#reset-password-page-button:active {
-  top: 2px;
+#reset-password-page-button:active,
+#notification-status:active {
+  background-color: #18a689;
 }
 
 #gallery {
@@ -283,8 +229,9 @@ input[type='password']:focus {
 }
 
 .login {
-  margin: 5px;
-  color: #262626;
+  margin: 15px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .photo {
@@ -298,7 +245,7 @@ input[type='password']:focus {
 .like-comment {
   display: flex;
   flex-direction: row;
-  margin: 5px;
+  margin: 5px 5px 10px 5px;
 }
 
 .fa-heart,
@@ -308,12 +255,17 @@ input[type='password']:focus {
   font-size: 20px;
 }
 
+.fa-heart,
+.fa-comment {
+  font-weight: bold;
+}
+
 .like-symbol-active:hover {
   cursor: pointer;
 }
 
-.like-symbol-liked {
-  color: red;
+.like-symbol-liked i {
+  color: #1ab394;
 }
 
 .like {
@@ -327,7 +279,7 @@ input[type='password']:focus {
 
 .comment-container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 5px;
   margin-bottom: 5px;
   line-height: 22px;
@@ -339,43 +291,56 @@ input[type='password']:focus {
 
 .delete-comment-button {
   margin-left: 10px;
-  padding-left: 7px;
-  padding-right: 7px;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+  color: #1ab394;
+}
+
+.delete-comment-button:hover {
+  cursor: pointer;
+  color: #18a689;
+}
+
+.delete-comment-button:active {
+  color: #18a689;
 }
 
 .login-div {
   padding-left: 5px;
   padding-right: 5px;
-  color: #262626;
-}
-
-.add-comment-input {
-  width: 100%;
-  margin-top: 1%;
-  box-sizing: border-box;
-  padding: 10px;
-  border: 1px solid #dbdbdb;
+  font-weight: bold;
 }
 
 .cool-input {
   width: 100%;
   margin-top: 1%;
-  box-sizing: border-box;
-  padding: 10px;
-  color: #717171;
-  background-color: #ffffff;
-  border: 1px solid #dbdbdb;
+  padding: 15px;
 }
 
 .cool-input:focus {
   outline: none;
-  border: 1px solid #cd9e51;
 }
 
 .add-comment-button {
+  position: relative;
+  top: -4px;
   width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: none;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #1ab394;
+}
+
+.add-comment-button:hover {
+  cursor: pointer;
+  background-color: #18a689;
+}
+
+.add-comment-button:active {
+  background-color: #18a689;
 }
 
 #account-links {
@@ -384,7 +349,7 @@ input[type='password']:focus {
 
 #photo-buttons {
   position: relative;
-  top: 77px;
+  top: 50px;
   width: 100%;
   height: 70px;
   display: flex;
@@ -394,13 +359,8 @@ input[type='password']:focus {
 
 #content {
   position: relative;
-  top: 77px;
+  top: 50px;
   width: 100%;
-}
-
-#back-to-camera-button {
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 #custom-file-upload {
@@ -411,30 +371,61 @@ input[type='password']:focus {
   padding-top: 5px;
   padding-bottom: 5px;
   border: none;
-  color: white;
-  background-image: linear-gradient(to right, #cd9e51, #8d642c);
-  box-shadow: 0 1px 5px #522800;
-  transition: top 0.1s;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #1ab394;
 }
 
 #custom-file-upload:hover {
   cursor: pointer;
-  position: relative;
-  top: 1px;
+  background-color: #18a689;
 }
 
 #custom-file-upload:active {
-  top: 2px;
+  background-color: #18a689;
 }
 
-#capture-button {
-  margin-left: 10px;
-  margin-right: 10px;
+#custom-file-upload i {
+  color: #ffffff;
 }
 
-#clear-button {
+#capture-button,
+#clear-button,
+#back-to-camera-button {
   margin-left: 10px;
   margin-right: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: none;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #1ab394;
+}
+
+#capture-button:hover,
+#clear-button:hover,
+#back-to-camera-button:hover {
+  cursor: pointer;
+  background-color: #18a689;
+}
+
+#capture-button:active,
+#clear-button:active,
+#back-to-camera-button:active {
+  background-color: #18a689;
+}
+
+#capture-button i,
+#clear-button i,
+#back-to-camera-button i {
+  color: #ffffff;
+}
+
+#capture-button:disabled, #clear-button:disabled {
+  cursor: initial;
+  background-color: #676A6C;
 }
 
 #photo-section {
@@ -483,8 +474,8 @@ input[type='password']:focus {
   align-items: center;
 }
 
-#change-section input {
-  margin: 5px;
+#change-container form {
+  margin-bottom: 5px;
 }
 
 #stickers-container {
@@ -508,7 +499,6 @@ input[type='password']:focus {
 }
 
 .image-div {
-  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -534,7 +524,7 @@ input[type='password']:focus {
 }
 
 .sticked-sticker:hover {
-  outline: 1px solid #dbdbdb;
+  outline: 1px solid #ffffff;
 }
 
 .selected-sticked-sticker {
@@ -556,12 +546,29 @@ input[type='password']:focus {
   width: 100%;
 }
 
+.delete-button,
 .publish-button {
+  position: relative;
+  top: -4px;
   width: 50%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: none;
+  outline: 1px solid #f3f3f4;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #1ab394;
 }
 
-.delete-button {
-  width: 50%;
+.delete-button:hover,
+.publish-button:hover {
+  cursor: pointer;
+  background-color: #18a689;
+}
+
+.delete-button:active,
+.publish-button:active {
+  background-color: #18a689;
 }
 
 input[type='file'] {
@@ -607,9 +614,35 @@ img {
   flex-direction: row;
 }
 
-#change-buttons button {
+.change-button {
   margin: 30px;
   padding: 30px;
+  border: none;
+  background-color: #1ab394;
+}
+
+.change-button i {
+  color: white;
+}
+
+.selected-change-button {
+  border: none;
+  background-color: #18a689;
+}
+
+#delete-sticker {
+  margin: 30px;
+  padding: 30px;
+  border: none;
+  background-color: #1ab394;
+}
+
+#delete-sticker i {
+  color: white;
+}
+
+#delete-sticker:active {
+  background-color: #18a689;
 }
 
 #change-scrolls {
@@ -629,17 +662,13 @@ img {
 }
 
 .scroll::-webkit-scrollbar-thumb {
-  background-image: linear-gradient(to right, #cd9e51, #8d642c);
+  background-color: #1ab394;
   left: 50%;
 }
 
 .scroll-content {
   width: 500%;
   height: 100%;
-}
-
-.selected-change-button {
-  background-image: linear-gradient(to right, #8d642c, #6f4204);
 }
 
 #reset-password-header {
@@ -666,6 +695,27 @@ img {
 
 #reset-password-home-link {
   margin: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: none;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #1ab394;
+}
+
+#reset-password-home-link:hover {
+  cursor: pointer;
+  background-color: #18a689;
+}
+
+#reset-password-home-link:active {
+  background-color: #18a689;
+}
+
+#reset-password-home-link:visited {
+  text-decoration: none;
 }
 
 #page-not-found-body {
@@ -689,10 +739,21 @@ img {
   padding-bottom: 5px;
   border: none;
   text-decoration: none;
-  color: white;
-  background-image: linear-gradient(to right, #cd9e51, #8d642c);
-  box-shadow: 0 1px 5px #522800;
-  transition: top 0.1s;
+  color: #ffffff;
+  background-color: #1ab394;
+}
+
+#page-not-found-home-link:hover {
+  cursor: pointer;
+  background-color: #18a689;
+}
+
+#page-not-found-home-link:active {
+  background-color: #18a689;
+}
+
+#page-not-found-home-link:visited {
+  text-decoration: none;
 }
 
 @media only screen and (max-width: 768px) {
@@ -704,68 +765,8 @@ img {
     font-size: 32px;
   }
 
-  #hello {
-    margin: 5px;
-    font-size: 1.5em;
-  }
-
-  label,
-  header a,
-  input,
-  .cool-input,
-  button {
-    font-size: 24px;
-  }
-
-  button,
-  header a,
-  input[type='submit'],
-  input,
-  #custom-file-upload {
-    padding-left: 10px;
-    padding-right: 10px;
-    background-color: transparent;
-  }
-
-  header {
-    height: 137px;
-  }
-
-  #home-main, #reset-password-main {
-    padding-top: 137px;
-  }
-
-  #form-container {
-    top: 137px;
-  }
-
   #photo-buttons {
-    top: 137px;
     height: 120px;
-  }
-
-  #content {
-    top: 137px;
-  }
-
-  #home-message-container,
-  #reset-password-message-container {
-    top: 220px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  #account-message-container {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .comment-container {
-    line-height: 48px;
   }
 
   .fa-heart,
