@@ -94,13 +94,12 @@ TODO
 + remove squares around buttons on mobile
 + style inactive buttons
 + style 404 and resetPassword pages
++ remove all comments
++ prettify everything
 
 
 
 - move website to free hosting
 - test everything
-- prettify everything
-- replace let with const where possible
-- remove all comments from the code
 - remove camagru.sql?
 - remove TODO

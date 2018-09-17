@@ -1,8 +1,9 @@
 import { dragAndDrop } from '/js/utils.js';
-import { container, isElementInsideContainer, deleteChangeStickerSection } from '/js/account.js'
-
-// TODO: Consider creating of separate module - Stretcher
-// TODO: Consider using of named arguments
+import {
+  container,
+  isElementInsideContainer,
+  deleteChangeStickerSection
+} from '/js/account.js';
 
 export const stretcher = {
   stretchLeft(element) {
@@ -17,9 +18,6 @@ export const stretcher = {
         let prevLeft = element.getBoundingClientRect().left;
         let currRight = prevLeft + element.getBoundingClientRect().width;
         let currLeft = prevLeft - diff;
-
-        // TODO: Replace with transform
-        // https://habr.com/company/odnoklassniki/blog/313978/
 
         if (currLeft < currRight) {
           prevLeft = parseInt(element.style.left);
@@ -115,7 +113,6 @@ export const stretcher = {
             moveEvent.clientY +
             container.getBoundingClientRect().top) /
           2;
-
         let prevLeft = element.getBoundingClientRect().left;
         let prevTop = element.getBoundingClientRect().top;
         let prevWidth = element.getBoundingClientRect().width;
@@ -185,9 +182,6 @@ export const stretcher = {
       element,
       () => {},
       moveEvent => {
-        // TODO: Consider using of cached value of client rect
-        // const clientRect = element.getBoundingClientRect()
-
         let diff =
           (moveEvent.clientY -
             element.getBoundingClientRect().bottom +
@@ -241,55 +235,67 @@ export const stretcher = {
         }
       }
     );
-  },
+  }
 };
 
 export const convertIntervalToInterval = (t, a, b, c, d) => {
   return c + ((d - c) / (b - a)) * (t - a);
 };
 
-export const changeWidth = (
-  sticker,
-  maxStickerWidth,
-  scroll
-) => {
-  sticker.style['width'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerWidth) + 'px';
+export const changeWidth = (sticker, maxStickerWidth, scroll) => {
+  sticker.style['width'] =
+    convertIntervalToInterval(
+      scroll.scrollLeft,
+      0,
+      scroll.scrollWidth,
+      0,
+      maxStickerWidth
+    ) + 'px';
   if (!isElementInsideContainer(sticker)) {
     container.removeChild(sticker);
     deleteChangeStickerSection();
   }
 };
 
-export const changeHeight = (
-  sticker,
-  maxStickerHeight,
-  scroll
-) => {
-  sticker.style['height'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerHeight) + 'px';
+export const changeHeight = (sticker, maxStickerHeight, scroll) => {
+  sticker.style['height'] =
+    convertIntervalToInterval(
+      scroll.scrollLeft,
+      0,
+      scroll.scrollWidth,
+      0,
+      maxStickerHeight
+    ) + 'px';
   if (!isElementInsideContainer(sticker)) {
     container.removeChild(sticker);
     deleteChangeStickerSection();
   }
 };
 
-export const moveUpDown = (
-  sticker,
-  maxStickerTop,
-  scroll
-) => {
-  sticker.style['top'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerTop) + 'px';
+export const moveUpDown = (sticker, maxStickerTop, scroll) => {
+  sticker.style['top'] =
+    convertIntervalToInterval(
+      scroll.scrollLeft,
+      0,
+      scroll.scrollWidth,
+      0,
+      maxStickerTop
+    ) + 'px';
   if (!isElementInsideContainer(sticker)) {
     container.removeChild(sticker);
     deleteChangeStickerSection();
   }
 };
 
-export const moveLeftRight = (
-  sticker,
-  maxStickerLeft,
-  scroll
-) => {
-  sticker.style['left'] = convertIntervalToInterval(scroll.scrollLeft, 0, scroll.scrollWidth, 0, maxStickerLeft) + 'px';
+export const moveLeftRight = (sticker, maxStickerLeft, scroll) => {
+  sticker.style['left'] =
+    convertIntervalToInterval(
+      scroll.scrollLeft,
+      0,
+      scroll.scrollWidth,
+      0,
+      maxStickerLeft
+    ) + 'px';
   if (!isElementInsideContainer(sticker)) {
     container.removeChild(sticker);
     deleteChangeStickerSection();

@@ -1,7 +1,7 @@
 * {
-  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'open sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 16px;
-  color: #676A6C;
+  color: #676a6c;
   box-sizing: border-box;
 }
 
@@ -423,9 +423,10 @@ input[type='password']:focus {
   color: #ffffff;
 }
 
-#capture-button:disabled, #clear-button:disabled {
+#capture-button:disabled,
+#clear-button:disabled {
   cursor: initial;
-  background-color: #676A6C;
+  background-color: #676a6c;
 }
 
 #photo-section {

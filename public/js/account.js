@@ -36,12 +36,10 @@ const login = document.getElementById('login');
 const password = document.getElementById('password');
 let notificationStatus = document.getElementById('notification-status');
 const accountMain = document.getElementById('account-main');
-
 let maxStickerWidth;
 let maxStickerHeight;
 let maxStickerLeft;
 let maxStickerTop;
-
 let uploadedPhotoWidth;
 let uploadedPhotoHeight;
 let widthCoef = 1;
@@ -457,7 +455,6 @@ const getBaseData = base => {
       height
     };
   } else if (base.id === 'uploaded-image') {
-    
     canvas.width = uploadedPhotoWidth;
     canvas.height = uploadedPhotoHeight;
     canvas
@@ -514,7 +511,6 @@ const changeCursorClass = (elem, newClass, cursorClasses) => {
   elem.classList.add(newClass);
 };
 
-// TODO: Read about currying
 const isPointInsideRect = (x, y) => rect => {
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 };
@@ -526,7 +522,7 @@ const moveOrChangeStickerSize = mouseMoveEvent => {
     right,
     bottom
   } = mouseMoveEvent.target.getBoundingClientRect();
-  let shift = 5; // px
+  let shift = 5;
   const isPointInside = isPointInsideRect(
     mouseMoveEvent.clientX,
     mouseMoveEvent.clientY
@@ -669,7 +665,6 @@ const dragAndDropInsideContainer = (element, shouldCopy) => {
   let drag = false;
 
   element.onmousedown = downEvent => {
-    // TODO: Consider using of 'key' property - event.key === 'left'
     if (isLeftButton(downEvent)) {
       let coords = getCoords(element);
       let shiftX = downEvent.clientX - coords.left;
@@ -772,7 +767,6 @@ const renderSticker = sources => {
       imageDiv.classList.add('image-div');
       image.src = source.url;
       image.classList.add('sticker');
-      // image.addEventListener('click', stickStickerOnMobile);
       image.addEventListener('contextmenu', stickStickerOnMobile);
       dragAndDropInsideContainer(image, true);
       imageDiv.append(image);
@@ -782,7 +776,8 @@ const renderSticker = sources => {
   }
 };
 
-const stickersForwardHander = () => {3
+const stickersForwardHander = () => {
+  3;
   stickersContainer.scrollLeft += 300;
 };
 

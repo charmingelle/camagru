@@ -18,12 +18,6 @@ class Route {
 			}
 			return false;
 		}
-		// else if ($condition === 'not signed in') {
-		// 	if (!isset($_SESSION['auth-data']['login']) || $_SESSION['auth-data']['login'] === '') {
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }
 		return false;
 	}
 

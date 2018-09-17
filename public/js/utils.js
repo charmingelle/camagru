@@ -14,18 +14,6 @@ export const isLeftButton = event => {
   return button == 1;
 };
 
-/**
- * TODO: Consider using of named arguments
- * export const dragAndDrop = (
- *		element,
- *		{
- *     onMouseDownHandler,
- *		 onMouseMoveHandler,
- *		 onMouseUpHandler
- *		}
- *		) => {
- */
-
 export const dragAndDrop = (
   element,
   mouseDownHandler,
@@ -115,7 +103,7 @@ export const post = (uri, requestBody) => {
   return fetch(uri, {
     method: 'POST',
     credentials: 'include',
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify(requestBody)
   }).then(response => response.json(), console.error);
 };
 
@@ -123,7 +111,7 @@ export const postNoResponse = (uri, requestBody) => {
   return fetch(uri, {
     method: 'POST',
     credentials: 'include',
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify(requestBody)
   });
 };
 

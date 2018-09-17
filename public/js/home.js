@@ -42,11 +42,9 @@ const signinFormHandler = (loginInput, passwordInput) => {
       login: loginInput.value,
       password: passwordInput.value
     }).then(data => {
-      // TODO: Read about using of status codes instead of string response body
       if (data !== 'OK') {
         renderMessageContainer(messageContainer, data);
       } else {
-        // TODO: Boolean arguments are VERY BAD!!!!
         renderSignedInOrAnonymousPage(true);
       }
     }, console.error);
@@ -79,7 +77,6 @@ const signupFormHandler = (emailInput, loginInput, passwordInput) => {
     loginInput.value !== '' &&
     passwordInput.value !== ''
   ) {
-    // TODO: Read about REST API
     post('/signup', {
       email: emailInput.value,
       login: loginInput.value,
@@ -334,7 +331,6 @@ const renderLikeEl = source => {
 
 const rerenderLikeIcon = (likeIcon, photoId) => {
   post('/getLikeStatus', { id: photoId }).then(data => {
-    // TODO: Consider using of classList.toggle
     data
       ? likeIcon.classList.add('like-symbol-liked')
       : likeIcon.classList.remove('like-symbol-liked');
