@@ -4,8 +4,8 @@ class Photos {
 	public static function getPhotos($lastId) {
 		$limit = 5;
 
-		return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE AND id <= :lastId ORDER BY ID DESC LIMIT :limit',
-									['lastId' => $lastId, 'limit' => $limit])->fetchAll();
+		return DBConnect::sendQuery('SELECT id, url, likes, comments, login FROM photo WHERE private = FALSE AND id <= :lastId ORDER BY ID DESC LIMIT 5',
+									['lastId' => $lastId])->fetchAll();
 	}
 
 	private static function _getUrl() {
@@ -139,6 +139,6 @@ class Photos {
 		if ($query_result) {
 			return $query_result[0]['id'];
 		}
-		return [];
+		return 0;
 	}
 }

@@ -14,23 +14,15 @@ class DBConnect {
 			}
 		}
 		try {
-			self::$_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			file_put_contents('/Users/grevenko/mamp/apache2/logs/error_log', $query . PHP_EOL, FILE_APPEND);
 			$pdo_statement = self::$_pdo->prepare($query);
-			$pdo_statement->execute($params);
+			file_put_contents('/Users/grevenko/mamp/apache2/logs/error_log', implode(' ', $pdo_statement->errorInfo()) . PHP_EOL, FILE_APPEND);			
+			$result = $pdo_statement->execute($params);
+			file_put_contents('/Users/grevenko/mamp/apache2/logs/error_log', implode(' ', $pdo_statement->errorInfo()) . PHP_EOL, FILE_APPEND);
+			file_put_contents('/Users/grevenko/mamp/apache2/logs/error_log', $result . PHP_EOL, FILE_APPEND);
 		} catch (Exception $e) {
 			exit($e->getMessage());
 		}
 		return $pdo_statement;
-	}
-
-	static function	success(PDOStatement $pdo)
-	{
-		$info = $pdo->errorInfo();
-		
-		if ($info[0] == "00000") {
-			return (true);
-		} else {
-			return ($info[2]);
-		}
 	}
 }
