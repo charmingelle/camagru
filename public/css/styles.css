@@ -88,6 +88,10 @@ header {
   text-decoration: none;
 }
 
+#home-message-container {
+  padding: 10px;
+}
+
 input[type='text'],
 input[type='password'] {
   padding: 10px;
