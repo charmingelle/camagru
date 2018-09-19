@@ -61,4 +61,11 @@
 		("sticker/10.png"),
 		("sticker/11.svg"),
 		("sticker/12.png"),
-		("sticker/13.png")');
+		("sticker/13.png"),
+		("sticker/14.svg"),
+		("sticker/15.png"),
+		("sticker/16.png"),
+		("sticker/17.png"),
+		("sticker/18.png"),
+		("sticker/19.png"),
+		("sticker/20.png")');

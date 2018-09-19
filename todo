@@ -96,6 +96,7 @@ TODO
 + style 404 and resetPassword pages
 + remove all comments
 + prettify everything
++ add more stickers here and to remote hosting, change setup.php accordingly
 
 
 
@@ -103,4 +104,4 @@ TODO
 - remove TODO
 - check everything using correction form
 - list all bonuses
-- add more stickers here and to remote hosting, change setup.php accordingly
+- set virtual host config
