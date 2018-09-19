@@ -97,11 +97,11 @@ TODO
 + remove all comments
 + prettify everything
 + add more stickers here and to remote hosting, change setup.php accordingly
++ set virtual host config
++ list all bonuses
 
 
 
 - test everything
 - remove TODO
 - check everything using correction form
-- list all bonuses
-- set virtual host config

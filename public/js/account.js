@@ -929,7 +929,7 @@ const changeNotificationStatus = () => {
 
 const renderNotificationStatus = () => {
   post('/getNotificationStatus', {}).then(data => {
-    data.notificationStatus
+    data.notificationStatus == true
       ? (notificationStatus.innerHTML = 'Disable notifications')
       : (notificationStatus.innerHTML = 'Enable notifications');
     notificationStatus.addEventListener('click', changeNotificationStatus);
