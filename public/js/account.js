@@ -341,18 +341,19 @@ const renderDeleteButton = (id, imageContainer) => {
   return button;
 };
 
-const okCallbackForTogglePhotoStatus = (button, id, buttonTitle) => {
+const okCallbackForTogglePhotoStatus = (button, id) => {
   postNoResponse('/publish', { id }).then(() => {
-    button.innerHTML = buttonTitle;
+    button.innerHTML === 'Publish'
+      ? (button.innerHTML = 'Hide')
+      : (button.innerHTML = 'Publish');
   }, console.error);
 };
 
-const togglePhotoStatus = (button, id, privateStatus) => {
-  let action = privateStatus ? 'publish' : 'hide';
-  let buttonTitle = privateStatus ? 'Hide' : 'Publish';
-
+const togglePhotoStatus = (button, id) => {
+  let action = button.innerHTML.toUpperCase();;
+  
   customConfirm(`Are you sure you would like to ${action} this photo?`, () =>
-    okCallbackForTogglePhotoStatus(button, id, buttonTitle)
+    okCallbackForTogglePhotoStatus(button, id)
   );
 };
 
@@ -360,11 +361,11 @@ const renderTogglePhotoStatusButton = id => {
   let button = document.createElement('button');
 
   post('/getPhotoPrivate', { id }).then(privateStatus => {
-    privateStatus
+    privateStatus === '1'
       ? (button.innerHTML = 'Publish')
       : (button.innerHTML = 'Hide');
     button.addEventListener('click', () =>
-      togglePhotoStatus(button, id, privateStatus)
+      togglePhotoStatus(button, id)
     );
   }, console.error);
   button.classList.add('publish-button');
@@ -929,7 +930,7 @@ const changeNotificationStatus = () => {
 
 const renderNotificationStatus = () => {
   post('/getNotificationStatus', {}).then(data => {
-    data.notificationStatus == true
+    data.notificationStatus === '1'
       ? (notificationStatus.innerHTML = 'Disable notifications')
       : (notificationStatus.innerHTML = 'Enable notifications');
     notificationStatus.addEventListener('click', changeNotificationStatus);
